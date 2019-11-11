@@ -1,4 +1,4 @@
-# dgc-wallet-blockchain
+# dgc-wallet-TP
 A simple dgc "wallet" transaction family example (processor + client)
 
 # Introduction
