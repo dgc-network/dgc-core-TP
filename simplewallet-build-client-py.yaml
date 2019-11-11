@@ -16,33 +16,17 @@
 version: '2.1'
 
 services:
-  simplewallet-rust-processor:
-    container_name: simplewallet-rust-processor
-    build:
-      context: .
-      dockerfile: ./rustprocessor/Dockerfile
-      args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
-    environment:
-      - 'http_proxy=${http_proxy}'
-      - 'https_proxy=${https_proxy}'
-      - 'no_proxy=rest-api,validator,${no_proxy}'
+  simplewallet-processor:
+    container_name: simplewallet-processor
+    image: askmish/sawtooth-simplewallet-tp-cxx:latest
     depends_on:
       - validator
     volumes:
       - '.:/project/simplewallet/'
 
-  simplewallet-client-js:
-    container_name: simplewallet-client-js
-    build:
-      context: .
-      dockerfile: ./jsclient/Dockerfile
-      args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
+  simplewallet-client:
+    container_name: simplewallet-client
+    image: askmish/sawtooth-simplewallet-client-python:latest
     environment:
       - 'http_proxy=${http_proxy}'
       - 'https_proxy=${https_proxy}'
@@ -53,6 +37,7 @@ services:
       - '0.0.0.0:3000:3000'
     depends_on:
       - sawtooth-rest-api
+    entrypoint: "bash -c \"sawtooth keygen --force sawtooth && tail -f /dev/null\""
     stop_signal: SIGKILL
 
   sawtooth-rest-api:
