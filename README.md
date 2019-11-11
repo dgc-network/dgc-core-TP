@@ -1,5 +1,5 @@
-# sawtooth-simplewallet
-A simple sawtooth "simplewallet" transaction family example (processor + client)
+# dgc-wallet-blockchain
+A simple dgc "wallet" transaction family example (processor + client)
 
 # Introduction
 
