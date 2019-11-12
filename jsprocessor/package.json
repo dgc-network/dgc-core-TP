@@ -2,8 +2,8 @@
   "name": "sawtooth-dgc-wallet-jsprocessor",
   "version": "1.0.0",
   "description": "A dgc-wallet transaction processor/family using sawtooth js sdk",
-  "homepage": "https://github.com/askmish/sawtooth-dgc-wallet",
-  "repository": "https://github.com/askmish/sawtooth-dgc-wallet.git",
+  "homepage": "https://github.com/dgc-network/dgc-wallet-tp",
+  "repository": "https://github.com/dgc-network/dgc-wallet-tp.git",
   "main": "index.js",
   "scripts": {
     "start": "node index.js tcp://validator:4004"

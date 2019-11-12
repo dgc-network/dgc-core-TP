@@ -47,7 +47,7 @@ static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger
     ("dgc-wallet"));
 
 static const std::string DEFAULT_VALIDATOR_URL = "tcp://validator:4004";
-static const std::string SIMPLEWALLET_FAMILY = "dgc-wallet";
+static const std::string DGC_WALLET_FAMILY = "dgc-wallet";
 static const std::string TRANSACTION_FAMILY_VERSION = "1.0";
 
 // Helper function: To generate an SHA512 hash and return it as a hex
@@ -174,7 +174,7 @@ class SimpleWalletApplicator:  public sawtooth::TransactionApplicator {
     // The first 6 characters is the TF prefix, which is the  
     // first 6 characters of SHA-512("dgc-wallet"), 7e2664.
     std::string MakeAddress(const std::string& customer_pubkey) {
-        return sha512(SIMPLEWALLET_FAMILY).substr(0, 6) +
+        return sha512(DGC_WALLET_FAMILY).substr(0, 6) +
             sha512(customer_pubkey).substr(0, 64);
     }
 
@@ -337,12 +337,12 @@ class dgcWalletHandler: public sawtooth::TransactionHandler {
  public:
     // Generating a namespace prefix in the default constructor
     dgcWalletHandler() {
-        this->namespacePrefix = sha512(SIMPLEWALLET_FAMILY).substr(0, 6);
+        this->namespacePrefix = sha512(DGC_WALLET_FAMILY).substr(0, 6);
         LOG4CXX_DEBUG(logger, "namespace:" << this->namespacePrefix);
     }
 
     std::string transaction_family_name() const {
-        return std::string(SIMPLEWALLET_FAMILY);
+        return std::string(DGC_WALLET_FAMILY);
     }
 
     std::list<std::string> versions() const {

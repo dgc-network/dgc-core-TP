@@ -18,7 +18,7 @@ version: '2.1'
 services:
   dgc-wallet-processor:
     container_name: dgc-wallet-processor
-    image: askmish/sawtooth-dgc-wallet-tp-cxx:latest
+    image: dgc-wallet-tp-cxx:latest
     depends_on:
       - validator
     volumes:

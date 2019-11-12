@@ -55,7 +55,7 @@ If you have Windows please install [Docker Toolbox for Windows](https://docs.doc
 **NOTE:**
 The minimum version of Docker Engine necessary is 17.03.0-ce. Linux distributions often ship with older versions of Docker.
 
-[Here's a gist](https://gist.github.com/askmish/76e348e34d93fc22926d7d9379a0fd08) detailing steps on installing docker and docker-compose.
+[Here's a gist](https://gist.github.com/dgc-network/76e348e34d93fc22926d7d9379a0fd08) detailing steps on installing docker and docker-compose.
 
 ### Working with proxies
 
@@ -146,7 +146,7 @@ To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS 
      ```
 2. In a new console, clone the dgc-wallet repo:
 
-   `git clone https://github.com/askmish/sawtooth-dgc-wallet.git`
+   `git clone https://github.com/dgc-network/dgc-wallet-tp.git`
 3. `cd sawtooth-dgc-wallet`
 4. Modify two files:
    - Create a new branch to start making changes
@@ -154,12 +154,12 @@ To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS 
    - Edit file `pyclient/wallet/dgc_wallet_cli.py` and change `rest-api:8008` to `localhost:8008`
    - Edit file `pyprocessor/processor/dgc_wallet_tp.py` and change `validator:4004` to `localhost:4004`
 5. Setup the dgc-wallet-tp.
-   - Follow the [`pyprocessor/Dockerfile`](https://github.com/askmish/sawtooth-dgc-wallet/blob/master/pyprocessor/Dockerfile)
-   - Install all the dependencies in the [first `RUN` line](https://github.com/askmish/sawtooth-dgc-wallet/blob/master/pyprocessor/Dockerfile#L18) in the Dockerfile
+   - Follow the [`pyprocessor/Dockerfile`](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyprocessor/Dockerfile)
+   - Install all the dependencies in the [first `RUN` line](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyprocessor/Dockerfile#L18) in the Dockerfile
    - Run the dgc-wallet-tp with `./pyprocessor/dgc-wallet-tp`
 6. Setup the client. Open a new console.
-   - Follow the [`pyclient/Dockerfile`](https://github.com/askmish/sawtooth-dgc-wallet/blob/master/pyclient/Dockerfile)
-   - Install all the dependencies in the [first `RUN` line](https://github.com/askmish/sawtooth-dgc-wallet/blob/master/pyclient/Dockerfile#L20) in the pyclient/Dockerfile
+   - Follow the [`pyclient/Dockerfile`](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyclient/Dockerfile)
+   - Install all the dependencies in the [first `RUN` line](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyclient/Dockerfile#L20) in the pyclient/Dockerfile
    - Run the dgc-wallet client with `./pyclient/dgc-wallet` command. Refer [Usage](#Usage) section above, for examples.
 
 **NOTE** If you prefer using the dgc-wallet client without directory prefix, you could add the `pyclient` directory to your `PATH` environment variable, as shown below:

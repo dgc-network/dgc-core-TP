@@ -26,9 +26,9 @@ data_files = []
 setup(
     name='dgc-wallet-cli',
     version='1.0',
-    description='Sawtooth SimpleWallet Example',
-    author='askmish',
-    url='https://github.com/askmish/sawtooth-dgc-wallet',
+    description='Sawtooth dgcWallet Example',
+    author='dgc.network',
+    url='https://github.com/dgc-network/dgc-wallet-tp',
     packages=find_packages(),
     install_requires=[
         'aiohttp',
