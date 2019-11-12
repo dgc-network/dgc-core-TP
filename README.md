@@ -85,7 +85,7 @@ Right click on the Docker icon in the notification area, select Settings. Then c
 
 Start the pre-built Docker containers in docker-compose.yaml file, located in sawtooth-dgc-wallet directory:
 ```bash
-cd sawtooth-dgc-wallet
+cd dgc-wallet-tp
 docker-compose up
 ```
 At this point all the containers should be running.
@@ -147,7 +147,7 @@ To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS 
 2. In a new console, clone the dgc-wallet repo:
 
    `git clone https://github.com/dgc-network/dgc-wallet-tp.git`
-3. `cd sawtooth-dgc-wallet`
+3. `cd dgc-wallet-tp`
 4. Modify two files:
    - Create a new branch to start making changes
    `git checkout -b nodocker`
@@ -167,7 +167,7 @@ To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS 
 `export PATH = $PATH:<absolute-path-to-your-cloned-sawtooth-dgc-wallet-dir>/pyclient"`
 
 # Video Presentation
-A video presentation on YouTube uses this application as an example. It is "Hyperledger Sawtooth Application Development using 'SimpleWallet'". It is at https://youtu.be/4VUaZkwJdCc
+A video presentation on YouTube uses this application as an example. It is "Hyperledger Sawtooth Application Development using 'dgcWallet'". It is at https://youtu.be/4VUaZkwJdCc
 
 # Contributing
 Currently, we're looking for contributions and PRs for following:
@@ -182,4 +182,4 @@ More ways you can contribute:
 
 # License
 This example and Hyperledger Sawtooth software are licensed under the [Apache License Version 2.0](LICENSE) software license.
-# dgc-wallet-blockchain
+# dgc-wallet-tp
