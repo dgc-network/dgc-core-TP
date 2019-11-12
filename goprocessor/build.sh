@@ -18,4 +18,4 @@
 
 # Produces a binary file dgc-wallet
 # We may use optional -o to change file name
-go build src/sawtooth_dgc-wallet/dgc-wallet.go
+go build src/sawtooth_dgc_wallet/dgc-wallet.go

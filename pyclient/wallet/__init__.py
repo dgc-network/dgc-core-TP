@@ -17,8 +17,8 @@ Define files for the client package in this directory.
 '''
 
 __all__ = [
-    'dgc-wallet_client',
-    'dgc-wallet_cli',
-    'dgc-wallet_message_factory'
+    'dgc_wallet_client',
+    'dgc_wallet_cli',
+    'dgc_wallet_message_factory'
 ]
 

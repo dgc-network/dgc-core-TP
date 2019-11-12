@@ -1,4 +1,4 @@
-package main.java.dgc-wallet.processor;
+package main.java.dgc.wallet.processor;
 
 import java.util.logging.Logger;
 import java.util.AbstractMap;
@@ -19,8 +19,8 @@ import sawtooth.sdk.processor.Utils;
 import com.google.protobuf.ByteString;
 
 
-public class SimpleWalletProcessor {
-    private final static Logger logger = Logger.getLogger(SimpleWalletProcessor.class.getName());
+public class dgcWalletProcessor {
+    private final static Logger logger = Logger.getLogger(dgcWalletProcessor.class.getName());
 
     public static void main(String[] args) {
 	//Check connection string to validator is passed in arguments.

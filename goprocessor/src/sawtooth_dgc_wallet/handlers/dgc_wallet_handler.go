@@ -22,8 +22,8 @@ import (
 	"github.com/hyperledger/sawtooth-sdk-go/logging"
 	"github.com/hyperledger/sawtooth-sdk-go/processor"
 	"github.com/hyperledger/sawtooth-sdk-go/protobuf/processor_pb2"
-	"sawtooth_dgc-wallet/constants"
-	"sawtooth_dgc-wallet/utils"
+	"sawtooth_dgc_wallet/constants"
+	"sawtooth_dgc_wallet/utils"
 	"strconv"
 	"strings"
 )

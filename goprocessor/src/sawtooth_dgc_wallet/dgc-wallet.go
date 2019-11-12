@@ -23,7 +23,7 @@ import (
 	processor2 "github.com/hyperledger/sawtooth-sdk-go/processor"
 	"github.com/jessevdk/go-flags"
 	"os"
-	handler2 "sawtooth_dgc-wallet/handlers"
+	handler2 "sawtooth_dgc_wallet/handlers"
 	"syscall"
 )
 

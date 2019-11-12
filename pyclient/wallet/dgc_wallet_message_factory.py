@@ -18,7 +18,7 @@ This file is used for automated testing of the dgc-wallet client.
 
 from sawtooth_processor_test.message_factory import MessageFactory
 
-class SimplewalletMessageFactory(object):
+class dgcWalletMessageFactory(object):
     def __init__(self, signer=None):
         self._factory = MessageFactory(
             family_name="dgc-wallet",

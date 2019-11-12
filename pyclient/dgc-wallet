@@ -15,7 +15,7 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 
-from wallet.dgc-wallet_cli import main_wrapper
+from wallet.dgc_wallet_cli import main_wrapper
 
 if __name__ == '__main__':
     main_wrapper()

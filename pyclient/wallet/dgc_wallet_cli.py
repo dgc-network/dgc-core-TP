@@ -29,7 +29,7 @@ import pkg_resources
 
 from colorlog import ColoredFormatter
 
-from wallet.dgc-wallet_client import dgcWalletClient
+from wallet.dgc_wallet_client import dgcWalletClient
 
 DISTRIBUTION_NAME = 'dgc-wallet'
 

@@ -151,7 +151,7 @@ To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS 
 4. Modify two files:
    - Create a new branch to start making changes
    `git checkout -b nodocker`
-   - Edit file `pyclient/wallet/dgc-wallet_cli.py` and change `rest-api:8008` to `localhost:8008`
+   - Edit file `pyclient/wallet/dgc_wallet_cli.py` and change `rest-api:8008` to `localhost:8008`
    - Edit file `pyprocessor/processor/dgc_wallet_tp.py` and change `validator:4004` to `localhost:4004`
 5. Setup the dgc-wallet-tp.
    - Follow the [`pyprocessor/Dockerfile`](https://github.com/askmish/sawtooth-dgc-wallet/blob/master/pyprocessor/Dockerfile)

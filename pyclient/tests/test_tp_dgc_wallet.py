@@ -17,7 +17,7 @@ import logging
 
 from sawtooth_processor_test.transaction_processor_test_case \
     import TransactionProcessorTestCase
-from wallet.dgc-wallet_message_factory import SimplewalletMessageFactory
+from wallet.dgc_wallet_message_factory import dgcWalletMessageFactory
 
 LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class TestSimplewallet(TransactionProcessorTestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.wallet = SimplewalletMessageFactory()
+        cls.wallet = dgcWalletMessageFactory()
         cls.public_key = cls.wallet.get_public_key()
 
     # send transactions

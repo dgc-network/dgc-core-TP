@@ -41,7 +41,7 @@ setup(
     data_files=data_files,
     entry_points={
         'console_scripts': [
-            'dgc-wallet = dgc-wallet_cli:main_wrapper',
+            'dgc-wallet = dgc_wallet_cli:main_wrapper',
         ]
     })
 

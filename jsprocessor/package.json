@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node index.js tcp://validator:4004"
   },
-  "author": "Ashish K Mishra",
+  "author": "dgc.network",
   "license": "Apache-2.0",
   "dependencies": {
     "protobufjs": "^6.7.3",
