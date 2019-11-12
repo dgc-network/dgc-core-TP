@@ -1,6 +1,3 @@
-# dgc-wallet-TP
-A simple dgc "wallet" transaction family example (processor + client)
-
 # Introduction
 
 This is a minimal example of a sawtooth 1.0 application. This example demonstrates, a common usecase, where a customer deposits/withdraws/transfers money from a wallet account.
