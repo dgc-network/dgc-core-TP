@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import logging
 
 from sawtooth_processor_test.transaction_processor_test_case \
     import TransactionProcessorTestCase
-from wallet.simplewallet_message_factory import SimplewalletMessageFactory
+from wallet.dgc-wallet_message_factory import SimplewalletMessageFactory
 
 LOGGER = logging.getLogger(__name__)
 

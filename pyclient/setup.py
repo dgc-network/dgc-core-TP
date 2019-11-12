@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ from setuptools import setup, find_packages
 data_files = []
 
 setup(
-    name='simplewallet-cli',
+    name='dgc-wallet-cli',
     version='1.0',
     description='Sawtooth SimpleWallet Example',
     author='askmish',
-    url='https://github.com/askmish/sawtooth-simplewallet',
+    url='https://github.com/askmish/sawtooth-dgc-wallet',
     packages=find_packages(),
     install_requires=[
         'aiohttp',
@@ -41,7 +41,7 @@ setup(
     data_files=data_files,
     entry_points={
         'console_scripts': [
-            'simplewallet = simplewallet_cli:main_wrapper',
+            'dgc-wallet = dgc-wallet_cli:main_wrapper',
         ]
     })
 

@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 version: '2.1'
 
 services:
-  simplewallet-go-processor:
-    container_name: simplewallet-go-processor
+  dgc-wallet-go-processor:
+    container_name: dgc-wallet-go-processor
     build:
       context: ./goprocessor
       dockerfile: ./Dockerfile
@@ -31,11 +31,11 @@ services:
       - 'no_proxy=rest-api,validator,${no_proxy}'
     depends_on:
       - validator
-    command: "simplewallet -C tcp://validator:4004"
+    command: "dgc-wallet -C tcp://validator:4004"
     stop_signal: SIGKILL
 
-  simplewallet-client:
-    container_name: simplewallet-client
+  dgc-wallet-client:
+    container_name: dgc-wallet-client
     build:
       context: .
       dockerfile: ./pyclient/Dockerfile
@@ -48,7 +48,7 @@ services:
       - 'https_proxy=${https_proxy}'
       - 'no_proxy=rest-api,validator,${no_proxy}'
     volumes:
-      - '.:/project/simplewallet/'
+      - '.:/project/dgc-wallet/'
     ports:
       - '0.0.0.0:3000:3000'
     depends_on:

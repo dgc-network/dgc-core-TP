@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,23 +16,23 @@
 version: '2.1'
 
 services:
-  simplewallet-processor:
-    container_name: simplewallet-processor
-    image: askmish/sawtooth-simplewallet-tp-cxx:latest
+  dgc-wallet-processor:
+    container_name: dgc-wallet-processor
+    image: askmish/sawtooth-dgc-wallet-tp-cxx:latest
     depends_on:
       - validator
     volumes:
-      - '.:/project/simplewallet/'
+      - '.:/project/dgc-wallet/'
 
-  simplewallet-client:
-    container_name: simplewallet-client
-    image: askmish/sawtooth-simplewallet-client-python:latest
+  dgc-wallet-client:
+    container_name: dgc-wallet-client
+    image: askmish/sawtooth-dgc-wallet-client-python:latest
     environment:
       - 'http_proxy=${http_proxy}'
       - 'https_proxy=${https_proxy}'
       - 'no_proxy=rest-api,validator,${no_proxy}'
     volumes:
-      - '.:/project/simplewallet/'
+      - '.:/project/dgc-wallet/'
     ports:
       - '0.0.0.0:3000:3000'
     depends_on:

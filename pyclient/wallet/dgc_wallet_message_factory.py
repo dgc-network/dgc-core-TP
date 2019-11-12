@@ -1,4 +1,4 @@
-# Copyright 2017 Intel Corporation
+# Copyright 2017 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 '''
-This file is used for automated testing of the simplewallet client.
+This file is used for automated testing of the dgc-wallet client.
 '''
 
 from sawtooth_processor_test.message_factory import MessageFactory
@@ -21,9 +21,9 @@ from sawtooth_processor_test.message_factory import MessageFactory
 class SimplewalletMessageFactory(object):
     def __init__(self, signer=None):
         self._factory = MessageFactory(
-            family_name="simplewallet",
+            family_name="dgc-wallet",
             family_version="1.0",
-            namespace=MessageFactory.sha512("simplewallet".encode("utf-8"))[0:6],
+            namespace=MessageFactory.sha512("dgc-wallet".encode("utf-8"))[0:6],
             signer=signer)
 
     def get_public_key(self):

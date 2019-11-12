@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ RUN \
 
 EXPOSE 4004/tcp
 
-WORKDIR /project/simplewallet/pyprocessor
-ENV PATH "$PATH:/project/simplewallet/pyprocessor"
+WORKDIR /project/dgc-wallet/pyprocessor
+ENV PATH "$PATH:/project/dgc-wallet/pyprocessor"
 
-CMD bash -c './simplewallet-tp'
+CMD bash -c './dgc-wallet-tp'

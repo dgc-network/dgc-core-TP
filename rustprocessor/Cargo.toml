@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation.
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
 # -----------------------------------------------------------------------------
 
 [package]
-name = "simplewallet-rust-tp"
+name = "dgc-wallet-rust-tp"
 version = "1.0.0"
-authors = ["Intel Corporation."]
+authors = ["dgc.network"]
 description = "Sawtooth Simple Wallet Transaction Processor"
 
 [dependencies]
-sawtooth_sdk = { git = "https://github.com/hyperledger/sawtooth-core.git" } 
+#sawtooth_sdk = { git = "https://github.com/hyperledger/sawtooth-core.git" } 
+sawtooth-sdk = "^0.1"
 rust-crypto = "0.2"
 clap = "2"
 log = "0.4"

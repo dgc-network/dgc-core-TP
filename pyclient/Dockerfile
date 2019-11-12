@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,9 +71,9 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/ci xenial universe" >> /etc/apt/sou
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /project/simplewallet/pyclient
+WORKDIR /project/dgc-wallet/pyclient
 
-ENV PATH "$PATH:/project/simplewallet/pyclient"
+ENV PATH "$PATH:/project/dgc-wallet/pyclient"
 
 EXPOSE 3000
 

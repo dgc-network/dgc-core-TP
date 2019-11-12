@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ const _hash = (x) => crypto.createHash('sha512').update(x).digest('hex').toLower
 var encoder = new TextEncoder('utf8')
 var decoder = new TextDecoder('utf8')
 const MIN_VALUE = 0
-const SW_FAMILY = 'simplewallet'
+const SW_FAMILY = 'dgc-wallet'
 const SW_NAMESPACE = _hash(SW_FAMILY).substring(0, 6)
 
 //function to obtain the payload obtained from the client
@@ -143,7 +143,7 @@ const makeTransfer =(context, senderAddress, amount, receiverAddress)  => (possi
   }
 }
 
-class SimpleWalletHandler extends TransactionHandler{
+class dgcWalletHandler extends TransactionHandler{
   constructor(){
     super(SW_FAMILY,['1.0'],[SW_NAMESPACE])
   }
@@ -206,4 +206,4 @@ class SimpleWalletHandler extends TransactionHandler{
   })
  }
 }
-module.exports = SimpleWalletHandler
+module.exports = dgcWalletHandler

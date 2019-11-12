@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 '''     
-Command line interface for the simplewallet transaction family.
+Command line interface for the dgc-wallet transaction family.
 
-Parses command line arguments and passes it to the SimpleWalletClient class
+Parses command line arguments and passes it to the dgcWalletClient class
 to process.
 ''' 
 
@@ -29,9 +29,9 @@ import pkg_resources
 
 from colorlog import ColoredFormatter
 
-from wallet.simplewallet_client import SimpleWalletClient
+from wallet.dgc-wallet_client import dgcWalletClient
 
-DISTRIBUTION_NAME = 'simplewallet'
+DISTRIBUTION_NAME = 'dgc-wallet'
 
 DEFAULT_URL = 'http://rest-api:8008'
 
@@ -183,7 +183,7 @@ def do_deposit(args):
     '''Implements the "deposit" subcommand by calling the client class.'''
     keyfile = _get_keyfile(args.customerName)
 
-    client = SimpleWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
+    client = dgcWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
 
     response = client.deposit(args.value)
 
@@ -193,7 +193,7 @@ def do_withdraw(args):
     '''Implements the "withdraw" subcommand by calling the client class.'''
     keyfile = _get_keyfile(args.customerName)
 
-    client = SimpleWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
+    client = dgcWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
 
     response = client.withdraw(args.value)
 
@@ -203,7 +203,7 @@ def do_balance(args):
     '''Implements the "balance" subcommand by calling the client class.'''
     keyfile = _get_keyfile(args.customerName)
 
-    client = SimpleWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
+    client = dgcWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfile)
 
     data = client.balance()
 
@@ -218,7 +218,7 @@ def do_transfer(args):
     keyfileFrom = _get_keyfile(args.customerNameFrom)
     keyfileTo = _get_pubkeyfile(args.customerNameTo)
 
-    clientFrom = SimpleWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfileFrom)
+    clientFrom = dgcWalletClient(baseUrl=DEFAULT_URL, keyFile=keyfileFrom)
 
     response = clientFrom.transfer(args.value, keyfileTo)
     print("Response: {}".format(response))

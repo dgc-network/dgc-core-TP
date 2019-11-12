@@ -1,4 +1,4 @@
-# Copyright 2016 Intel Corporation
+# Copyright 2016 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ Define files for the client package in this directory.
 '''
 
 __all__ = [
-    'simplewallet_client',
-    'simplewallet_cli',
-    'simplewallet_message_factory'
+    'dgc-wallet_client',
+    'dgc-wallet_cli',
+    'dgc-wallet_message_factory'
 ]
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,27 +22,27 @@ import (
 	"github.com/hyperledger/sawtooth-sdk-go/logging"
 	"github.com/hyperledger/sawtooth-sdk-go/processor"
 	"github.com/hyperledger/sawtooth-sdk-go/protobuf/processor_pb2"
-	"sawtooth_simplewallet/constants"
-	"sawtooth_simplewallet/utils"
+	"sawtooth_dgc-wallet/constants"
+	"sawtooth_dgc-wallet/utils"
 	"strconv"
 	"strings"
 )
 
 var logger = logging.Get()
 
-func (self *SimpleWalletHandler) FamilyName() string {
+func (self *dgcWalletHandler) FamilyName() string {
 	return constants.TransactionFamilyName
 }
 
-func (self *SimpleWalletHandler) FamilyVersions() []string {
+func (self *dgcWalletHandler) FamilyVersions() []string {
 	return []string{constants.TransactionFamilyVersion}
 }
 
-func (self *SimpleWalletHandler) Namespaces() []string {
+func (self *dgcWalletHandler) Namespaces() []string {
 	return []string{self.getNamespaceAddress()}
 }
 
-func (self *SimpleWalletHandler) Apply(request *processor_pb2.TpProcessRequest, context *processor.Context) error {
+func (self *dgcWalletHandler) Apply(request *processor_pb2.TpProcessRequest, context *processor.Context) error {
 	payload := string(request.GetPayload())
 	payloadList := strings.Split(payload, ",")
 	if len(payloadList) != 2 && !(len(payloadList) == 3 && constants.TransactionTransfer == payloadList[constants.TransactionOperationIndex]) {
@@ -75,7 +75,7 @@ func (self *SimpleWalletHandler) Apply(request *processor_pb2.TpProcessRequest, 
 	return nil
 }
 
-func (self SimpleWalletHandler) transfer() error {
+func (self dgcWalletHandler) transfer() error {
 
 	walletKeyFrom := self.getNamespaceAddress() + utils.Hexdigest(self.getUserFrom())[:constants.TransactionUserAddressLength]
 	walletKeyTo := self.getNamespaceAddress() + utils.Hexdigest(self.getUserTo())[:constants.TransactionUserAddressLength]
@@ -124,7 +124,7 @@ func (self SimpleWalletHandler) transfer() error {
 	return nil
 }
 
-func (self SimpleWalletHandler) withdraw() error {
+func (self dgcWalletHandler) withdraw() error {
 	// Get the wallet key derived from the wallet user's public key
 	walletKey := self.getNamespaceAddress() + utils.Hexdigest(self.getUserFrom())[:constants.TransactionUserAddressLength]
 	logger.Info("Got user key " + self.getUserFrom() + "wallet key " + walletKey)
@@ -154,7 +154,7 @@ func (self SimpleWalletHandler) withdraw() error {
 	return nil
 }
 
-func (self SimpleWalletHandler) deposit() error {
+func (self dgcWalletHandler) deposit() error {
 	// Get the wallet key derived from the wallet user's public key
 	walletKey := self.getNamespaceAddress() + utils.Hexdigest(self.getUserFrom())[:constants.TransactionUserAddressLength]
 	logger.Info("Got user key " + self.getUserFrom() + "wallet key " + walletKey)
@@ -186,6 +186,6 @@ func (self SimpleWalletHandler) deposit() error {
 	return nil
 }
 
-func (self SimpleWalletHandler) getNamespaceAddress() string {
+func (self dgcWalletHandler) getNamespaceAddress() string {
 	return utils.Hexdigest(constants.TransactionFamilyName)[:constants.TransactionFamilyNamespaceAddressLength]
 }

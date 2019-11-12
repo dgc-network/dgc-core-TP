@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package handlers
 import "github.com/hyperledger/sawtooth-sdk-go/processor"
 
 // Define struct, this will implement TP
-type SimpleWalletHandler struct {
+type dgcWalletHandler struct {
 	context   *processor.Context
 	operation string
 	amount    int
@@ -29,22 +29,22 @@ type SimpleWalletHandler struct {
 }
 
 // Getters
-func (self SimpleWalletHandler) getOperation() string {
+func (self dgcWalletHandler) getOperation() string {
 	return self.operation
 }
 
-func (self SimpleWalletHandler) getAmount() int {
+func (self dgcWalletHandler) getAmount() int {
 	return self.amount
 }
 
-func (self SimpleWalletHandler) getUserFrom() string {
+func (self dgcWalletHandler) getUserFrom() string {
 	return self.userFrom
 }
 
-func (self SimpleWalletHandler) getUserTo() string {
+func (self dgcWalletHandler) getUserTo() string {
 	return self.userTo
 }
 
-func (self SimpleWalletHandler) getContext() *processor.Context {
+func (self dgcWalletHandler) getContext() *processor.Context {
 	return self.context
 }

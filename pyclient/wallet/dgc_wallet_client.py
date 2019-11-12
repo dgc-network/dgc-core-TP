@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 '''
-This SimpleWalletClient class interfaces with Sawtooth through the REST API.
+This dgcWalletClient class interfaces with Sawtooth through the REST API.
 '''
 
 import hashlib
@@ -34,13 +34,13 @@ from sawtooth_sdk.protobuf.batch_pb2 import BatchHeader
 from sawtooth_sdk.protobuf.batch_pb2 import Batch
 
 # The Transaction Family Name
-FAMILY_NAME = 'simplewallet'
+FAMILY_NAME = 'dgc-wallet'
 
 def _hash(data):
     return hashlib.sha512(data).hexdigest()
 
 
-class SimpleWalletClient(object):
+class dgcWalletClient(object):
     '''Client simple wallet class.
 
     This supports deposit, withdraw, transfer, and balance functions.

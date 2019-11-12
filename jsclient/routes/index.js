@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var router = express.Router();
-var {SimpleWalletClient} = require('./SimpleWalletClient') 
+var {dgcWalletClient} = require('./dgcWalletClient') 
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -66,8 +66,8 @@ router.post('/login', urlencodedParser, function(req, res){
 router.post('/deposit', function(req, res) {
     var userId = req.body.userId;
     var amount = req.body.money;
-    var SimpleWalletClient1 = new SimpleWalletClient(userId); 
-    SimpleWalletClient1.deposit(amount);    
+    var dgcWalletClient1 = new dgcWalletClient(userId); 
+    dgcWalletClient1.deposit(amount);    
     res.send({message:"Amount "+ amount +" successfully added"});
 });
 
@@ -75,8 +75,8 @@ router.post('/deposit', function(req, res) {
 router.post('/withdraw', function(req, res) {
     var userId = req.body.userId;
     var amount = req.body.money;
-    var SimpleWalletClient1 = new SimpleWalletClient(userId);   
-    SimpleWalletClient1.withdraw(amount);     
+    var dgcWalletClient1 = new dgcWalletClient(userId);   
+    dgcWalletClient1.withdraw(amount);     
     res.send({  message:"Amount "+ amount +" successfully deducted"});
 });
 
@@ -85,14 +85,14 @@ router.post('/transfer', function(req, res) {
     var userId = req.body.userId;
     var beneficiary = req.body.beneficiary;
     var amount = req.body.money;
-    var client = new SimpleWalletClient(userId);
+    var client = new dgcWalletClient(userId);
     client.transfer(beneficiary, amount);    
     res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
 });
 
 router.post('/balance', function(req, res){
     var userId = req.body.userId;
-    var client = new SimpleWalletClient(userId);
+    var client = new dgcWalletClient(userId);
     var getYourBalance = client.balance();
     console.log(getYourBalance);
     getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});

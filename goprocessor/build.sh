@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #------------------------------------------------------------------------------
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,6 @@
 # limitations under the License.
 #------------------------------------------------------------------------------
 
-# Produces a binary file simplewallet
+# Produces a binary file dgc-wallet
 # We may use optional -o to change file name
-go build src/sawtooth_simplewallet/simplewallet.go
+go build src/sawtooth_dgc-wallet/dgc-wallet.go

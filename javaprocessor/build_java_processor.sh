@@ -37,4 +37,4 @@ mvn clean install \
     -Dhttps.proxyHost=$https_proxy_host \
     -Dhttps.proxyPort=$https_proxy_port
 
-java -cp target/javaprocessor-1.0-SNAPSHOT.jar main.java.simplewallet.processor.SimpleWalletProcessor tcp://validator:4004
+java -cp target/javaprocessor-1.0-SNAPSHOT.jar main.java.dgc-wallet.processor.SimpleWalletProcessor tcp://validator:4004

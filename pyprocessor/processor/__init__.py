@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,6 @@ Define files for the transaction processor package in this directory.
 '''
 
 __all__ = [
-    'simplewallet_tp'
+    'dgc_wallet_tp'
 ]
 

@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation.
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,13 +47,13 @@ RUN curl https://sh.rustup.rs -sSf > /usr/bin/rustup-init \
  && chmod +x /usr/bin/rustup-init \
  && rustup-init -y
 
-ENV PATH=$PATH:/project/simplewallet/rustprocessor/bin:/protoc3/bin:/root/.cargo/bin \
+ENV PATH=$PATH:/project/dgc-wallet/rustprocessor/bin:/protoc3/bin:/root/.cargo/bin \
     CARGO_INCREMENTAL=0
 
 RUN rustup component add rustfmt-preview
 
 
-WORKDIR /project/simplewallet/rustprocessor
+WORKDIR /project/dgc-wallet/rustprocessor
 
 ###########################################################################
 # Below lines are workaround to avoid rebuilding dependencies every time 
@@ -61,11 +61,11 @@ WORKDIR /project/simplewallet/rustprocessor
 
 # create a new empty shell project
 RUN USER=root cargo new --bin my-project
-WORKDIR /project/simplewallet/rustprocessor/my-project
+WORKDIR /project/dgc-wallet/rustprocessor/my-project
 
 # copy over your manifests 
 #(context passed from docker yaml file in parent directory)
-COPY ./rustprocessor/Cargo.lock Cargo.lock
+#COPY ./rustprocessor/Cargo.lock Cargo.lock
 COPY ./rustprocessor/Cargo.toml Cargo.toml
 
 # this build step will cache your dependencies
@@ -76,13 +76,13 @@ RUN rm src/*.rs
 COPY ./rustprocessor/src ./src
 ###########################################################################
 
-WORKDIR /project/simplewallet/rustprocessor
+WORKDIR /project/dgc-wallet/rustprocessor
 
 #CMD cd rustprocessor \
-CMD echo "\033[0;32m--- Building simplewallet-rust-tp ---\n\033[0m" \
+CMD echo "\033[0;32m--- Building dgc-wallet-rust-tp ---\n\033[0m" \
  && rm -rf ./bin/ \
  && mkdir -p ./bin/ \
  && cargo build --release \
- && cp ./target/release/simplewallet-rust-tp ./bin/simplewallet-rust-tp \
- && cargo run --release --bin simplewallet-rust-tp -- -v -C tcp://validator:4004 \
+ && cp ./target/release/dgc-wallet-rust-tp ./bin/dgc-wallet-rust-tp \
+ && cargo run --release --bin dgc-wallet-rust-tp -- -v -C tcp://validator:4004 \
  && tail -f /dev/null

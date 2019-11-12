@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import (
 	processor2 "github.com/hyperledger/sawtooth-sdk-go/processor"
 	"github.com/jessevdk/go-flags"
 	"os"
-	handler2 "sawtooth_simplewallet/handlers"
+	handler2 "sawtooth_dgc-wallet/handlers"
 	"syscall"
 )
 
@@ -68,7 +68,7 @@ func main() {
 	logger.Debugf("command line arguments: %v", os.Args)
 	logger.Debugf("verbose = %v\n", len(opts.Verbose))
 	logger.Debugf("endpoint = %v\n", endpoint)
-	handler := &handler2.SimpleWalletHandler{}
+	handler := &handler2.dgcWalletHandler{}
 	processor := processor2.NewTransactionProcessor(endpoint)
 	processor.AddHandler(handler)
 	processor.ShutdownOnSignal(syscall.SIGINT, syscall.SIGTERM)

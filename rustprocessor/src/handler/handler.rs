@@ -44,7 +44,7 @@ impl SwTransactionHandler {
     
     pub fn new() -> SwTransactionHandler {
         SwTransactionHandler {
-            family_name: String::from("simplewallet"),
+            family_name: String::from("dgc-wallet"),
             family_versions: vec![String::from("1.0")],
             namespaces: vec![String::from(get_sw_prefix().to_string())],
         }

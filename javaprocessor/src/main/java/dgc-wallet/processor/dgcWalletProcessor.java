@@ -1,4 +1,4 @@
-package main.java.simplewallet.processor;
+package main.java.dgc-wallet.processor;
 
 import java.util.logging.Logger;
 import java.util.AbstractMap;
@@ -30,7 +30,7 @@ public class SimpleWalletProcessor {
 	// Connect to validator with connection string (tcp://validator:4004)
 	TransactionProcessor simpleWalletProcessor = new TransactionProcessor(args[0]);
 	// Create simple wallet transaction handler and register with the validator
-	simpleWalletProcessor.addHandler(new SimpleWalletHandler());
+	simpleWalletProcessor.addHandler(new dgcWalletHandler());
 	Thread thread = new Thread(simpleWalletProcessor);
 	//start the transaction processor
 	thread.run();
@@ -39,22 +39,22 @@ public class SimpleWalletProcessor {
 }
 
 /* ******************************************************************************
- * SimpleWalletHandler
+ * dgcWalletHandler
  *
- * It handles the processing of operation supported by simplewallet.
+ * It handles the processing of operation supported by dgc-wallet.
  * It sets the name space prefix, versions and transaction family name.
  * This is the place where you implement your transaction specific logic(Insie apply() method
  * 
  ***************************************************************************** */
 
-class SimpleWalletHandler implements TransactionHandler {
-    private final Logger logger = Logger.getLogger(SimpleWalletHandler.class.getName());
+class dgcWalletHandler implements TransactionHandler {
+    private final Logger logger = Logger.getLogger(dgcWalletHandler.class.getName());
     private final static String version = "1.0";
-    private final static String txnFamilyName = "simplewallet";
+    private final static String txnFamilyName = "dgc-wallet";
 
     private String simpleWalletNameSpace;
 
-    SimpleWalletHandler() {
+    dgcWalletHandler() {
 	try {
 	    //Initialize the simple wallet name space using first 6 characters
 	    simpleWalletNameSpace = Utils.hash512(txnFamilyName.getBytes("UTF-8")).substring(0, 6);

@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,6 +35,6 @@ RUN \
 
 EXPOSE 4004/tcp
 
-WORKDIR /project/simplewallet/javaprocessor
+WORKDIR /project/dgc-wallet/javaprocessor
 
 CMD bash -c "./build_java_processor.sh"

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package constants
 
 const (
 	// Related to transaction family
-	TransactionFamilyName    string = "simplewallet"
+	TransactionFamilyName    string = "dgc-wallet"
 	TransactionFamilyVersion string = "1.0"
 	// Related to length of addresses
 	TransactionFamilyNamespaceAddressLength int = 6

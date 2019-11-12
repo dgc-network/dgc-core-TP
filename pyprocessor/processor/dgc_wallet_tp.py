@@ -11,7 +11,7 @@
 # limitations under the License.
 # ------------------------------------------------------------------------------
 '''
-Transaction family class for simplewallet.
+Transaction family class for dgc-wallet.
 '''
 
 import traceback
@@ -26,18 +26,18 @@ from sawtooth_sdk.processor.core import TransactionProcessor
 
 LOGGER = logging.getLogger(__name__)
 
-FAMILY_NAME = "simplewallet"
+FAMILY_NAME = "dgc-wallet"
 
 def _hash(data):
     '''Compute the SHA-512 hash and return the result as hex characters.'''
     return hashlib.sha512(data).hexdigest()
 
-# Prefix for simplewallet is the first six hex digits of SHA-512(TF name).
+# Prefix for dgc-wallet is the first six hex digits of SHA-512(TF name).
 sw_namespace = _hash(FAMILY_NAME.encode('utf-8'))[0:6]
 
 class SimpleWalletTransactionHandler(TransactionHandler):
     '''                                                       
-    Transaction Processor class for the simplewallet transaction family.       
+    Transaction Processor class for the dgc-wallet transaction family.       
                                                               
     This with the validator using the accept/get/set functions.
     It implements functions to deposit, withdraw, and transfer money.
@@ -62,10 +62,10 @@ class SimpleWalletTransactionHandler(TransactionHandler):
         '''This implements the apply function for this transaction handler.
                                                               
            This function does most of the work for this class by processing
-           a single transaction for the simplewallet transaction family.   
+           a single transaction for the dgc-wallet transaction family.   
         '''                                                   
         
-        # Get the payload and extract simplewallet-specific information.
+        # Get the payload and extract dgc-wallet-specific information.
         header = transaction.header
         payload_list = transaction.payload.decode().split(",")
         operation = payload_list[0]
@@ -177,7 +177,7 @@ def setup_loggers():
     logging.getLogger().setLevel(logging.DEBUG)
 
 def main():
-    '''Entry-point function for the simplewallet transaction processor.'''
+    '''Entry-point function for the dgc-wallet transaction processor.'''
     setup_loggers()
     try:
         # Register the transaction handler and start it.

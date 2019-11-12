@@ -1,4 +1,4 @@
-/* Copyright 2018 Intel Corporation
+/* Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 'use strict'
 
 const { TransactionProcessor } = require('sawtooth-sdk/processor')
-const SimpleWalletHandler = require('./SimpleWalletHandler')
+const dgcWalletHandler = require('./dgcWalletHandler')
 
 if (process.argv.length < 3) {
   console.log('missing a validator address')
@@ -28,6 +28,6 @@ const address = process.argv[2]
 
 const transactionProcessor = new TransactionProcessor(address)
 
-transactionProcessor.addHandler(new SimpleWalletHandler())
+transactionProcessor.addHandler(new dgcWalletHandler())
 
 transactionProcessor.start()

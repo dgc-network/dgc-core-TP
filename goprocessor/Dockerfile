@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ RUN echo "deb [arch=amd64] http://repo.sawtooth.me/ubuntu/ci xenial universe" >>
     python3-grpcio-tools=1.1.3-1 \
  && apt-get clean
 
-RUN mkdir -p /project/simplewallet/goprocessor
-ENV GOPATH=/go:/go/src/github.com/hyperledger/sawtooth-sdk-go:/project/simplewallet/goprocessor
-ENV PATH=$PATH:/project/bin:/go/bin:/usr/lib/go-1.9/bin:/project/simplewallet/goprocessor
+RUN mkdir -p /project/dgc-wallet/goprocessor
+ENV GOPATH=/go:/go/src/github.com/hyperledger/sawtooth-sdk-go:/project/dgc-wallet/goprocessor
+ENV PATH=$PATH:/project/bin:/go/bin:/usr/lib/go-1.9/bin:/project/dgc-wallet/goprocessor
 
 # TODO: Use dep to solve dependency resolution problem in go code
 RUN go get -u \
@@ -54,8 +54,8 @@ RUN go generate
 
 EXPOSE 4004/tcp
 
-WORKDIR /project/simplewallet/goprocessor
+WORKDIR /project/dgc-wallet/goprocessor
 COPY . ./
 RUN bash -c "./build.sh"
 RUN rm -rf src/ *.sh Dockerfile
-CMD bash -C "simplewallet"
+CMD bash -C "dgc-wallet"

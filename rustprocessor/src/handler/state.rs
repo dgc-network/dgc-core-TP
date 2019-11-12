@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Intel Corporation.
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ use sawtooth_sdk::processor::handler::TransactionContext;
 
 pub fn get_sw_prefix() -> String {
         let mut sha = Sha512::new();
-        sha.input_str("simplewallet");
+        sha.input_str("dgc-wallet");
         sha.result_str()[..6].to_string()
 }
 

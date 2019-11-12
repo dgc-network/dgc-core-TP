@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/ci xenial universe" >> /etc/apt/sou
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && apt-get install -y nodejs
 
-WORKDIR /project/simplewallet/jsclient
+WORKDIR /project/dgc-wallet/jsclient
 
-ENV PATH "$PATH:/project/simplewallet/jsclient"
+ENV PATH "$PATH:/project/dgc-wallet/jsclient"
 
 EXPOSE 3000
 

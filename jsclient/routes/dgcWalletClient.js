@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Intel Corporation
+ * Copyright 2018 dgc.network
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ const fetch = require('node-fetch');
 const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
 const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 
-FAMILY_NAME='simplewallet'
+FAMILY_NAME='dgc-wallet'
 
 function hash(v) {
     return createHash('sha512').update(v).digest('hex');
 }
 
-class SimpleWalletClient {
+class dgcWalletClient {
     constructor(userid) {
       const privateKeyStrBuf = this.getUserPriKey(userid);
       const privateKeyStr = privateKeyStrBuf.toString().trim();
@@ -37,7 +37,7 @@ class SimpleWalletClient {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
       this.signer = new CryptoFactory(context).newSigner(privateKey);
       this.publicKey = this.signer.getPublicKey().asHex();
-      this.address = hash("simplewallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
+      this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
       console.log("Storing at: " + this.address);
     }
 
@@ -81,7 +81,7 @@ class SimpleWalletClient {
       if (action === "transfer") {
 	const pubKeyStrBuf = this.getUserPubKey(values[1]);
         const pubKeyStr = pubKeyStrBuf.toString().trim();
-        var toAddress = hash("simplewallet").substr(0, 6) + hash(pubKeyStr).substr(0, 64);
+        var toAddress = hash("dgc-wallet").substr(0, 6) + hash(pubKeyStr).substr(0, 64);
         inputAddressList.push(toAddress);
         outputAddressList.push(toAddress);
         payload = action+","+values[0]+","+pubKeyStr;
@@ -92,7 +92,7 @@ class SimpleWalletClient {
       var enc = new TextEncoder('utf8');
       const payloadBytes = enc.encode(payload);
       const transactionHeaderBytes = protobuf.TransactionHeader.encode({
-      familyName: 'simplewallet',
+      familyName: 'dgc-wallet',
       familyVersion: '1.0',
       inputs: inputAddressList,
       outputs: outputAddressList,
@@ -159,4 +159,4 @@ class SimpleWalletClient {
       }
     }
 }
-module.exports.SimpleWalletClient = SimpleWalletClient;
+module.exports.dgcWalletClient = dgcWalletClient;

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #------------------------------------------------------------------------------
-# Copyright 2018 Intel Corporation
+# Copyright 2018 dgc.network
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,4 +22,4 @@ mkdir -p build
 cd build
 cmake ..
 make
-./bin/simplewallet-tp tcp://validator:4004
+./bin/dgc-wallet-tp tcp://validator:4004

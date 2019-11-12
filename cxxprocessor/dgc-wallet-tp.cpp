@@ -1,4 +1,4 @@
-/* Copyright 2018 Intel Corporation
+/* Copyright 2018 dgc.network
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 ------------------------------------------------------------------------------*/
 
 /*******************************************************************************
- * simplewallet-tp
+ * dgc-wallet-tp
  *
  * Simple Wallet Transaction Processor written in C++.
  ******************************************************************************/
@@ -44,10 +44,10 @@
 using namespace log4cxx;
 
 static log4cxx::LoggerPtr logger(log4cxx::Logger::getLogger
-    ("simplewallet"));
+    ("dgc-wallet"));
 
 static const std::string DEFAULT_VALIDATOR_URL = "tcp://validator:4004";
-static const std::string SIMPLEWALLET_FAMILY = "simplewallet";
+static const std::string SIMPLEWALLET_FAMILY = "dgc-wallet";
 static const std::string TRANSACTION_FAMILY_VERSION = "1.0";
 
 // Helper function: To generate an SHA512 hash and return it as a hex
@@ -112,7 +112,7 @@ class SimpleWalletApplicator:  public sawtooth::TransactionApplicator {
         TransactionApplicator(std::move(txn), std::move(state)) { }
 
     // The Apply() function does most of the work for the transaction processor
-    // by processing a transaction for the simplewallet transaction family.
+    // by processing a transaction for the dgc-wallet transaction family.
     void Apply() {
         try {
             std::cout << "SimpleWalletApplicator::Apply\n";
@@ -172,7 +172,7 @@ class SimpleWalletApplicator:  public sawtooth::TransactionApplicator {
  private:
     // Make a 70-character(35-byte) address to store and retrieve the state
     // The first 6 characters is the TF prefix, which is the  
-    // first 6 characters of SHA-512("simplewallet"), 7e2664.
+    // first 6 characters of SHA-512("dgc-wallet"), 7e2664.
     std::string MakeAddress(const std::string& customer_pubkey) {
         return sha512(SIMPLEWALLET_FAMILY).substr(0, 6) +
             sha512(customer_pubkey).substr(0, 64);
@@ -326,17 +326,17 @@ class SimpleWalletApplicator:  public sawtooth::TransactionApplicator {
 };
 
 /*******************************************************************************
- * SimpleWalletHandler Class
+ * dgcWalletHandler Class
  *
  * This class will be registered as the transaction processor handler
  * with validator
  * It sets the namespaceprefix, versions, TF and types of transactions
  * that can be handled by this TP - via the Apply method
  ******************************************************************************/
-class SimpleWalletHandler: public sawtooth::TransactionHandler {
+class dgcWalletHandler: public sawtooth::TransactionHandler {
  public:
     // Generating a namespace prefix in the default constructor
-    SimpleWalletHandler() {
+    dgcWalletHandler() {
         this->namespacePrefix = sha512(SIMPLEWALLET_FAMILY).substr(0, 6);
         LOG4CXX_DEBUG(logger, "namespace:" << this->namespacePrefix);
     }
@@ -383,7 +383,7 @@ int main(int argc, char** argv) {
 
         // 2. create a transaction handler for our SimpleWallet TF
         sawtooth::TransactionHandlerUPtr transaction_handler(
-            new SimpleWalletHandler());
+            new dgcWalletHandler());
 
         // 3. register the transaction handler with validator
         processor->RegisterHandler(
