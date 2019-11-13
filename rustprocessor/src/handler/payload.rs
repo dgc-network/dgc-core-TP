@@ -63,7 +63,7 @@ impl SwPayload {
             }
         };
 
-        //SimpleWallet payload is constructed as comma separated items
+        //dgcWallet payload is constructed as comma separated items
         let items: Vec<&str> = payload_string.split(",").collect();
 
         if items.len() < 2 {
@@ -85,7 +85,6 @@ impl SwPayload {
                 "Action is required",
             )));
         }
-             
         
         let action = match action {
                             "deposit" => Action::Deposit,

@@ -30,7 +30,7 @@ pub fn get_sw_prefix() -> String {
         sha.result_str()[..6].to_string()
 }
 
-//Simplewallet State
+//dgc-wallet State
 pub struct SwState<'a> {
     context: &'a mut TransactionContext,
 }
@@ -55,16 +55,14 @@ impl<'a> SwState<'a> {
             Some(packed) => {                
                 
                 let value_string = match String::from_utf8(packed) {
-                                      Ok(v) => v,
-                                      Err(_) => return Err(ApplyError::InvalidTransaction(String::from(
-                                                              "Invalid UTF-8 sequence")))
-                                   };                
+                    Ok(v) => v,
+                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from("Invalid UTF-8 sequence")))
+                };                
                 
                 let value: u32 = match value_string.parse() {
-                                    Ok(v) => v,
-                                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from(
-                                                              "Unable to parse UTF-8 String as u32")))
-                                 };
+                    Ok(v) => v,
+                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from("Unable to parse UTF-8 String as u32")))
+                };
                 
                 Ok(Some(value))
                                
