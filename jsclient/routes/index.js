@@ -38,64 +38,10 @@ router.get('/transfer',function(req, res){
 })
 
 //Get Balance View
-//router.get('/balance', function(req, res){
-//    res.render('balancePage');
-//})
-//Get Balance
 router.get('/balance', function(req, res){
-    var userId = req.body.userId;
-    res.send({done:1, message: "User Successfully Logged in as "  });
-/*
-    console.log('userId' + userId);
-    var client = new dgcWalletClient(userId);
-    var getYourBalance = client.balance();
-    console.log(getYourBalance);
-    //getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
-
-    getYourBalance.then(result => {
-        res.send({ 
-            balance: result, 
-            message:"Amount " + result + " available"
-        });
-    });
-*/    
+    res.render('balancePage');
 })
 
-router.get('/info', function(req, res){
-    var userId = req.body.userId;
-    res.send({
-        //pubkey: batcher.getPublicKey(),
-        //mapsApiKey: config.MAPS_API_KEY,
-        endpoints: endpointInfo
-    });
-})
-// Parses the endpoints from an Express router
-const _ = require('lodash')
-const getEndpoints = router => {
-    return _.chain(router.stack)
-    .filter(layer => layer.route)
-    .map(({ route }) => {
-        return _.chain(route.stack)
-        .reduceRight((layers, layer) => {
-            if (layer.name === 'restrict') {
-                _.nth(layers, -1).restricted = true
-            } else {
-                layers.push({
-                    path: route.path,
-                    method: layer.method.toUpperCase(),
-                    restricted: false
-                })
-            }
-            return layers
-        }, [])
-        .reverse()
-        .value()
-    })
-    .flatten()
-    .value()
-  }
-const endpointInfo = getEndpoints(router)
-  
 //recieve data from login page and save it.
 router.post('/login', urlencodedParser, function(req, res){
     var userid = req.body.userId;
@@ -137,4 +83,41 @@ router.post('/balance', function(req, res){
     console.log(getYourBalance);
     getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
 })
+
+//Get Info
+router.get('/info', function(req, res){
+    var userId = req.body.userId;
+    res.send({
+        //pubkey: batcher.getPublicKey(),
+        //mapsApiKey: config.MAPS_API_KEY,
+        endpoints: endpointInfo
+    });
+})
+// Parses the endpoints from an Express router
+const _ = require('lodash')
+const getEndpoints = router => {
+    return _.chain(router.stack)
+    .filter(layer => layer.route)
+    .map(({ route }) => {
+        return _.chain(route.stack)
+        .reduceRight((layers, layer) => {
+            if (layer.name === 'restrict') {
+                _.nth(layers, -1).restricted = true
+            } else {
+                layers.push({
+                    path: route.path,
+                    method: layer.method.toUpperCase(),
+                    restricted: false
+                })
+            }
+            return layers
+        }, [])
+        .reverse()
+        .value()
+    })
+    .flatten()
+    .value()
+  }
+const endpointInfo = getEndpoints(router)
+
 module.exports = router;
