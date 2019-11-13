@@ -61,6 +61,41 @@ router.get('/balance', function(req, res){
 */    
 })
 
+router.get('/info', function(req, res){
+    var userId = req.body.userId;
+    res.send({
+        //pubkey: batcher.getPublicKey(),
+        //mapsApiKey: config.MAPS_API_KEY,
+        endpoints: endpointInfo
+    });
+})
+// Parses the endpoints from an Express router
+const _ = require('lodash')
+const getEndpoints = router => {
+    return _.chain(router.stack)
+    .filter(layer => layer.route)
+    .map(({ route }) => {
+        return _.chain(route.stack)
+        .reduceRight((layers, layer) => {
+            if (layer.name === 'restrict') {
+                _.nth(layers, -1).restricted = true
+            } else {
+                layers.push({
+                    path: route.path,
+                    method: layer.method.toUpperCase(),
+                    restricted: false
+                })
+            }
+            return layers
+        }, [])
+        .reverse()
+        .value()
+    })
+    .flatten()
+    .value()
+  }
+const endpointInfo = getEndpoints(router)
+  
 //recieve data from login page and save it.
 router.post('/login', urlencodedParser, function(req, res){
     var userid = req.body.userId;
