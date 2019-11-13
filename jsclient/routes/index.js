@@ -9,7 +9,8 @@ var {dgcWalletClient} = require('./dgcWalletClient')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 router.get('/', function(req, res){
-    res.redirect("/login");
+    //res.redirect("/login");
+    res.render('homePage');
 })
 
 //Get home view
