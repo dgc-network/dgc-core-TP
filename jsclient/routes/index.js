@@ -44,11 +44,19 @@ router.get('/transfer',function(req, res){
 //Get Balance
 router.get('/balance', function(req, res){
     var userId = req.body.userId;
-    console.log(userId);
+    console.log('userId' + userId);
     var client = new dgcWalletClient(userId);
     var getYourBalance = client.balance();
     console.log(getYourBalance);
-    getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
+    //getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
+    getYourBalance.then(result => {
+        'userId didnot define!';
+        /*
+        res.send({ 
+            balance: result, 
+            message:"Amount " + result + " available"
+        });*/
+    });
 })
 
 //recieve data from login page and save it.
