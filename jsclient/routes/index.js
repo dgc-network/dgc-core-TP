@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 var {dgcWalletClient} = require('./dgcWalletClient') 
 
-var urlEncodedParser = bodyParser.urlEncoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 router.get('/', function(req, res){
     res.redirect("/login");
@@ -52,7 +52,7 @@ router.get('/balance', function(req, res){
 })
 
 //recieve data from login page and save it.
-router.post('/login', urlEncodedParser, function(req, res){
+router.post('/login', urlencodedParser, function(req, res){
     var userid = req.body.userId;
     res.send({done:1, userId: userid, message: "User Successfully Logged in as "+userid  });
 });

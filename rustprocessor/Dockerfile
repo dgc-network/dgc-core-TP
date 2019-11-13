@@ -65,7 +65,7 @@ WORKDIR /project/dgc-wallet/rustprocessor/my-project
 
 # copy over your manifests 
 #(context passed from docker yaml file in parent directory)
-#COPY ./rustprocessor/Cargo.lock Cargo.lock
+COPY ./rustprocessor/Cargo.lock Cargo.lock
 COPY ./rustprocessor/Cargo.toml Cargo.toml
 
 # this build step will cache your dependencies
