@@ -1,26 +1,12 @@
-/**
- * Copyright 2018 dgc.network
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ------------------------------------------------------------------------------
- */
+// Copyright (c) The dgc.network
+// SPDX-License-Identifier: Apache-2.0
 
 var express = require('express');
 var bodyParser = require('body-parser');
 var router = express.Router();
 var {dgcWalletClient} = require('./dgcWalletClient') 
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlEncodedParser = bodyParser.urlEncoded({ extended: false })
 
 router.get('/', function(req, res){
     res.redirect("/login");
@@ -52,12 +38,21 @@ router.get('/transfer',function(req, res){
 })
 
 //Get Balance View
+//router.get('/balance', function(req, res){
+//    res.render('balancePage');
+//})
+//Get Balance
 router.get('/balance', function(req, res){
-    res.render('balancePage');
+    var userId = req.body.userId;
+    console.log(userId);
+    var client = new dgcWalletClient(userId);
+    var getYourBalance = client.balance();
+    console.log(getYourBalance);
+    getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
 })
 
 //recieve data from login page and save it.
-router.post('/login', urlencodedParser, function(req, res){
+router.post('/login', urlEncodedParser, function(req, res){
     var userid = req.body.userId;
     res.send({done:1, userId: userid, message: "User Successfully Logged in as "+userid  });
 });
