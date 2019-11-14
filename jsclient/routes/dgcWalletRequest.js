@@ -15,6 +15,17 @@ function hash(v) {
   return createHash('sha512').update(v).digest('hex');
 }
 
+/**
+ * Generates a new private key, saving it to memory and storage (encrypted).
+ * Returns both a public key and the encrypted private key.
+ */
+const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
+const context = new secp256k1.Secp256k1Context()
+let privateKey = null
+let publicKey = null
+let encryptedKey = null
+
+
 class dgcWalletRequest {
   //constructor(userid) {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
@@ -27,6 +38,19 @@ class dgcWalletRequest {
     this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
     console.log("Storing at: " + this.address);
   }
+
+// return {"privateKey" : privateKey, "publicKey" : publicKey}
+makePrivateKey() {
+  return Promise.resolve()
+    .then(() => {
+      privateKey = context.newRandomPrivateKey()
+      publicKey = context.getPublicKey(privateKey).asHex()
+      privateKey = privateKey.asHex()
+      return {privateKey,  publicKey}
+    })
+}
+
+
 
   deposit(amount) {
     this._wrap_and_send("deposit", [amount]);
