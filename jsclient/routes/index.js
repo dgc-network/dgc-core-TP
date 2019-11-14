@@ -99,7 +99,10 @@ router.post('/balance', function(req, res){
 router.post('/makePrivateKey', function(req, res){
     let response = auth.makePrivateKey;
     console.log('my privateKey: ', response);
-    //res.send({ privateKey:privateKey, publicKey:publicKey});
+    res.send({
+        privateKey: response.privateKey, 
+        publicKey: response.publicKey
+    });
 })
 
 //Is Registered
