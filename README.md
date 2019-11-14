@@ -83,7 +83,7 @@ Right click on the Docker icon in the notification area, select Settings. Then c
 
 # Usage
 
-Start the pre-built Docker containers in docker-compose.yaml file, located in sawtooth-dgc-wallet directory:
+Start the pre-built Docker containers in docker-compose.yaml file, located in dgc-wallet-TP directory:
 ```bash
 cd dgc-wallet-tp
 docker-compose up
@@ -134,7 +134,7 @@ where,
  <your_prog_language> should be replaced with either `cxx`, `java`, or `py`
 
 # Building and running on OS(without dockers)
-To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS installation and compile dgc-wallet from sources. Below is a sample procedure for python TP/client:
+To run dgc-wallet-TP without dockers, we'll have to use a Ubuntu 16.04 OS installation and compile dgc-wallet from sources. Below is a sample procedure for python TP/client:
 
 1. Install sawtooth on Ubuntu 16.04 LTS x64 machine and setup genesis block. Refer sawtooth app developer's guide [here](https://sawtooth.hyperledger.org/docs/core/releases/latest/app_developers_guide/ubuntu.html)
    - Start the validator, rest-api and settings-tp in separate, new consoles:
@@ -164,7 +164,7 @@ To run sawtooth-dgc-wallet without dockers, we'll have to use a Ubuntu 16.04 OS 
 
 **NOTE** If you prefer using the dgc-wallet client without directory prefix, you could add the `pyclient` directory to your `PATH` environment variable, as shown below:
 
-`export PATH = $PATH:<absolute-path-to-your-cloned-sawtooth-dgc-wallet-dir>/pyclient"`
+`export PATH = $PATH:<absolute-path-to-your-cloned-dgc-wallet-TP-dir>/pyclient"`
 
 # Video Presentation
 A video presentation on YouTube uses this application as an example. It is "Hyperledger Sawtooth Application Development using 'dgcWallet'". It is at https://youtu.be/4VUaZkwJdCc

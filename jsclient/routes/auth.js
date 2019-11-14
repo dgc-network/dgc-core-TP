@@ -3,22 +3,10 @@
 
 'use strict'
 
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-
-const users = require('../db/users')
-const { BadRequest, Unauthorized } = require('./errors')
-const config = require('../system/config')
-
-const SALT_ROUNDS = 10
-const SECRET = config.JWT_SECRET
-
-// dgc API custom
 /**
  * Generates a new private key, saving it to memory and storage (encrypted).
  * Returns both a public key and the encrypted private key.
  */
-const sjcl = require('sjcl')
 const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
 const context = new secp256k1.Secp256k1Context()
 let privateKey = null
@@ -35,7 +23,20 @@ const makePrivateKey = () => {
       return {privateKey,  publicKey}
     })
 }
+/*
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
+const users = require('../db/users')
+const { BadRequest, Unauthorized } = require('./errors')
+const config = require('../system/config')
+
+const SALT_ROUNDS = 10
+const SECRET = config.JWT_SECRET
+
+// dgc API custom
+
+const sjcl = require('sjcl')
 // return {"encryptedKey" : encryptedKey}
 const encryptKey = (args) => {
   return Promise.resolve()
@@ -94,7 +95,7 @@ const authorize = ({ username, password }) => {
     })
     .catch(() => { throw new Unauthorized('Authorization Failed') })
 }
-
+*/
 module.exports = {
   hashPassword,
   makePrivateKey,

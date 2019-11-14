@@ -1,5 +1,5 @@
 {
-  "name": "sawtooth-dgc-wallet-jsprocessor",
+  "name": "dgc-wallet-jsprocessor",
   "version": "1.0.0",
   "description": "A dgc-wallet transaction processor/family using sawtooth js sdk",
   "homepage": "https://github.com/dgc-network/dgc-wallet-tp",
