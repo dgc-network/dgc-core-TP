@@ -95,7 +95,7 @@ const authorize = ({ username, password }) => {
     })
     .catch(() => { throw new Unauthorized('Authorization Failed') })
 }
-*/
+
 module.exports = {
   hashPassword,
   makePrivateKey,
@@ -103,4 +103,8 @@ module.exports = {
   createToken,
   verifyToken,
   authorize
+}
+*/
+module.exports = {
+  makePrivateKey
 }
