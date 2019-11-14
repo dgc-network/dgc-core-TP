@@ -98,7 +98,7 @@ router.post('/balance', function(req, res){
 //makePrivateKey
 router.post('/makePrivateKey', function(req, res){
     let response = auth.makePrivateKey;
-    console.log('my privateKey: ', auth.makePrivateKey);
+    console.log('my privateKey: ', response);
     //res.send({ privateKey:privateKey, publicKey:publicKey});
 })
 
