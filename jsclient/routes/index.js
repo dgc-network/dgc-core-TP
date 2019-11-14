@@ -1,10 +1,11 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
+const _ = require('lodash')
 var express = require('express');
 var bodyParser = require('body-parser');
 var router = express.Router();
-var {dgcWalletClient} = require('./dgcWalletClient') 
+var {dgcWalletRequest} = require('./dgcWalletRequest') 
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -53,8 +54,8 @@ router.post('/login', urlencodedParser, function(req, res){
 router.post('/deposit', function(req, res) {
     var userId = req.body.userId;
     var amount = req.body.money;
-    var dgcWalletClient1 = new dgcWalletClient(userId); 
-    dgcWalletClient1.deposit(amount);    
+    var client = new dgcWalletRequest(userId); 
+    client.deposit(amount);    
     res.send({message:"Amount "+ amount +" successfully added"});
 });
 
@@ -62,8 +63,8 @@ router.post('/deposit', function(req, res) {
 router.post('/withdraw', function(req, res) {
     var userId = req.body.userId;
     var amount = req.body.money;
-    var dgcWalletClient1 = new dgcWalletClient(userId);   
-    dgcWalletClient1.withdraw(amount);     
+    var client = new dgcWalletRequest(userId);   
+    client.withdraw(amount);     
     res.send({  message:"Amount "+ amount +" successfully deducted"});
 });
 
@@ -72,14 +73,14 @@ router.post('/transfer', function(req, res) {
     var userId = req.body.userId;
     var beneficiary = req.body.beneficiary;
     var amount = req.body.money;
-    var client = new dgcWalletClient(userId);
+    var client = new dgcWalletRequest(userId);
     client.transfer(beneficiary, amount);    
     res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
 });
 
 router.post('/balance', function(req, res){
     var userId = req.body.userId;
-    var client = new dgcWalletClient(userId);
+    var client = new dgcWalletRequest(userId);
     var getYourBalance = client.balance();
     console.log(getYourBalance);
     getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
@@ -95,7 +96,6 @@ router.get('/info', function(req, res){
     });
 })
 // Parses the endpoints from an Express router
-const _ = require('lodash')
 const getEndpoints = router => {
     return _.chain(router.stack)
     .filter(layer => layer.route)
@@ -118,7 +118,7 @@ const getEndpoints = router => {
     })
     .flatten()
     .value()
-  }
+}
 const endpointInfo = getEndpoints(router)
 
 module.exports = router;

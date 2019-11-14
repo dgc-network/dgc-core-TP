@@ -1,7 +1,7 @@
 {
   "name": "sawtooth-dgc-wallet",
   "version": "1.0.0",
-  "description": "A frontend client for dgc-wallet application",
+  "description": "A frontend REST api for dgc-wallet application",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"

@@ -15,7 +15,7 @@ function hash(v) {
   return createHash('sha512').update(v).digest('hex');
 }
 
-class dgcWalletClient {
+class dgcWalletRequest {
   constructor(userid) {
     const privateKeyStrBuf = this.getUserPriKey(userid);
     const privateKeyStr = privateKeyStrBuf.toString().trim();
@@ -145,4 +145,4 @@ class dgcWalletClient {
     }
   }
 }
-module.exports.dgcWalletClient = dgcWalletClient;
+module.exports.dgcWalletRequest = dgcWalletRequest;
