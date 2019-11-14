@@ -6,29 +6,29 @@ use sawtooth_sdk::processor::handler::ApplyError;
 use sawtooth_sdk::processor::handler::TransactionContext;
 use sawtooth_sdk::processor::handler::TransactionHandler;
 
-use handler::payload::dgcPayload;
+use handler::payload::DGCPayload;
 use handler::payload::Action;
-use handler::state::dgcState;
+use handler::state::DGCState;
 use handler::state::get_dgc_prefix;
 
-pub struct dgcTransactionHandler {
+pub struct DGCTransactionHandler {
     family_name: String,
     family_versions: Vec<String>,
     namespaces: Vec<String>,
 }
 
 //Transactions in dgc wallet
-trait dgcTransactions {
-    fn deposit(&self, state: &mut dgcState, customer_pubkey: &str, deposit_amount: u32) -> Result<(), ApplyError>;
-    fn withdraw(&self, state: &mut dgcState, customer_pubkey: &str, withdraw_amount: u32) -> Result<(), ApplyError>;
-    fn transfer(&self, state: &mut dgcState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
-    fn balance(&self, state: &mut dgcState, customer_pubkey: &str) -> Result<u32, ApplyError>;
+trait DGCTransactions {
+    fn deposit(&self, state: &mut DGCState, customer_pubkey: &str, deposit_amount: u32) -> Result<(), ApplyError>;
+    fn withdraw(&self, state: &mut DGCState, customer_pubkey: &str, withdraw_amount: u32) -> Result<(), ApplyError>;
+    fn transfer(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
+    fn balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
 }
 
-impl dgcTransactionHandler {
+impl DGCTransactionHandler {
     
-    pub fn new() -> dgcTransactionHandler {
-        dgcTransactionHandler {
+    pub fn new() -> DGCTransactionHandler {
+        DGCTransactionHandler {
             family_name: String::from("dgc-wallet"),
             family_versions: vec![String::from("1.0")],
             namespaces: vec![String::from(get_dgc_prefix().to_string())],
@@ -37,7 +37,7 @@ impl dgcTransactionHandler {
         
 }
 
-impl TransactionHandler for dgcTransactionHandler {
+impl TransactionHandler for DGCTransactionHandler {
     fn family_name(&self) -> String {
         self.family_name.clone()
     }
@@ -65,7 +65,7 @@ impl TransactionHandler for dgcTransactionHandler {
             }
         };
         
-        let payload = dgcPayload::new(request.get_payload());
+        let payload = DGCPayload::new(request.get_payload());
         let payload = match payload {
             Err(e) => return Err(e),
             Ok(payload) => payload,
@@ -79,7 +79,7 @@ impl TransactionHandler for dgcTransactionHandler {
             }
         };
         
-        let mut state = dgcState::new(context);
+        let mut state = DGCState::new(context);
         
         info!(
             "payload: {} {}",
@@ -127,9 +127,9 @@ impl TransactionHandler for dgcTransactionHandler {
     }    
 }
 
-impl dgcTransactions for dgcTransactionHandler {
+impl DGCTransactions for DGCTransactionHandler {
 
-    fn balance(&self, state: &mut dgcState, customer_pubkey: &str) -> Result<u32, ApplyError> {
+    fn balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError> {
     
         let current_balance: u32 = match state.get(customer_pubkey) {
             Ok(Some(v)) => v,
@@ -143,7 +143,7 @@ impl dgcTransactions for dgcTransactionHandler {
         Ok(current_balance)
     }
 
-    fn deposit(&self, state: &mut dgcState, customer_pubkey: &str, deposit_amount: u32) -> Result<(), ApplyError> {
+    fn deposit(&self, state: &mut DGCState, customer_pubkey: &str, deposit_amount: u32) -> Result<(), ApplyError> {
                    
         let current_balance: u32 = self.balance(state, customer_pubkey)?;
                       
@@ -156,7 +156,7 @@ impl dgcTransactions for dgcTransactionHandler {
     
     }
 
-    fn withdraw(&self, state: &mut dgcState, customer_pubkey: &str, withdraw_amount: u32) -> Result<(), ApplyError> {
+    fn withdraw(&self, state: &mut DGCState, customer_pubkey: &str, withdraw_amount: u32) -> Result<(), ApplyError> {
                    
         let current_balance: u32 = self.balance(state, customer_pubkey)?;                    
         
@@ -177,7 +177,7 @@ impl dgcTransactions for dgcTransactionHandler {
     
     }
     
-    fn transfer(&self, state: &mut dgcState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError> {
+    fn transfer(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError> {
                    
         //Get balance of customer
         let current_balance: u32 = self.balance(state, customer_pubkey)?;                                        

@@ -29,15 +29,15 @@ impl fmt::Display for Action {
     }
 }
 
-pub struct dgcPayload {
+pub struct DGCPayload {
     action: Action,    
     value: u32,
     beneficiary_pubkey: Option<String>,
 }
 
-impl dgcPayload {
+impl DGCPayload {
 
-    pub fn new(payload_data: &[u8]) -> Result<Option<dgcPayload>, ApplyError> {
+    pub fn new(payload_data: &[u8]) -> Result<Option<DGCPayload>, ApplyError> {
     
         let payload_string = match str::from_utf8(&payload_data) {
             Ok(s) => s,
@@ -107,7 +107,7 @@ impl dgcPayload {
             
         }        
         
-        let payload = dgcPayload {
+        let payload = DGCPayload {
             action: action,
             value: value,
             beneficiary_pubkey: beneficiary_pubkey,

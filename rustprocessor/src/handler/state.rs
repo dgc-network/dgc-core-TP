@@ -17,13 +17,13 @@ pub fn get_dgc_prefix() -> String {
 }
 
 //dgc-wallet State
-pub struct dgcState<'a> {
+pub struct DGCState<'a> {
     context: &'a mut TransactionContext,
 }
 
-impl<'a> dgcState<'a> {
-    pub fn new(context: &'a mut TransactionContext) -> dgcState {
-        dgcState {
+impl<'a> DGCState<'a> {
+    pub fn new(context: &'a mut TransactionContext) -> DGCState {
+        DGCState {
             context: context,
         }
     }
@@ -35,7 +35,7 @@ impl<'a> dgcState<'a> {
     }
     
     pub fn get(&mut self, name: &str) -> Result<Option<u32>, ApplyError> {
-        let address = dgcState::calculate_address(name);
+        let address = DGCState::calculate_address(name);
         let d = self.context.get_state(vec![address.clone()])?;
         match d {
             Some(packed) => {                
@@ -60,7 +60,7 @@ impl<'a> dgcState<'a> {
     pub fn set(&mut self, name: &str, value: u32) -> Result<(), ApplyError> {
        
         let mut sets = HashMap::new();
-        sets.insert(dgcState::calculate_address(name), value.to_string().into_bytes());
+        sets.insert(DGCState::calculate_address(name), value.to_string().into_bytes());
         self.context
             .set_state(sets)
             .map_err(|err| ApplyError::InternalError(format!("{}", err)))?;

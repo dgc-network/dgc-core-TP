@@ -19,7 +19,7 @@ use log4rs::encode::pattern::PatternEncoder;
 
 use sawtooth_sdk::processor::TransactionProcessor;
 
-use handler::handler::dgcTransactionHandler;
+use handler::handler::DGCTransactionHandler;
 
 use std::process;
 
@@ -73,7 +73,7 @@ fn main() {
         }
     }
 
-    let handler = dgcTransactionHandler::new();
+    let handler = DGCTransactionHandler::new();
     let mut processor = TransactionProcessor::new(endpoint);
 
     info!("Console logging level: {}", console_log_level);
