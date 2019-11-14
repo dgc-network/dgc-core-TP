@@ -16,11 +16,12 @@ function hash(v) {
 }
 
 class dgcWalletRequest {
-  constructor(userid) {
-    const privateKeyStrBuf = this.getUserPriKey(userid);
-    const privateKeyStr = privateKeyStrBuf.toString().trim();
+  //constructor(userid) {
+    //const privateKeyStrBuf = this.getUserPriKey(userid);
+    //const privateKeyStr = privateKeyStrBuf.toString().trim();
+    //const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+  constructor(privateKey) {
     const context = createContext('secp256k1');
-    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
     this.signer = new CryptoFactory(context).newSigner(privateKey);
     this.publicKey = this.signer.getPublicKey().asHex();
     this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);

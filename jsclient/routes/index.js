@@ -6,6 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var router = express.Router();
 var {dgcWalletRequest} = require('./dgcWalletRequest') 
+const auth = require('./auth')
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -52,38 +53,63 @@ router.post('/login', urlencodedParser, function(req, res){
 
 //function to deposit amount in server
 router.post('/deposit', function(req, res) {
-    var userId = req.body.userId;
+    //var userId = req.body.userId;
+    //var client = new dgcWalletRequest(userId); 
     var amount = req.body.money;
-    var client = new dgcWalletRequest(userId); 
+    var privateKey = req.body.privateKey;
+    var client = new dgcWalletRequest(privateKey);
     client.deposit(amount);    
     res.send({message:"Amount "+ amount +" successfully added"});
 });
 
 //function to withdraw
 router.post('/withdraw', function(req, res) {
-    var userId = req.body.userId;
+    //var userId = req.body.userId;
+    //var client = new dgcWalletRequest(userId);   
     var amount = req.body.money;
-    var client = new dgcWalletRequest(userId);   
+    var privateKey = req.body.privateKey;
+    var client = new dgcWalletRequest(privateKey);
     client.withdraw(amount);     
     res.send({  message:"Amount "+ amount +" successfully deducted"});
 });
 
 //function to transfer money to another user
 router.post('/transfer', function(req, res) {
-    var userId = req.body.userId;
+    //var userId = req.body.userId;
+    //var client = new dgcWalletRequest(userId);
     var beneficiary = req.body.beneficiary;
     var amount = req.body.money;
-    var client = new dgcWalletRequest(userId);
+    var privateKey = req.body.privateKey;
+    var client = new dgcWalletRequest(privateKey);
     client.transfer(beneficiary, amount);    
     res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
 });
 
 router.post('/balance', function(req, res){
-    var userId = req.body.userId;
-    var client = new dgcWalletRequest(userId);
+    //var userId = req.body.userId;
+    //var client = new dgcWalletRequest(userId);
+    var privateKey = req.body.privateKey;
+    var client = new dgcWalletRequest(privateKey);
     var getYourBalance = client.balance();
     console.log(getYourBalance);
     getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
+})
+
+//makePrivateKey
+router.post('/makePrivateKey', function(req, res){
+    let response = auth.makePrivateKey;
+    console.log(response);
+    res.send({ privateKey:response.privateKey, publicKey:response.publicKey});
+})
+
+//Is Registered
+router.get('/isregistered', function(req, res){
+    var userId = req.body.userId;
+    res.send({
+        //pubkey: batcher.getPublicKey(),
+        //mapsApiKey: config.MAPS_API_KEY,
+        endpoints: endpointInfo
+    });
 })
 
 //Get Info
