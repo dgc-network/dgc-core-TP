@@ -35,9 +35,14 @@ class dgcWalletRequest {
     //const context = createContext('secp256k1');
     //this.signer = new CryptoFactory(context).newSigner(privateKey);
     //this.publicKey = this.signer.getPublicKey().asHex();
-    this.publicKey = context.getPublicKey(privateKey).asHex()
-    this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
-    console.log("Storing at: " + this.address);
+    if (null == privateKey)
+      console.log("privateKey is null");
+    else {
+      this.publicKey = context.getPublicKey(privateKey).asHex()
+      this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
+      console.log("Storing at: " + this.address);
+  
+    }
   }
 
   makePrivateKey() {
