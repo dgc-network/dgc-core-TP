@@ -39,16 +39,15 @@ class dgcWalletRequest {
     console.log("Storing at: " + this.address);
   }
 
-// return {"privateKey" : privateKey, "publicKey" : publicKey}
-makePrivateKey() {
-  return Promise.resolve()
+  makePrivateKey() {
+    return Promise.resolve()
     .then(() => {
       privateKey = context.newRandomPrivateKey()
       publicKey = context.getPublicKey(privateKey).asHex()
       privateKey = privateKey.asHex()
-      return {privateKey,  publicKey}
+      return privateKey
     })
-}
+  }
 
 
 

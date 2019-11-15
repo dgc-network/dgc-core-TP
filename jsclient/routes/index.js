@@ -102,8 +102,8 @@ router.post('/makePrivateKey', function(req, res){
     var response = client.makePrivateKey();
     console.log('my privateKey: ', response);
     res.send({
-        privateKey: response.privateKey, 
-        publicKey: response.publicKey
+        privateKey: response.privateKey
+        //publicKey: response.publicKey
     });
 })
 
