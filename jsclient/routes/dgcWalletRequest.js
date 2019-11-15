@@ -31,17 +31,16 @@ class dgcWalletRequest {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
     //const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-  constructor(privateKey) {
     //const context = createContext('secp256k1');
     //this.signer = new CryptoFactory(context).newSigner(privateKey);
     //this.publicKey = this.signer.getPublicKey().asHex();
+  constructor(privateKey) {
     if (null == privateKey)
       console.log("privateKey is null");
     else {
       this.publicKey = context.getPublicKey(privateKey).asHex()
       this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
-      console.log("Storing at: " + this.address);
-  
+      console.log("Storing at: " + this.address);  
     }
   }
 
@@ -54,7 +53,9 @@ class dgcWalletRequest {
     //})
   }
 
-
+  getPublicKey() {
+      return this.publicKey
+  }
 
   deposit(amount) {
     this._wrap_and_send("deposit", [amount]);
