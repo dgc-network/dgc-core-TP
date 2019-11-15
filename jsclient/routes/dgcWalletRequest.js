@@ -33,8 +33,9 @@ class dgcWalletRequest {
     //const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
   constructor(privateKey) {
     //const context = createContext('secp256k1');
-    this.signer = new CryptoFactory(context).newSigner(privateKey);
-    this.publicKey = this.signer.getPublicKey().asHex();
+    //this.signer = new CryptoFactory(context).newSigner(privateKey);
+    //this.publicKey = this.signer.getPublicKey().asHex();
+    this.publicKey = context.getPublicKey(privateKey).asHex()
     this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
     console.log("Storing at: " + this.address);
   }
@@ -43,7 +44,6 @@ class dgcWalletRequest {
     return Promise.resolve()
     .then(() => {
       privateKey = context.newRandomPrivateKey()
-      publicKey = context.getPublicKey(privateKey).asHex()
       privateKey = privateKey.asHex()
       return privateKey
     })
