@@ -6,7 +6,7 @@ const {CryptoFactory, createContext } = require('sawtooth-sdk/signing')
 const protobuf = require('sawtooth-sdk/protobuf')
 const fs = require('fs')
 const fetch = require('node-fetch');
-const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
+//const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
 const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 
 FAMILY_NAME='dgc-wallet'
@@ -21,9 +21,9 @@ function hash(v) {
  */
 const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
 const context = new secp256k1.Secp256k1Context()
-let privateKey = null
-let publicKey = null
-let encryptedKey = null
+//let privateKey = null
+//let publicKey = null
+//let encryptedKey = null
 
 
 class dgcWalletRequest {
@@ -32,7 +32,7 @@ class dgcWalletRequest {
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
     //const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
   constructor(privateKey) {
-    const context = createContext('secp256k1');
+    //const context = createContext('secp256k1');
     this.signer = new CryptoFactory(context).newSigner(privateKey);
     this.publicKey = this.signer.getPublicKey().asHex();
     this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
