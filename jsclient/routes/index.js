@@ -98,31 +98,20 @@ router.post('/balance', function(req, res){
 //makePrivateKey
 router.post('/makePrivateKey', function(req, res){
     var client = new dgcWalletRequest(req.body.privateKey);
-    //var response = client.makePrivateKey();
-    //console.log('privateKey: ', response);
-    res.send({
-        privateKey: client.makePrivateKey()
-    });
+    res.send({privateKey: client.makePrivateKey()});
 })
 
 //getPublicKey
 router.post('/getPublicKey', function(req, res){
     var client = new dgcWalletRequest(req.body.privateKey);
-    var response = client.getPublicKey();
-    console.log('publicKey: ', response);
-    res.send({
-        publicKey: response
-    });
+    res.send({publicKey: client.getPublicKey()});
 })
 
 //Is Registered
 router.get('/isregistered', function(req, res){
-    var userId = req.body.userId;
-    res.send({
-        //pubkey: batcher.getPublicKey(),
-        //mapsApiKey: config.MAPS_API_KEY,
-        endpoints: endpointInfo
-    });
+    if (null == req.body.privateKey) {
+        res.send({message: 'You have not the privateKey'})
+    }
 })
 
 //Get Info
