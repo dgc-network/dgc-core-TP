@@ -49,6 +49,7 @@ class dgcWalletRequest {
     //.then(() => {
       let privateKey = context.newRandomPrivateKey()
       privateKey = privateKey.asHex()
+      publicKey = context.getPublicKey(privateKey).asHex()
       return privateKey
     //})
   }

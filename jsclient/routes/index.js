@@ -6,7 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var router = express.Router();
 var {dgcWalletRequest} = require('./dgcWalletRequest') 
-const auth = require('./auth')
+//const auth = require('./auth')
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -97,14 +97,11 @@ router.post('/balance', function(req, res){
 
 //makePrivateKey
 router.post('/makePrivateKey', function(req, res){
-    //let response = auth.makePrivateKey;
-    var privateKey = req.body.privateKey;
     var client = new dgcWalletRequest(req.body.privateKey);
-    var response = client.makePrivateKey();
-    console.log('privateKey: ', response);
+    //var response = client.makePrivateKey();
+    //console.log('privateKey: ', response);
     res.send({
-        privateKey: response
-        //publicKey: response.publicKey
+        privateKey: client.makePrivateKey()
     });
 })
 
