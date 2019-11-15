@@ -48,7 +48,7 @@ class dgcWalletRequest {
   makePrivateKey() {
     //return Promise.resolve()
     //.then(() => {
-      privateKey = context.newRandomPrivateKey()
+      let privateKey = context.newRandomPrivateKey()
       privateKey = privateKey.asHex()
       return privateKey
     //})
