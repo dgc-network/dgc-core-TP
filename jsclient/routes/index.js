@@ -98,6 +98,7 @@ router.post('/balance', function(req, res){
 //makePrivateKey
 router.post('/makePrivateKey', function(req, res){
     //let response = auth.makePrivateKey;
+    var privateKey = req.body.privateKey;
     var client = new dgcWalletRequest(privateKey);
     var response = client.makePrivateKey();
     console.log('my privateKey: ', response);
