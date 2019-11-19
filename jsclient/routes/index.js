@@ -107,6 +107,12 @@ router.post('/getPublicKey', function(req, res){
     res.send({publicKey: client.getPublicKey()});
 })
 
+//dgcBalance
+router.post('/dgcBalance', function(req, res){
+    var client = new dgcWalletRequest(req.body.privateKey);
+    res.send({dgcBalance: client.dgcBalance()});
+})
+
 //Is Registered
 router.get('/isregistered', function(req, res){
     if (null == req.body.privateKey) {

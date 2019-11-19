@@ -55,6 +55,11 @@ class dgcWalletRequest {
     return this.publicKey
   }
 
+  dgcBalance() {
+    let amount = this._send_to_rest_api(null);
+    return amount;
+  }
+
   deposit(amount) {
     this._wrap_and_send("deposit", [amount]);
   }
