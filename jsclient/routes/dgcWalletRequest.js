@@ -31,7 +31,7 @@ class dgcWalletRequest {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
   constructor(privateKeyStr) {
-    if (null == privateKey)
+    if (null == privateKeyStr)
       console.log("privateKey is null");
     else {
       //this.publicKey = context.getPublicKey(privateKey).asHex()
