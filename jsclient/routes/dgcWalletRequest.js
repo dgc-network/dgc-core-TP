@@ -22,7 +22,7 @@ function hash(v) {
 const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
 const context = new secp256k1.Secp256k1Context()
 //let privateKey = null
-//let publicKey = null
+let publicKey = null
 //let encryptedKey = null
 
 
