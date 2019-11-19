@@ -31,14 +31,14 @@ class dgcWalletRequest {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
   constructor(privateKeyStr) {
-    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-    const context = createContext('secp256k1');
-    this.signer = new CryptoFactory(context).newSigner(privateKey);
-    this.publicKey = this.signer.getPublicKey().asHex();
     if (null == privateKey)
       console.log("privateKey is null");
     else {
       //this.publicKey = context.getPublicKey(privateKey).asHex()
+      const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+      //const context = createContext('secp256k1');
+      this.signer = new CryptoFactory(context).newSigner(privateKey);
+      this.publicKey = this.signer.getPublicKey().asHex();
       this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
       console.log("Storing at: " + this.address);  
     }
