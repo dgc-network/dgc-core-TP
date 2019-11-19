@@ -30,8 +30,8 @@ class dgcWalletRequest {
   //constructor(userid) {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
-  constructor(privateKey) {
-    //const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+  constructor(privateKeyStr) {
+    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
     const context = createContext('secp256k1');
     this.signer = new CryptoFactory(context).newSigner(privateKey);
     this.publicKey = this.signer.getPublicKey().asHex();
