@@ -6,7 +6,6 @@ const {CryptoFactory, createContext } = require('sawtooth-sdk/signing')
 const protobuf = require('sawtooth-sdk/protobuf')
 const fs = require('fs')
 const fetch = require('node-fetch');
-const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
 const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 
 FAMILY_NAME='dgc-wallet'
@@ -19,8 +18,10 @@ function hash(v) {
  * Generates a new private key, saving it to memory and storage (encrypted).
  * Returns both a public key and the encrypted private key.
  */
+const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
 const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
 const context = new secp256k1.Secp256k1Context()
+//const context = createContext('secp256k1');
 //let privateKey = null
 //let publicKey = null
 //let encryptedKey = null
@@ -34,9 +35,7 @@ class dgcWalletRequest {
     if (null == privateKeyStr)
       console.log("privateKey is null");
     else {
-      //this.publicKey = context.getPublicKey(privateKey).asHex()
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-      //const context = createContext('secp256k1');
       this.signer = new CryptoFactory(context).newSigner(privateKey);
       this.publicKey = this.signer.getPublicKey().asHex();
       this.address = hash("dgc-wallet").substr(0, 6) + hash(this.publicKey).substr(0, 64);
@@ -51,13 +50,16 @@ class dgcWalletRequest {
   }
 
   getPublicKey() {
-    //publicKey = context.getPublicKey(privateKey).asHex()
     return this.publicKey
   }
 
   dgcBalance() {
     let amount = this._send_to_rest_api(null);
     return amount;
+  }
+
+  dgcTransfer(user2, amount) {
+    this._wrap_and_send("transfer", [amount, user2]);
   }
 
   deposit(amount) {

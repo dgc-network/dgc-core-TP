@@ -95,35 +95,48 @@ router.post('/balance', function(req, res){
     getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
 })
 
-//makePrivateKey
+// Copyright (c) The dgc.network
+// makePrivateKey
 router.post('/makePrivateKey', function(req, res){
     var client = new dgcWalletRequest(req.body.privateKey);
     res.send({privateKey: client.makePrivateKey()});
 })
 
-//getPublicKey
+// getPublicKey
 router.post('/getPublicKey', function(req, res){
     var client = new dgcWalletRequest(req.body.privateKey);
     res.send({publicKey: client.getPublicKey()});
 })
 
-//dgcBalance
+// dgcBalance
 router.post('/dgcBalance', function(req, res){
     var client = new dgcWalletRequest(req.body.privateKey);
     //res.send({dgcBalance: client.dgcBalance()});
     var getBalance = client.dgcBalance();
-    console.log(getBalance);
+    //console.log(getBalance);
     getBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
 })
 
-//Is Registered
-router.get('/isregistered', function(req, res){
+// Transfer money to another user
+router.post('/dgcTransfer', function(req, res) {
+    //var userId = req.body.userId;
+    //var client = new dgcWalletRequest(userId);
+    var beneficiary = req.body.beneficiary;
+    var amount = req.body.money;
+    //var privateKey = req.body.privateKey;
+    var client = new dgcWalletRequest(req.body.privateKey);
+    client.dgcTransfer(beneficiary, amount);    
+    res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
+});
+
+// Is Registered
+router.get('/isRegistered', function(req, res){
     if (null == req.body.privateKey) {
         res.send({message: 'You have not the privateKey'})
     }
 })
 
-//Get Info
+// Get Info
 router.get('/info', function(req, res){
     var userId = req.body.userId;
     res.send({
@@ -132,6 +145,7 @@ router.get('/info', function(req, res){
         endpoints: endpointInfo
     });
 })
+
 // Parses the endpoints from an Express router
 const getEndpoints = router => {
     return _.chain(router.stack)
