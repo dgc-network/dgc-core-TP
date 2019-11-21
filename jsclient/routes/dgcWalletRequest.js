@@ -33,7 +33,7 @@ class dgcWalletRequest {
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
   constructor(privateKeyStr) {
     if (null == privateKeyStr)
-      console.log("privateKey is null");
+      console.log("privateKey is empty");
     else {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
       this.signer = new CryptoFactory(context).newSigner(privateKey);

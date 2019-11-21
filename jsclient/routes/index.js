@@ -105,7 +105,7 @@ router.post('/makePrivateKey', function(req, res){
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
     if (null == req.body.privateKey) {
-        res.send({error: "privateKey is null"});
+        res.send({error: "privateKey is empty"});
     } else {
         var client = new dgcWalletRequest(req.body.privateKey);
         res.send({publicKey: client.getPublicKey()});
@@ -114,20 +114,34 @@ router.post('/getPublicKey', function(req, res){
 
 // dgcBalance
 router.post('/dgcBalance', function(req, res){
-    var client = new dgcWalletRequest(req.body.privateKey);
-    //res.send({dgcBalance: client.dgcBalance()});
-    var getBalance = client.dgcBalance();
-    //console.log(getBalance);
-    getBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
+    if (null == req.body.privateKey) {
+        res.send({error: "privateKey is empty"});
+    } else {
+        var client = new dgcWalletRequest(req.body.privateKey);
+        var getBalance = client.dgcBalance();
+        getBalance.then(result => {
+            res.send({ balance: result, message:"Amount " + result + " available"});
+        });
+    }
 })
 
 // Transfer money to another user
 router.post('/dgcTransfer', function(req, res) {
-    var beneficiary = req.body.beneficiary;
-    var amount = req.body.money;
-    var client = new dgcWalletRequest(req.body.privateKey);
-    client.dgcTransfer(beneficiary, amount);    
-    res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
+    if (null == req.body.privateKey) {
+        res.send({error: "privateKey is empty"});
+    } else if (null == req.body.beneficiary) {
+        res.send({error: "beneficiary is empty"});
+    } else {
+        var client = new dgcWalletRequest(req.body.privateKey);
+        var getBalance = client.dgcBalance();
+        getBalance.then(result => {
+            res.send({ balance: result, message:"Amount " + result + " available"});
+        });
+        var beneficiary = req.body.beneficiary;
+        var amount = req.body.money;
+        client.dgcTransfer(beneficiary, amount);
+        res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
+    }
 });
 
 // Is Registered
