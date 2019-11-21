@@ -136,7 +136,7 @@ router.post('/dgcTransfer', function(req, res) {
         var getBalance = client.dgcBalance();
         getBalance.then(result => {
             if (req.body.DGC > result ) {
-                res.send({ balance: result, message:"DGC Balance " + result + " is not enough"});
+                res.send({ balance: result, message:"your DGC balance is not enough"});
             } else {
                 var beneficiary = req.body.beneficiary;
                 var amount = req.body.DGC;
