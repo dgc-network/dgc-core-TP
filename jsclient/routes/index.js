@@ -182,10 +182,17 @@ router.post('/sellDGC', function(req, res) {
             if (req.body.DGC > result ) {
                 res.send({ balance: result, message:"your DGC balance is not enough"});
             } else {
-                let buyingLisy = client.dgcBuyingList();
-                var beneficiary = req.body.beneficiary;
-                var amount = req.body.DGC;
-                client.buyDGC(beneficiary, amount);
+                var sellAmount = req.body.DGC;
+                let buyingList = client.dgcBuyingList();
+                for (i = 0; i < buyingList.length; i++) {
+                    if (sellAmount > buyingList[i].DGC) {
+                        var beneficiary = buyingList[i].beneficiary;
+                        client.buyDGC(beneficiary, buyingList[i].DGC);
+                        sellAmount = sellAmount - buyingList[i].DGC;
+                    } else {
+
+                    }
+                }
                 res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
             }
         });

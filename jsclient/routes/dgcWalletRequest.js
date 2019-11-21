@@ -62,6 +62,15 @@ class dgcWalletRequest {
     this._wrap_and_send("transfer", [amount, user2]);
   }
 
+  buyDGC(user2, amount) {
+    this._wrap_and_send("buyDGC", [amount, user2]);
+  }
+
+  sellDGC(user2, amount) {
+    this._wrap_and_send("sellDGC", [amount, user2]);
+  }
+
+/*
   deposit(amount) {
     this._wrap_and_send("deposit", [amount]);
   }
@@ -92,7 +101,7 @@ class dgcWalletRequest {
     var userpubkeyfile = '/root/.sawtooth/keys/'+userid+'.pub';
     return fs.readFileSync(userpubkeyfile);
   }
-
+*/
   _wrap_and_send(action,values){
     var payload = ''
     const address = this.address;
@@ -108,8 +117,7 @@ class dgcWalletRequest {
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
       payload = action+","+values[0]+","+pubKeyStr;
-    } 
-    else {
+    } else {
 	    payload = action+","+values[0];
     }	
     var enc = new TextEncoder('utf8');
@@ -163,8 +171,7 @@ class dgcWalletRequest {
       .catch((error) => {
         console.error(error);
       }); 	
-    }
-    else{
+    } else {
       fetch('http://rest-api:8008/batches', {
  	      method: 'POST',
         headers: {
