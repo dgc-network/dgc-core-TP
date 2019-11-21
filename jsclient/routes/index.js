@@ -135,12 +135,15 @@ router.post('/dgcTransfer', function(req, res) {
         var client = new dgcWalletRequest(req.body.privateKey);
         var getBalance = client.dgcBalance();
         getBalance.then(result => {
-            res.send({ balance: result, message:"Amount " + result + " available"});
+            if (req.body.DGC > result ) {
+                res.send({ balance: result, message:"DGC Balance " + result + " is not enough"});
+            } else {
+                var beneficiary = req.body.beneficiary;
+                var amount = req.body.DGC;
+                client.dgcTransfer(beneficiary, amount);
+                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+            }
         });
-        var beneficiary = req.body.beneficiary;
-        var amount = req.body.money;
-        client.dgcTransfer(beneficiary, amount);
-        res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
     }
 });
 
