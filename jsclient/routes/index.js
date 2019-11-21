@@ -125,7 +125,7 @@ router.post('/dgcBalance', function(req, res){
     }
 })
 
-// Transfer money to another user
+// Transfer DGC to another user
 router.post('/dgcTransfer', function(req, res) {
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
@@ -141,6 +141,51 @@ router.post('/dgcTransfer', function(req, res) {
                 var beneficiary = req.body.beneficiary;
                 var amount = req.body.DGC;
                 client.dgcTransfer(beneficiary, amount);
+                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+            }
+        });
+    }
+});
+
+// Buy DGC from marketplace
+router.post('/buyDGC', function(req, res) {
+    if (null == req.body.privateKey) {
+        res.send({error: "privateKey is empty"});
+    } else if (null == req.body.currency) {
+        res.send({error: "Currency cannot be empty"});
+    } else {
+        var client = new dgcWalletRequest(req.body.privateKey);
+        var getBalance = client.dgcBalance();
+        getBalance.then(result => {
+            if (req.body.DGC > result ) {
+                res.send({ balance: result, message:"your DGC balance is not enough"});
+            } else {
+                var beneficiary = req.body.beneficiary;
+                var amount = req.body.DGC;
+                client.dgcTransfer(beneficiary, amount);
+                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+            }
+        });
+    }
+});
+
+// sell DGC to marketplace
+router.post('/sellDGC', function(req, res) {
+    if (null == req.body.privateKey) {
+        res.send({error: "privateKey is empty"});
+    } else if (null == req.body.currency) {
+        res.send({error: "Currency cannot be empty"});
+    } else {
+        var client = new dgcWalletRequest(req.body.privateKey);
+        var getBalance = client.dgcBalance();
+        getBalance.then(result => {
+            if (req.body.DGC > result ) {
+                res.send({ balance: result, message:"your DGC balance is not enough"});
+            } else {
+                let buyingLisy = client.dgcBuyingList();
+                var beneficiary = req.body.beneficiary;
+                var amount = req.body.DGC;
+                client.buyDGC(beneficiary, amount);
                 res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
             }
         });
