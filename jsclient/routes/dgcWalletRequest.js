@@ -101,8 +101,9 @@ class dgcWalletRequest {
     var outputAddressList = [address];
     if (action === "transfer") {
 	    //const pubKeyStrBuf = this.getUserPubKey(values[1]);
-	    const pubKeyStrBuf = values[1];
-      const pubKeyStr = pubKeyStrBuf.toString().trim();
+      //const pubKeyStr = pubKeyStrBuf.toString().trim();
+      console.log(values[1]);
+	    const pubKeyStr = values[1];
       var toAddress = hash("dgc-wallet").substr(0, 6) + hash(pubKeyStr).substr(0, 64);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
