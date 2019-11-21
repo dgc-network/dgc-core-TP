@@ -57,9 +57,6 @@ class dgcWalletRequest {
 
   dgcBalance() {
     let amount = this._send_to_rest_api(null);
-    if (null == amount) {
-      amount = 0;
-    }
     return amount;
   }
 
