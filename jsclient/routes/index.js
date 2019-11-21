@@ -104,8 +104,12 @@ router.post('/makePrivateKey', function(req, res){
 
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
-    var client = new dgcWalletRequest(req.body.privateKey);
-    res.send({publicKey: client.getPublicKey()});
+    if (null == req.body.privateKey) {
+        res.send({error: "privateKey is null"});
+    } else {
+        var client = new dgcWalletRequest(req.body.privateKey);
+        res.send({publicKey: client.getPublicKey()});
+    }
 })
 
 // dgcBalance
@@ -119,11 +123,8 @@ router.post('/dgcBalance', function(req, res){
 
 // Transfer money to another user
 router.post('/dgcTransfer', function(req, res) {
-    //var userId = req.body.userId;
-    //var client = new dgcWalletRequest(userId);
     var beneficiary = req.body.beneficiary;
     var amount = req.body.money;
-    //var privateKey = req.body.privateKey;
     var client = new dgcWalletRequest(req.body.privateKey);
     client.dgcTransfer(beneficiary, amount);    
     res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
