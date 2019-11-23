@@ -182,4 +182,3 @@ More ways you can contribute:
 
 # License
 This example and Hyperledger Sawtooth software are licensed under the [Apache License Version 2.0](LICENSE) software license.
-# dgc-wallet-tp
