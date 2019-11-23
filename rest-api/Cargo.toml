@@ -8,7 +8,10 @@ authors = ["dgc.network"]
 description = "dgc-core REST api"
 
 [dependencies]
-tide = "0.1.0"
-http = "0.1"
-serde = "1.0.80"
-serde_derive = "1.0.80"
+nickel = "*"
+mongodb = "*"
+bson = "*"
+rustc-serialize = "*"
+hyper = "*"
+jwt = "*"
+rust-crypto = "*"

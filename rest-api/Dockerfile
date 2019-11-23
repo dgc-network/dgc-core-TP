@@ -36,7 +36,7 @@ RUN curl https://sh.rustup.rs -sSf > /usr/bin/rustup-init \
  && chmod +x /usr/bin/rustup-init \
  && rustup-init -y
 
-ENV PATH=$PATH:/project/dgc-core/processor/bin:/protoc3/bin:/root/.cargo/bin \
+ENV PATH=$PATH:/project/dgc-core/rest-api/bin:/protoc3/bin:/root/.cargo/bin \
     CARGO_INCREMENTAL=0
 
 RUN rustup component add rustfmt-preview
