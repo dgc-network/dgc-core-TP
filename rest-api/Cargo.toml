@@ -6,12 +6,9 @@ name = "dgc-core-rest-api"
 version = "1.0.0"
 authors = ["dgc.network"]
 description = "dgc-core REST api"
+edition = "2018"
 
 [dependencies]
-nickel = "*"
-mongodb = "*"
-bson = "*"
-rustc-serialize = "*"
-hyper = "*"
-jwt = "*"
-rust-crypto = "*"
+rouille = "3.0.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
