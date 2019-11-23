@@ -47,13 +47,13 @@ RUN curl https://sh.rustup.rs -sSf > /usr/bin/rustup-init \
  && chmod +x /usr/bin/rustup-init \
  && rustup-init -y
 
-ENV PATH=$PATH:/project/dgc-wallet/rustprocessor/bin:/protoc3/bin:/root/.cargo/bin \
+ENV PATH=$PATH:/project/dgc-core/processor/bin:/protoc3/bin:/root/.cargo/bin \
     CARGO_INCREMENTAL=0
 
 RUN rustup component add rustfmt-preview
 
 
-WORKDIR /project/dgc-wallet/rustprocessor
+WORKDIR /project/dgc-core/processor
 
 ###########################################################################
 # Below lines are workaround to avoid rebuilding dependencies every time 
@@ -61,24 +61,24 @@ WORKDIR /project/dgc-wallet/rustprocessor
 
 # create a new empty shell project
 RUN USER=root cargo new --bin my-project
-WORKDIR /project/dgc-wallet/rustprocessor/my-project
+WORKDIR /project/dgc-core/processor/my-project
 
 # copy over your manifests 
 #(context passed from docker yaml file in parent directory)
-COPY ./rustprocessor/Cargo.lock Cargo.lock
-COPY ./rustprocessor/Cargo.toml Cargo.toml
+COPY ./processor/Cargo.lock Cargo.lock
+COPY ./processor/Cargo.toml Cargo.toml
 
 # this build step will cache your dependencies
 RUN cargo build --release
 RUN rm src/*.rs
 
 # copy your source tree
-COPY ./rustprocessor/src ./src
+COPY ./processor/src ./src
 ###########################################################################
 
-WORKDIR /project/dgc-wallet/rustprocessor
+WORKDIR /project/dgc-core/processor
 
-#CMD cd rustprocessor \
+#CMD cd processor \
 CMD echo "\033[0;32m--- Building dgc-wallet-rust-tp ---\n\033[0m" \
  && rm -rf ./bin/ \
  && mkdir -p ./bin/ \

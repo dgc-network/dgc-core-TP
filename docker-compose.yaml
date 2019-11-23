@@ -8,7 +8,7 @@ services:
     container_name: dgc-wallet-rust-processor
     build:
       context: .
-      dockerfile: ./rustprocessor/Dockerfile
+      dockerfile: ./processor/Dockerfile
       args:
         - http_proxy
         - https_proxy
@@ -20,13 +20,13 @@ services:
     depends_on:
       - validator
     volumes:
-      - '.:/project/dgc-wallet/'
+      - '.:/project/dgc-core/'
 
   dgc-wallet-rest-api:
     container_name: dgc-wallet-rest-api
     build:
       context: .
-      dockerfile: ./jsclient/Dockerfile
+      dockerfile: ./RESTapi/Dockerfile
       args:
         - http_proxy
         - https_proxy
@@ -36,7 +36,7 @@ services:
       - 'https_proxy=${https_proxy}'
       - 'no_proxy=rest-api,validator,${no_proxy}'
     volumes:
-      - '.:/project/dgc-wallet/'
+      - '.:/project/dgc-core/'
     ports:
       - '0.0.0.0:3000:3000'
     depends_on:
