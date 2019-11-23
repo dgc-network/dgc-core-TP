@@ -1,11 +1,11 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-extern crate dgc-core-rest-api;
+extern crate dgc_core_rest_api;
 extern crate serde;
 #[macro_use] extern crate rouille;
 
-use dgc-core-rest-api::{Task, TaskManager};
+use dgc_core_rest_api::{Task, TaskManager};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
