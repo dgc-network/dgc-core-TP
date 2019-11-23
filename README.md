@@ -8,7 +8,7 @@ A customer can:
 3. check the balance in the wallet account
 4. transfer money from his/her wallet account to another
 
-The customer is identified by a customer name and a corresponding public key. The wallet account balance, is stored at an address, derived from SHA 512 hash of customer's public key and the dgc-wallet transaction family namespace.
+The customer is identified by a customer name and a corresponding public key. The wallet account balance, is stored at an address, derived from SHA 512 hash of customer's public key and the dgc-core transaction family namespace.
 
 # Components
 The application is built in two parts:
@@ -20,17 +20,17 @@ The application is built in two parts:
 
 **JAVASCRIPT CLIENT NOTE**
 
-The client is also written in Javascript using node.js. The `app.js` is the main javascript file from where the `main` function call occurs. Handlebars are used for templating, client related CSS and JavaScript code is written in public folder and server related files are written in `router/` folder. Running the default `docker-compose.yaml` file or the `dgc-wallet-build-client-js.yaml` launches the client, which is accessible at `localhost:3000`. 
+The client is also written in Javascript using node.js. The `app.js` is the main javascript file from where the `main` function call occurs. Handlebars are used for templating, client related CSS and JavaScript code is written in public folder and server related files are written in `router/` folder. Running the default `docker-compose.yaml` file or the `dgc-core-build-client-js.yaml` launches the client, which is accessible at `localhost:3000`. 
 
-How to use the dgc-wallet UI:
+How to use the dgc-core UI:
 
 1. Build and start the Docker containers:
 
-`docker-compose -f dgc-wallet-build-client-js.yaml up`
+`docker-compose -f dgc-core-build-client-js.yaml up`
 
-2. Open bash shell in `dgc-wallet-client-js` container:
+2. Open bash shell in `dgc-core-client-js` container:
 
-`docker exec -it dgc-wallet-client-js bash`
+`docker exec -it dgc-core-client-js bash`
 
 3. Create user accounts for jack and jill:
 
@@ -83,16 +83,16 @@ Right click on the Docker icon in the notification area, select Settings. Then c
 
 # Usage
 
-Start the pre-built Docker containers in docker-compose.yaml file, located in dgc-wallet-TP directory:
+Start the pre-built Docker containers in docker-compose.yaml file, located in dgc-core-TP directory:
 ```bash
-cd dgc-wallet-tp
+cd dgc-core-tp
 docker-compose up
 ```
 At this point all the containers should be running.
 
 To launch the client, you could do this:
 ```bash
-docker exec -it dgc-wallet-client bash
+docker exec -it dgc-core-client bash
 ```
 
 You can locate the right Docker client container name using `docker ps`.
@@ -103,38 +103,38 @@ Sample command usage:
 #Create a wallet
 sawtooth keygen jack #This creates the public/private keys for Jack, a pre-requisite for the following commands
 
-dgc-wallet deposit 100 jack #This adds 100 units to Jack's account
+dgc-core deposit 100 jack #This adds 100 units to Jack's account
 
-dgc-wallet withdraw 50 jack #Withdraws 50 units from Jack's account
+dgc-core withdraw 50 jack #Withdraws 50 units from Jack's account
 
-dgc-wallet balance jack #Displays the balance left in Jack's account
+dgc-core balance jack #Displays the balance left in Jack's account
 
 #Create 2nd wallet
 sawtooth keygen jill #This creates the public/private keys for Jill, a pre-requisite for the following commands
 
-dgc-wallet deposit 100 jill #This adds 100 units to Jill's account
+dgc-core deposit 100 jill #This adds 100 units to Jill's account
 
-dgc-wallet balance jill #Displays the balance left in Jill's account
+dgc-core balance jill #Displays the balance left in Jill's account
 
-dgc-wallet transfer 25 jack jill #Transfer 25 units money from Jack to Jill
+dgc-core transfer 25 jack jill #Transfer 25 units money from Jack to Jill
 
-dgc-wallet balance jack #Displays the balance left in Jack's account
+dgc-core balance jack #Displays the balance left in Jack's account
 
-dgc-wallet balance jill #Displays the balance left in Jill's account
+dgc-core balance jill #Displays the balance left in Jill's account
 
 ```
 
 # Building containers
-To build TP code of your preferred language and run the dgc-wallet example:
+To build TP code of your preferred language and run the dgc-core example:
 
 ```bash
-docker-compose -f dgc-wallet-build-tp-<your_prog_language>.yaml up --build
+docker-compose -f dgc-core-build-tp-<your_prog_language>.yaml up --build
 ```
 where,
  <your_prog_language> should be replaced with either `cxx`, `java`, or `py`
 
 # Building and running on OS(without dockers)
-To run dgc-wallet-TP without dockers, we'll have to use a Ubuntu 16.04 OS installation and compile dgc-wallet from sources. Below is a sample procedure for python TP/client:
+To run dgc-core-TP without dockers, we'll have to use a Ubuntu 16.04 OS installation and compile dgc-core from sources. Below is a sample procedure for python TP/client:
 
 1. Install sawtooth on Ubuntu 16.04 LTS x64 machine and setup genesis block. Refer sawtooth app developer's guide [here](https://sawtooth.hyperledger.org/docs/core/releases/latest/app_developers_guide/ubuntu.html)
    - Start the validator, rest-api and settings-tp in separate, new consoles:
@@ -144,27 +144,27 @@ To run dgc-wallet-TP without dockers, we'll have to use a Ubuntu 16.04 OS instal
      sudo -u sawtooth sawtooth-rest-api -vvv
      sudo -u sawtooth settings-tp -vv
      ```
-2. In a new console, clone the dgc-wallet repo:
+2. In a new console, clone the dgc-core repo:
 
-   `git clone https://github.com/dgc-network/dgc-wallet-tp.git`
-3. `cd dgc-wallet-tp`
+   `git clone https://github.com/dgc-network/dgc-core-tp.git`
+3. `cd dgc-core-tp`
 4. Modify two files:
    - Create a new branch to start making changes
    `git checkout -b nodocker`
    - Edit file `pyclient/wallet/dgc_wallet_cli.py` and change `rest-api:8008` to `localhost:8008`
    - Edit file `pyprocessor/processor/dgc_wallet_tp.py` and change `validator:4004` to `localhost:4004`
-5. Setup the dgc-wallet-tp.
-   - Follow the [`pyprocessor/Dockerfile`](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyprocessor/Dockerfile)
-   - Install all the dependencies in the [first `RUN` line](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyprocessor/Dockerfile#L18) in the Dockerfile
-   - Run the dgc-wallet-tp with `./pyprocessor/dgc-wallet-tp`
+5. Setup the dgc-core-tp.
+   - Follow the [`pyprocessor/Dockerfile`](https://github.com/dgc-network/dgc-core-tp/blob/master/pyprocessor/Dockerfile)
+   - Install all the dependencies in the [first `RUN` line](https://github.com/dgc-network/dgc-core-tp/blob/master/pyprocessor/Dockerfile#L18) in the Dockerfile
+   - Run the dgc-core-tp with `./pyprocessor/dgc-core-tp`
 6. Setup the client. Open a new console.
-   - Follow the [`pyclient/Dockerfile`](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyclient/Dockerfile)
-   - Install all the dependencies in the [first `RUN` line](https://github.com/dgc-network/dgc-wallet-tp/blob/master/pyclient/Dockerfile#L20) in the pyclient/Dockerfile
-   - Run the dgc-wallet client with `./pyclient/dgc-wallet` command. Refer [Usage](#Usage) section above, for examples.
+   - Follow the [`pyclient/Dockerfile`](https://github.com/dgc-network/dgc-core-tp/blob/master/pyclient/Dockerfile)
+   - Install all the dependencies in the [first `RUN` line](https://github.com/dgc-network/dgc-core-tp/blob/master/pyclient/Dockerfile#L20) in the pyclient/Dockerfile
+   - Run the dgc-core client with `./pyclient/dgc-core` command. Refer [Usage](#Usage) section above, for examples.
 
-**NOTE** If you prefer using the dgc-wallet client without directory prefix, you could add the `pyclient` directory to your `PATH` environment variable, as shown below:
+**NOTE** If you prefer using the dgc-core client without directory prefix, you could add the `pyclient` directory to your `PATH` environment variable, as shown below:
 
-`export PATH = $PATH:<absolute-path-to-your-cloned-dgc-wallet-TP-dir>/pyclient"`
+`export PATH = $PATH:<absolute-path-to-your-cloned-dgc-core-TP-dir>/pyclient"`
 
 # Video Presentation
 A video presentation on YouTube uses this application as an example. It is "Hyperledger Sawtooth Application Development using 'dgcWallet'". It is at https://youtu.be/4VUaZkwJdCc
@@ -175,7 +175,7 @@ Currently, we're looking for contributions and PRs for following:
  - Client apps in GO, .NET, C++, and Java
 
 More ways you can contribute:
- - Bugs or issues: Report problems or defects found when working with dgc-wallet
+ - Bugs or issues: Report problems or defects found when working with dgc-core
  - Core features and enhancements: Provide expanded capabilities or optimizations
  - Documentation: Improve existing documentation or create new information
  - Tests: Add functional, performance, or scalability tests

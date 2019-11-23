@@ -14,7 +14,7 @@
 # -----------------------------------------------------------------------------
 
 [package]
-name = "dgc-wallet-rust-tp"
+name = "dgc-core-rust-tp"
 version = "1.0.0"
 authors = ["dgc.network"]
 description = "Sawtooth Simple Wallet Transaction Processor"

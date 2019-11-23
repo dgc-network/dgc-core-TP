@@ -29,7 +29,7 @@ impl DGCTransactionHandler {
     
     pub fn new() -> DGCTransactionHandler {
         DGCTransactionHandler {
-            family_name: String::from("dgc-wallet"),
+            family_name: String::from("dgc-core"),
             family_versions: vec![String::from("1.0")],
             namespaces: vec![String::from(get_dgc_prefix().to_string())],
         }

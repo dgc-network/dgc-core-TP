@@ -12,11 +12,11 @@ use sawtooth_sdk::processor::handler::TransactionContext;
 
 pub fn get_dgc_prefix() -> String {
     let mut sha = Sha512::new();
-    sha.input_str("dgc-wallet");
+    sha.input_str("dgc-core");
     sha.result_str()[..6].to_string()
 }
 
-//dgc-wallet State
+//dgc-core State
 pub struct DGCState<'a> {
     context: &'a mut TransactionContext,
 }

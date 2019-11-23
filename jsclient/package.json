@@ -1,7 +1,7 @@
 {
-  "name": "dgc-wallet-rest-api",
+  "name": "dgc-core-rest-api",
   "version": "1.0.0",
-  "description": "A frontend REST api for dgc-wallet application",
+  "description": "A frontend REST api for dgc-core application",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"

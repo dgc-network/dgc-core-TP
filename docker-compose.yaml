@@ -4,8 +4,8 @@
 version: '2.1'
 
 services:
-  dgc-wallet-rust-processor:
-    container_name: dgc-wallet-rust-processor
+  dgc-core-rust-processor:
+    container_name: dgc-core-rust-processor
     build:
       context: .
       dockerfile: ./processor/Dockerfile
@@ -22,8 +22,8 @@ services:
     volumes:
       - '.:/project/dgc-core/'
 
-  dgc-wallet-rest-api:
-    container_name: dgc-wallet-rest-api
+  dgc-core-rest-api:
+    container_name: dgc-core-rest-api
     build:
       context: .
       dockerfile: ./RESTapi/Dockerfile

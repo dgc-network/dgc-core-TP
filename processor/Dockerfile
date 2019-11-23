@@ -79,10 +79,10 @@ COPY ./processor/src ./src
 WORKDIR /project/dgc-core/processor
 
 #CMD cd processor \
-CMD echo "\033[0;32m--- Building dgc-wallet-rust-tp ---\n\033[0m" \
+CMD echo "\033[0;32m--- Building dgc-core-rust-tp ---\n\033[0m" \
  && rm -rf ./bin/ \
  && mkdir -p ./bin/ \
  && cargo build --release \
- && cp ./target/release/dgc-wallet-rust-tp ./bin/dgc-wallet-rust-tp \
- && cargo run --release --bin dgc-wallet-rust-tp -- -v -C tcp://validator:4004 \
+ && cp ./target/release/dgc-core-rust-tp ./bin/dgc-core-rust-tp \
+ && cargo run --release --bin dgc-core-rust-tp -- -v -C tcp://validator:4004 \
  && tail -f /dev/null
