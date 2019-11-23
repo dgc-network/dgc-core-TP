@@ -24,7 +24,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 
 WORKDIR /project/dgc-core/RESTapi
 
-ENV PATH "$PATH:/project/dgc-core/RESTapi"
+ENV PATH "$PATH:/project/dgc-core/jsclient"
 
 EXPOSE 3000
 
