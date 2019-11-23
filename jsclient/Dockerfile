@@ -22,7 +22,7 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/ci xenial universe" >> /etc/apt/sou
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
     && apt-get install -y nodejs
 
-WORKDIR /project/dgc-core/RESTapi
+WORKDIR /project/dgc-core/jsrestapi
 
 ENV PATH "$PATH:/project/dgc-core/jsclient"
 

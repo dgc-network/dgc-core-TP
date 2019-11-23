@@ -26,7 +26,8 @@ services:
     container_name: dgc-core-rest-api
     build:
       context: .
-      dockerfile: ./RESTapi/Dockerfile
+      #dockerfile: ./jsrestapi/Dockerfile
+      dockerfile: ./rest-api/Dockerfile
       args:
         - http_proxy
         - https_proxy

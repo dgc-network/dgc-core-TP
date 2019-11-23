@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const {createHash} = require('crypto')
-const {CryptoFactory, createContext } = require('sawtooth-sdk/signing')
-const protobuf = require('sawtooth-sdk/protobuf')
+const {CryptoFactory, createContext } = require('../../jsrestapi/routes/node_modules/sawtooth-sdk/signing')
+const protobuf = require('../../jsrestapi/routes/node_modules/sawtooth-sdk/protobuf')
 const fs = require('fs')
 const fetch = require('node-fetch');
-const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
+const {TextEncoder, TextDecoder} = require('../../jsrestapi/routes/node_modules/text-encoding/lib/encoding')
 
 FAMILY_NAME='dgc-core'
 
@@ -18,8 +18,8 @@ function hash(v) {
  * Generates a new private key, saving it to memory and storage (encrypted).
  * Returns both a public key and the encrypted private key.
  */
-const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
-const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
+const {Secp256k1PrivateKey} = require('../../jsrestapi/routes/node_modules/sawtooth-sdk/signing/secp256k1')	
+const secp256k1 = require('../../jsrestapi/routes/node_modules/sawtooth-sdk/signing/secp256k1')
 const context = new secp256k1.Secp256k1Context()
 //const context = createContext('secp256k1');
 //let privateKey = null

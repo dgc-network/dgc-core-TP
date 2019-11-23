@@ -25,10 +25,15 @@ router.get('/isRegistered', function(req, res){
 
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
+    var client = new dgcWalletRequest(req.body.privateKey);
+    var isPrivateKey = client.isPrivateKey();
+    if (client.isPrivateKey()) {
+        res.send({publicKey: client.getPublicKey()});
+    }
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
     } else {
-        var client = new dgcWalletRequest(req.body.privateKey);
+        //var client = new dgcWalletRequest(req.body.privateKey);
         res.send({publicKey: client.getPublicKey()});
     }
 })

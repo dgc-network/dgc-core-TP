@@ -42,7 +42,7 @@ ENV PATH=$PATH:/project/dgc-core/processor/bin:/protoc3/bin:/root/.cargo/bin \
 RUN rustup component add rustfmt-preview
 
 
-WORKDIR /project/dgc-core/processor
+WORKDIR /project/dgc-core/rest-api
 
 ###########################################################################
 # Below lines are workaround to avoid rebuilding dependencies every time 
@@ -50,28 +50,28 @@ WORKDIR /project/dgc-core/processor
 
 # create a new empty shell project
 RUN USER=root cargo new --bin my-project
-WORKDIR /project/dgc-core/processor/my-project
+WORKDIR /project/dgc-core/rest-api/my-project
 
 # copy over your manifests 
 #(context passed from docker yaml file in parent directory)
-COPY ./processor/Cargo.lock Cargo.lock
-COPY ./processor/Cargo.toml Cargo.toml
+COPY ./rest-api/Cargo.lock Cargo.lock
+COPY ./rest-api/Cargo.toml Cargo.toml
 
 # this build step will cache your dependencies
 RUN cargo build --release
 RUN rm src/*.rs
 
 # copy your source tree
-COPY ./processor/src ./src
+COPY ./rest-api/src ./src
 ###########################################################################
 
-WORKDIR /project/dgc-core/processor
+WORKDIR /project/dgc-core/rest-api
 
-#CMD cd processor \
-CMD echo "\033[0;32m--- Building dgc-core-rust-tp ---\n\033[0m" \
+#CMD cd rest-api \
+CMD echo "\033[0;32m--- Building dgc-core-rest-api ---\n\033[0m" \
  && rm -rf ./bin/ \
  && mkdir -p ./bin/ \
  && cargo build --release \
- && cp ./target/release/dgc-core-rust-tp ./bin/dgc-core-rust-tp \
- && cargo run --release --bin dgc-core-rust-tp -- -v -C tcp://validator:4004 \
+ && cp ./target/release/dgc-core-rest-api ./bin/dgc-core-rest-api \
+ && cargo run --release --bin dgc-core-rest-api -- -v -C tcp://validator:4004 \
  && tail -f /dev/null

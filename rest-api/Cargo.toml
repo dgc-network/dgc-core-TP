@@ -1,0 +1,14 @@
+# Copyright (c) The dgc.network
+# SPDX-License-Identifier: Apache-2.0
+
+[package]
+name = "dgc-core-rest-api"
+version = "1.0.0"
+authors = ["dgc.network"]
+description = "dgc-core REST api"
+
+[dependencies]
+tide = "0.1.0"
+http = "0.1"
+serde = "1.0.80"
+serde_derive = "1.0.80"
