@@ -1,6 +1,8 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
+'use strict'
+
 const {createHash} = require('crypto')
 const {CryptoFactory, createContext } = require('sawtooth-sdk/signing')
 const protobuf = require('sawtooth-sdk/protobuf')
@@ -41,6 +43,11 @@ class dgcWalletRequest {
       this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
       console.log("Storing at: " + this.address);  
     }
+  }
+
+  isPrivateKey() {
+    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+    return privateKey
   }
 
   makePrivateKey() {

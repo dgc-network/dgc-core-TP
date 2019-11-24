@@ -1,40 +1,40 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
-const _ = require('lodash')
-var express = require('express');
-var bodyParser = require('body-parser');
-var router = express.Router();
-var {dgcWalletRequest} = require('./dgcWalletRequest') 
-//const auth = require('./auth')
+'use strict'
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+const _ = require('lodash')
+const express = require('express');
+const bodyParser = require('body-parser');
+const {dgcWalletRequest} = require('./dgcWalletRequest') 
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+const router = express.Router();
 
 // makePrivateKey
 router.post('/makePrivateKey', function(req, res){
-    var client = new dgcWalletRequest(req.body.privateKey);
-    res.send({privateKey: client.makePrivateKey()});
-})
-
-// Is Registered
-router.get('/isRegistered', function(req, res){
-    if (null == req.body.privateKey) {
-        res.send({message: 'You have not the privateKey'})
-    }
+    let app = new dgcWalletRequest(req.body.privateKey);
+    res.send({privateKey: app.makePrivateKey()});
 })
 
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
-    var client = new dgcWalletRequest(req.body.privateKey);
-    var isPrivateKey = client.isPrivateKey();
-    if (client.isPrivateKey()) {
-        res.send({publicKey: client.getPublicKey()});
+    let app = new dgcWalletRequest(req.body.privateKey);
+    var isPrivateKey = app.isPrivateKey();
+    if (app.isPrivateKey()) {
+        res.send({publicKey: app.getPublicKey()});
     }
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
     } else {
         //var client = new dgcWalletRequest(req.body.privateKey);
         res.send({publicKey: client.getPublicKey()});
+    }
+})
+
+// Is Registered
+router.get('/isRegistered', function(req, res){
+    if (null == req.body.privateKey) {
+        res.send({message: 'You have not the privateKey'})
     }
 })
 
