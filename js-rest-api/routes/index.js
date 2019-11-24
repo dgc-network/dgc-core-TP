@@ -13,7 +13,13 @@ const router = express.Router();
 // makePrivateKey
 router.post('/makePrivateKey', function(req, res){
     let app = new dgcRequest(req.body.privateKey);
-    res.send({privateKey: app.makePrivateKey()});
+    app.isPrivateKey().then(result => {
+        if (false == result) {
+            res.send({ privateKey: app.makePrivateKey()});
+        } else {
+            res.send({ error: "privateKey is existed"});
+        }
+    });
 })
 
 // getPublicKey
@@ -21,18 +27,11 @@ router.post('/getPublicKey', function(req, res){
     let app = new dgcRequest(req.body.privateKey);
     app.isPrivateKey().then(result => {
         if (false == result) {
-            res.send({error: "privateKey is not corrected"});
+            res.send({ error: "privateKey is not corrected"});
         } else {
-            res.send({publicKey: app.getPublicKey()});
+            res.send({ publicKey: app.getPublicKey()});
         }
     });
-})
-
-// Is Registered
-router.get('/isRegistered', function(req, res){
-    if (null == req.body.privateKey) {
-        res.send({message: 'You have not the privateKey'})
-    }
 })
 
 // dgcBalance
@@ -49,24 +48,21 @@ router.post('/dgcBalance', function(req, res){
 
 // Transfer DGC to another user
 router.post('/dgcTransfer', function(req, res) {
-    if (null == req.body.privateKey) {
-        res.send({error: "privateKey is empty"});
-    } else if (null == req.body.beneficiary) {
-        res.send({error: "beneficiary is empty"});
-    } else {
-        var client = new dgcRequest(req.body.privateKey);
-        var getBalance = client.dgcBalance();
-        getBalance.then(result => {
+    let app = new dgcRequest(req.body.privateKey);
+    app.dgcBalance().then(result => {
+        if (false == result) {
+            res.send({ error: "privateKey is not corrected"});
+        } else {
             if (req.body.DGC > result ) {
-                res.send({ balance: result, message:"your DGC balance is not enough"});
+                res.send({ message: "your DGC balance is not enough"});
             } else {
                 var beneficiary = req.body.beneficiary;
                 var amount = req.body.DGC;
-                client.dgcTransfer(beneficiary, amount);
+                app.dgcTransfer(beneficiary, amount);
                 res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
             }
-        });
-    }
+        }
+    });
 });
 
 // Buy DGC from marketplace
