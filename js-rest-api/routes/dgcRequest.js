@@ -46,6 +46,7 @@ class dgcRequest {
   }
 
   isPrivateKey() {
+    console.log(this._send_to_rest_api(null))
     if (false == this._send_to_rest_api(null)) {
       return false;
     }
