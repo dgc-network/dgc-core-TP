@@ -1,2 +1,0 @@
-INSERT INTO users (name, email, password_hash, salt) VALUES ('Alex Banks', 'alex.banks0@gmail.com', '1234', '1234');
-INSERT INTO users (name, email, password_hash, salt) VALUES ('Test User', 'test.user@user.io', '123', '123');
