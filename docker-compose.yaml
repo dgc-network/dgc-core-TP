@@ -23,7 +23,7 @@ services:
       - '.:/project/dgc-core/'
 
   dgc-core-rest-api:
-    container_name: dgc-core-rest-api
+    container_name: dgc-core-js-rest-api
     build:
       context: .
       dockerfile: ./js-rest-api/Dockerfile
@@ -59,7 +59,7 @@ services:
         --bind sawtooth-rest-api:8008
 
   settings-tp:
-    container_name: sawtooth-settings-tp
+    container_name: settings-tp
     image: hyperledger/sawtooth-settings-tp:1.0
     depends_on:
       - validator
