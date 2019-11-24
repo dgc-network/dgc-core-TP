@@ -34,20 +34,23 @@ class dgcRequest {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
   constructor(privateKeyStr) {
-    if (null == privateKeyStr)
-      console.log("privateKey is empty");
-    else {
+    //if (null == privateKeyStr)
+      //console.log("privateKey is empty");
+    //else {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
       this.signer = new CryptoFactory(context).newSigner(privateKey);
       this.publicKey = this.signer.getPublicKey().asHex();
       this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
       console.log("Storing at: " + this.address);  
-    }
+    //}
   }
 
   isPrivateKey() {
-    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-    return privateKey
+    if (!this._send_to_rest_api(null)) {
+      return false;
+    }
+    //const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+    //return privateKey
   }
 
   makePrivateKey() {
@@ -177,6 +180,7 @@ class dgcRequest {
       })
       .catch((error) => {
         console.error(error);
+        return false;
       }); 	
     } else {
       fetch('http://rest-api:8008/batches', {

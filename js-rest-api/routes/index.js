@@ -20,14 +20,14 @@ router.post('/makePrivateKey', function(req, res){
 router.post('/getPublicKey', function(req, res){
     let app = new dgcRequest(req.body.privateKey);
     //var isPrivateKey = app.isPrivateKey();
-    if (app.isPrivateKey(req.body.privateKey)) {
+    if (!app.isPrivateKey()) {
         res.send({publicKey: app.getPublicKey()});
     }
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
     } else {
         //var client = new dgcRequest(req.body.privateKey);
-        res.send({publicKey: client.getPublicKey()});
+        res.send({publicKey: app.getPublicKey()});
     }
 })
 
