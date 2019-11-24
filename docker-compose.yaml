@@ -59,6 +59,7 @@ services:
         --bind sawtooth-rest-api:8008
 
   settings-tp:
+    container_name: sawtooth-settings-tp
     image: hyperledger/sawtooth-settings-tp:1.0
     depends_on:
       - validator

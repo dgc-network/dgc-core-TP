@@ -1,90 +1,116 @@
-// Copyright (c) The dgc.network
-// SPDX-License-Identifier: Apache-2.0
-
-extern crate dgc_core_rest_api;
+extern crate iron;
+extern crate time;
+extern crate router;
+extern crate dotenv;
+extern crate rand;
+extern crate bcrypt;
+extern crate bodyparser;
 extern crate serde;
-#[macro_use] extern crate rouille;
+extern crate frank_jwt;
 
-use dgc_core_rest_api::{Task, TaskManager};
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::sync::Mutex;
+#[macro_use]
+extern crate diesel;
 
-/// External representation of a single task.
-#[derive(Serialize)]
-struct GetTaskResponse<'a> {
-    text: &'a str,
-    done: bool,
+#[macro_use]
+extern crate diesel_codegen;
+
+#[macro_use]
+extern crate serde_json;
+
+#[macro_use]
+extern crate serde_derive;
+
+use iron::prelude::*;
+use router::Router;
+use iron::{BeforeMiddleware, typemap};
+use std::error::Error;
+use iron::status;
+use std::fmt::{self, Debug};
+
+
+mod handlers;
+mod services;
+mod types;
+mod database;
+pub mod schema;
+mod helpers;
+
+/// A test route, just to make sure the API is running
+fn hello_world(_: &mut Request) -> IronResult<Response> {
+    Ok(Response::with((iron::status::Ok, "Hello World")))
 }
 
-impl<'a> GetTaskResponse<'a> {
-    /// Constructs a new external version of a task given a task's definition.
-    fn from(t: &'a Task) -> Self {
-        Self { text: &t.text, done: t.done }
+/// StringError is just a convenience struct to
+/// work with IronResult/IronError
+#[derive(Debug)]
+struct StringError(String);
+
+impl fmt::Display for StringError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        Debug::fmt(self, f)
     }
 }
 
-/// Representation of a request to update zero or more fields of a task.
-#[derive(Deserialize)]
-struct UpdateTaskRequest {
-    text: Option<String>,
-    done: Option<bool>,
+impl Error for StringError {
+    fn description(&self) -> &str { &*self.0 }
 }
 
-/// Processes REST requests for the task manager API and transforms them into
-/// operations against the given backing `task_manager`.
-fn route_request(request: &rouille::Request, task_manager: &Mutex<TaskManager>)
-    -> rouille::Response {
+impl typemap::Key for types::user::User { type Value = String; }
 
-    let mut task_manager = task_manager.lock().unwrap();
-
-    router!(request,
-        (GET) ["/task"] => {
-            let mut response = HashMap::new();
-            for (id, task) in task_manager.all().iter() {
-                let path = format!("/task/{}", id);
-                response.insert(path, GetTaskResponse::from(task));
-            }
-            rouille::Response::json(&response)
-        },
-
-        (POST) ["/task"] => {
-            let body: String =
-                try_or_400!(rouille::input::json_input(request));
-            let id = task_manager.add(body);
-            rouille::Response::json(&format!("/task/{}", id))
-        },
-
-        (GET) ["/task/{id}", id: usize] => {
-            match task_manager.get(id) {
-                Ok(task) =>
-                    rouille::Response::json(&GetTaskResponse::from(task)),
-                Err(e) => rouille::Response::json(&e).with_status_code(404),
-            }
-        },
-
-        (UPDATE) ["/task/{id}", id: usize] => {
-            let body: UpdateTaskRequest =
-                try_or_400!(rouille::input::json_input(request));
-            match task_manager.set(id, body.text, body.done) {
-                Ok(()) => rouille::Response::empty_204(),
-                Err(e) => rouille::Response::json(&e).with_status_code(404),
-            }
-        },
-
-        (DELETE) ["/task/{id}", id: usize] => {
-            match task_manager.delete(id) {
-                Ok(()) => rouille::Response::empty_204(),
-                Err(e) => rouille::Response::json(&e).with_status_code(404),
-            }
-        },
-
-        _ => rouille::Response::empty_404()
-    )
+/// The Iron-specific code for verifying a JWT token before entering a route
+/// This adds the principal to the request, to be used in any following route handler
+struct AuthorizationMiddleware;
+impl BeforeMiddleware for AuthorizationMiddleware {
+    fn before(&self, req: &mut Request) -> IronResult<()> {
+        let raw_header = req.headers.get_raw("authorization");
+        match raw_header {
+            Some(header) => {
+                let val = header[0].clone();
+                let user = ::services::jwt::validate_header(val);
+                match user {
+                    Some(u) => {
+                        req.extensions.insert::<types::user::User>(json!(u).to_string());
+                        Ok(())
+                    },
+                    None => return_error()
+                }
+            },
+            None => return_error()
+        }
+    }
 }
 
+/// A convenience function to return an IronResult error
+/// There are various ways this can be invoked during the JWT process
+/// I just wanted to standardize that code
+fn return_error() -> IronResult<()> {
+    return Err(IronError::new(StringError("Error".to_string()), status::BadRequest))
+}
+
+/// Register all the routes, creating chains for JWT if necessary
+/// If this moved foward, moving the routes to their own function would be wise
+/// Also, adding a logging chain link would probably be wise
 fn main() {
-    let task_manager = Mutex::from(TaskManager::new());
-    rouille::start_server(
-        "localhost:3000", move |request| route_request(request, &task_manager))
+    let mut router = Router::new();
+    // public
+    router.get("/", hello_world, "index");
+    router.post("/user", handlers::users::register, "register");
+    router.post("/user/authenticate", handlers::users::authenticate, "authenticate");
+
+
+    // authenticated
+    let mut user_chain = Chain::new(handlers::users::get_user);
+    user_chain.link_before(AuthorizationMiddleware);
+    router.get("/user/:id", user_chain, "user");
+
+    let mut users_chain = Chain::new(handlers::users::get_users);
+    users_chain.link_before(AuthorizationMiddleware);
+    router.get("/users", users_chain, "users");
+
+
+    println!("Listening on port 3000");
+    Iron::new(router).http("0.0.0.0:3000").unwrap();
 }
+
+
+
