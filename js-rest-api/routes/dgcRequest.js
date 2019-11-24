@@ -24,25 +24,14 @@ const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')
 const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
 const context = new secp256k1.Secp256k1Context()
 //const context = createContext('secp256k1');
-//let privateKey = null
-//let publicKey = null
-//let encryptedKey = null
-
 
 class dgcRequest {
-  //constructor(userid) {
-    //const privateKeyStrBuf = this.getUserPriKey(userid);
-    //const privateKeyStr = privateKeyStrBuf.toString().trim();
   constructor(privateKeyStr) {
-    //if (null == privateKeyStr)
-      //console.log("privateKey is empty");
-    //else {
-      const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-      this.signer = new CryptoFactory(context).newSigner(privateKey);
-      this.publicKey = this.signer.getPublicKey().asHex();
-      this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
-      console.log("Storing at: " + this.address);  
-    //}
+    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+    this.signer = new CryptoFactory(context).newSigner(privateKey);
+    this.publicKey = this.signer.getPublicKey().asHex();
+    this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
+    console.log("Storing at: " + this.address);  
   }
 
   isPrivateKey() {
@@ -60,20 +49,23 @@ class dgcRequest {
   }
 
   dgcBalance() {
-    let amount = this._send_to_rest_api(null);
-    return amount;
+    return this._send_to_rest_api(null);
   }
 
-  dgcTransfer(user2, amount) {
+  transferDGC(amount, user2) {
     this._wrap_and_send("transfer", [amount, user2]);
   }
 
-  buyDGC(user2, amount) {
-    this._wrap_and_send("buyDGC", [amount, user2]);
+  dgcExchange() {
+    return this._send_to_rest_api(null);
   }
 
-  sellDGC(user2, amount) {
-    this._wrap_and_send("sellDGC", [amount, user2]);
+  sellDGC(amount, currency) {
+    this._wrap_and_send("sellDGC", [amount, currency]);
+  }
+
+  buyDGC(amount, currency) {
+    this._wrap_and_send("buyDGC", [amount, currency]);
   }
 
 /*

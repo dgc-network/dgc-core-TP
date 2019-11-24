@@ -12,6 +12,11 @@ pub enum Action {
     Withdraw,
     Balance,
     Transfer,
+    dgcBalance,
+    transferDGC,
+    dgcExchange,
+    sellDGC,
+    buyDGC,
 }
 
 impl fmt::Display for Action {
@@ -24,6 +29,11 @@ impl fmt::Display for Action {
                 Action::Withdraw => "Action::Withdraw",
                 Action::Balance => "Action::Balance",
                 Action::Transfer => "Action::Transfer",
+                Action::dgcBalance => "Action::dgcBalance",
+                Action::transferDGC => "Action::transferDGC",
+                Action::dgcExchange => "Action::dgcExchange",
+                Action::sellDGC => "Action::sellDGC",
+                Action::buyDGC => "Action::buyDGC",
             }
         )
     }
@@ -48,7 +58,7 @@ impl DGCPayload {
             }
         };
 
-        //dgcWallet payload is constructed as comma separated items
+        //dgc payload is constructed as comma separated items
         let items: Vec<&str> = payload_string.split(",").collect();
 
         if items.len() < 2 {
@@ -76,6 +86,11 @@ impl DGCPayload {
             "withdraw" => Action::Withdraw,
             "balance" => Action::Balance,
             "transfer" => Action::Transfer,
+            "dgcBalance" => Action::dgcBalance,
+            "transferDGC" => Action::transferDGC,
+            "dgcExchange" => Action::dgcExchange,
+            "sellDGC" => Action::sellDGC,
+            "buyDGC" => Action::buyDGC,
             _ => {
                 return Err(ApplyError::InvalidTransaction(String::from(
                     "Invalid Action",

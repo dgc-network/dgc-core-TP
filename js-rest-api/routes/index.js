@@ -47,7 +47,7 @@ router.post('/dgcBalance', function(req, res){
 })
 
 // Transfer DGC to another user
-router.post('/dgcTransfer', function(req, res) {
+router.post('/transferDGC', function(req, res) {
     let app = new dgcRequest(req.body.privateKey);
     app.dgcBalance().then(result => {
         if (false == result) {
@@ -56,65 +56,80 @@ router.post('/dgcTransfer', function(req, res) {
             if (req.body.DGC > result ) {
                 res.send({ message: "your DGC balance is not enough"});
             } else {
-                var beneficiary = req.body.beneficiary;
                 var amount = req.body.DGC;
-                app.dgcTransfer(beneficiary, amount);
+                var beneficiary = req.body.beneficiary;
+                app.dgcTransfer(amount, beneficiary);
                 res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
             }
         }
     });
 });
 
-// Buy DGC from marketplace
-router.post('/buyDGC', function(req, res) {
-    if (null == req.body.privateKey) {
-        res.send({error: "privateKey is empty"});
-    } else if (null == req.body.currency) {
-        res.send({error: "Currency cannot be empty"});
-    } else {
-        var client = new dgcRequest(req.body.privateKey);
-        var getBalance = client.dgcBalance();
-        getBalance.then(result => {
-            if (req.body.DGC > result ) {
-                res.send({ balance: result, message:"your DGC balance is not enough"});
-            } else {
-                var beneficiary = req.body.beneficiary;
-                var amount = req.body.DGC;
-                client.dgcTransfer(beneficiary, amount);
-                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
-            }
-        });
-    }
-});
+// dgcExchange
+router.post('/dgcExchange', function(req, res){
+    let currency = req.body.currency;
+    let app = new dgcRequest(req.body.privateKey);
+    app.dgcExchange(currency).then(result => {
+        if (false == result) {
+            res.send({ message:"the currency " + currency + " is not existed"});
+        } else {
+            res.send({ exchange: result, message:"The currency "  + currency + " exchange rate is " + result });
+        }
+    });
+})
 
 // sell DGC to marketplace
+// imcomplete
 router.post('/sellDGC', function(req, res) {
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
     } else if (null == req.body.currency) {
         res.send({error: "Currency cannot be empty"});
     } else {
-        var client = new dgcRequest(req.body.privateKey);
-        var getBalance = client.dgcBalance();
+        var app = new dgcRequest(req.body.privateKey);
+        var getBalance = app.dgcBalance();
         getBalance.then(result => {
             if (req.body.DGC > result ) {
                 res.send({ balance: result, message:"your DGC balance is not enough"});
             } else {
                 var sellAmount = req.body.DGC;
-                let buyingList = client.dgcBuyingList();
+                let buyingList = app.dgcBuyingList();
                 for (i = 0; i < buyingList.length; i++) {
                     if (sellAmount > buyingList[i].DGC) {
-                        var beneficiary = buyingList[i].beneficiary;
-                        client.buyDGC(beneficiary, buyingList[i].DGC);
+                        var currency = buyingList[i].currency;
+                        app.buyDGC(buyingList[i].DGC, currency);
                         sellAmount = sellAmount - buyingList[i].DGC;
                     } else {
 
                     }
                 }
-                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+                res.send({ message:"Amount "+ amount +" successfully sell to " + currency});        
             }
         });
     }
+});
+
+// Buy DGC from marketplace
+// imcomplete
+router.post('/buyDGC', function(req, res) {
+    let amount = req.body.DGC;
+    let currency = req.body.currency;
+    let currency_amount = req.body.currency_amount;
+    let app = new dgcRequest(req.body.privateKey);
+    app.buyDGC(amount, currency, currency_amount);
+    
+    
+    
+    res.send({ message:"Amount "+ amount +" successfully buy from " + currency});        
+    
+    app.dgcExchange(currency).then(result => {
+        if (false == result ) {
+            res.send({ message:"the currency " + currency + " is not existed"});
+        } else {
+            app.buyDGC(amount, currency, currency_amount);
+            res.send({ message:"Amount "+ amount +" successfully buy from " + currency});        
+        }
+    });
 });
 
 // Get Info

@@ -27,7 +27,7 @@ fn main() {
          
     let matches = clap_app!(sw =>
         (version: crate_version!())
-        (about: "dgc Wallet Transaction Processor (Rust)")
+        (about: "dgc Transaction Processor (Rust)")
         (@arg connect: -C --connect +takes_value
          "connection endpoint for validator")
         (@arg verbose: -v --verbose +multiple

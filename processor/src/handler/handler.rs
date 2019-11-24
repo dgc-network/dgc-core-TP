@@ -17,12 +17,17 @@ pub struct DGCTransactionHandler {
     namespaces: Vec<String>,
 }
 
-//Transactions in dgc wallet
+//Transactions in dgc
 trait DGCTransactions {
     fn deposit(&self, state: &mut DGCState, customer_pubkey: &str, deposit_amount: u32) -> Result<(), ApplyError>;
     fn withdraw(&self, state: &mut DGCState, customer_pubkey: &str, withdraw_amount: u32) -> Result<(), ApplyError>;
     fn transfer(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
     fn balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
+    fn dgcBalance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
+    fn transferDGC(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
+    fn dgcExchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError>;
+    fn sellDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError>;
+    fn buyDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError>;
 }
 
 impl DGCTransactionHandler {
@@ -121,6 +126,70 @@ impl TransactionHandler for DGCTransactionHandler {
         
                 self.transfer(&mut state, customer_pubkey, beneficiary_pubkey, transfer_amount)?;                
             }                        
+
+            Action::dgcBalance => {
+                let current_balance: u32 = self.dgcBalance(&mut state, customer_pubkey)?;                                
+                info!("current balance: {} ", current_balance);
+            }
+            
+            Action::transferDGC => {
+            
+                //Get beneficiary details from payload
+                let beneficiary_pubkey =  match payload.get_beneficiary() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: transferDGC. beneficiary account doesn't exist.",
+                        )))
+                    }                    
+                };
+                
+                //Get transfer amount
+                let transfer_amount = payload.get_value();
+        
+                self.transferDGC(&mut state, customer_pubkey, beneficiary_pubkey, transfer_amount)?;                
+            }                        
+
+            Action::dgcExchange => {
+                let current_exchange: u32 = self.dgcExchange(&mut state, currency)?;                                
+                info!("current exchange: {} ", current_balance);
+            }
+            
+            Action::sellDGC => {
+            
+                //Get currency from payload
+                let currency =  match payload.get_currency() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: sellDGC. currency doesn't exist.",
+                        )))
+                    }                    
+                };
+                
+                //Get sell amount
+                let sell_amount = payload.get_value();
+        
+                self.sellDGC(&mut state, customer_pubkey, currency, sell_amount)?;                
+            }                        
+
+            Action::buyDGC => {
+            
+                //Get currency from payload
+                let currency =  match payload.get_currency() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: buyDGC. currency doesn't exist.",
+                        )))
+                    }                    
+                };
+                
+                //Get sell amount
+                let buy_amount = payload.get_value();
+        
+                self.buyDGC(&mut state, customer_pubkey, currency, buy_amount)?;                
+            }                        
         }
 
         Ok(())
@@ -129,9 +198,108 @@ impl TransactionHandler for DGCTransactionHandler {
 
 impl DGCTransactions for DGCTransactionHandler {
 
+    fn dgcBalance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError> {
+    
+        let current_balance: u32 = match state.get_balance(customer_pubkey) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new account for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+        
+        Ok(current_balance)
+    }
+
+    fn transferDGC(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError> {
+                   
+        //Get balance of customer
+        let current_balance: u32 = self.dgcBalance(state, customer_pubkey)?;                                        
+                                
+        //Get beneficiary balance
+        let beneficiary_balance: u32 = self.dgcBalance(state, beneficiary_pubkey)?;        
+        
+        //Transfer amount should not be greater than current account balance        
+        if transfer_amount > current_balance {
+            return Err(ApplyError::InvalidTransaction(String::from(
+                "Action: Transfer amount is more than customer account balance.",
+            )))
+        }
+        
+        //Store new balance to state
+        state.set_balance(customer_pubkey, current_balance - transfer_amount)?;
+        state.set_balance(beneficiary_pubkey, beneficiary_balance + transfer_amount)?;
+                                     
+        Ok(())
+    
+    }
+
+    fn dgcExchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError> {
+    
+        let current_exchange: u32 = match state.get_exchange(currency) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new currency for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+        
+        Ok(current_exchange)
+    }
+
+    fn sellDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError> {
+                   
+        //Get balance of customer
+        let current_balance: u32 = self.dgcBalance(state, customer_pubkey)?;                                        
+
+        //Get exchange rate of currency
+        let current_exchange: u32 = self.dgcExchange(state, currency)?;                                        
+
+        //sell amount should not be greater than current account balance        
+        if sell_amount > current_balance {
+            return Err(ApplyError::InvalidTransaction(String::from(
+                "Action: Sell amount is more than customer account balance.",
+            )))
+        }
+        
+        //Store new balance to state
+        state.set_balance(customer_pubkey, current_balance - sell_amount)?;
+        //Store new exchange rate to state --> imcomplete
+        state.set_exchange(currency, current_exchange)?;
+                                     
+        Ok(())
+    
+    }
+
+    fn buyDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError> {
+                   
+        //Get balance of customer
+        let current_balance: u32 = self.dgcBalance(state, customer_pubkey)?;                                        
+
+        //Get exchange rate of currency
+        let current_exchange: u32 = self.dgcExchange(state, currency)?;                                        
+
+        //sell amount should not be greater than current account balance        
+        //if sell_amount > current_balance {
+        //    return Err(ApplyError::InvalidTransaction(String::from(
+        //        "Action: Sell amount is more than customer account balance.",
+        //    )))
+        //}
+        
+        //Store new balance to state
+        state.set_balance(customer_pubkey, current_balance + buy_amount)?;
+        //Store new exchange rate to state --> imcomplete
+        state.set_exchange(currency, current_exchange)?;
+                                     
+        Ok(())
+    
+    }
+
     fn balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError> {
     
-        let current_balance: u32 = match state.get(customer_pubkey) {
+        let current_balance: u32 = match state.get_balance(customer_pubkey) {
             Ok(Some(v)) => v,
             Ok(None) => {
                 info!("First time deposit. Creating new account for user.");
@@ -150,7 +318,7 @@ impl DGCTransactions for DGCTransactionHandler {
         let new_balance = current_balance + deposit_amount;
         
         //Store new balance to state
-        state.set(customer_pubkey, new_balance)?;
+        state.set_balance(customer_pubkey, new_balance)?;
         
         Ok(())
     
@@ -171,7 +339,7 @@ impl DGCTransactions for DGCTransactionHandler {
         let new_balance = current_balance - withdraw_amount;
         
         //Store new balance to state
-        state.set(customer_pubkey, new_balance)?;
+        state.set_balance(customer_pubkey, new_balance)?;
         
         Ok(())
     
@@ -193,8 +361,8 @@ impl DGCTransactions for DGCTransactionHandler {
         }
         
         //Store new balance to state
-        state.set(customer_pubkey, current_balance - transfer_amount)?;
-        state.set(beneficiary_pubkey, beneficiary_balance + transfer_amount)?;
+        state.set_balance(customer_pubkey, current_balance - transfer_amount)?;
+        state.set_balance(beneficiary_pubkey, beneficiary_balance + transfer_amount)?;
                                      
         Ok(())
     
