@@ -10,7 +10,7 @@ const fs = require('fs')
 const fetch = require('node-fetch');
 const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 
-FAMILY_NAME='dgc-core'
+//const FAMILY_NAME='dgc-core'
 
 function hash(v) {
   return createHash('sha512').update(v).digest('hex');
@@ -29,7 +29,7 @@ const context = new secp256k1.Secp256k1Context()
 //let encryptedKey = null
 
 
-class dgcWalletRequest {
+class dgcRequest {
   //constructor(userid) {
     //const privateKeyStrBuf = this.getUserPriKey(userid);
     //const privateKeyStr = privateKeyStrBuf.toString().trim();
@@ -196,4 +196,4 @@ class dgcWalletRequest {
     }
   }
 }
-module.exports.dgcWalletRequest = dgcWalletRequest;
+module.exports.dgcRequest = dgcRequest;

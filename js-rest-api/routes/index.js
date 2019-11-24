@@ -6,27 +6,27 @@
 const _ = require('lodash')
 const express = require('express');
 const bodyParser = require('body-parser');
-const {dgcWalletRequest} = require('./dgcWalletRequest') 
+const {dgcRequest} = require('./dgcRequest') 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const router = express.Router();
 
 // makePrivateKey
 router.post('/makePrivateKey', function(req, res){
-    let app = new dgcWalletRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body.privateKey);
     res.send({privateKey: app.makePrivateKey()});
 })
 
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
-    let app = new dgcWalletRequest(req.body.privateKey);
-    var isPrivateKey = app.isPrivateKey();
-    if (app.isPrivateKey()) {
+    let app = new dgcRequest(req.body.privateKey);
+    //var isPrivateKey = app.isPrivateKey();
+    if (app.isPrivateKey(req.body.privateKey)) {
         res.send({publicKey: app.getPublicKey()});
     }
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
     } else {
-        //var client = new dgcWalletRequest(req.body.privateKey);
+        //var client = new dgcRequest(req.body.privateKey);
         res.send({publicKey: client.getPublicKey()});
     }
 })
@@ -43,7 +43,7 @@ router.post('/dgcBalance', function(req, res){
     if (null == req.body.privateKey) {
         res.send({error: "privateKey is empty"});
     } else {
-        var client = new dgcWalletRequest(req.body.privateKey);
+        var client = new dgcRequest(req.body.privateKey);
         var getBalance = client.dgcBalance();
         getBalance.then(result => {
             res.send({ balance: result, message:"Amount " + result + " available"});
@@ -58,7 +58,7 @@ router.post('/dgcTransfer', function(req, res) {
     } else if (null == req.body.beneficiary) {
         res.send({error: "beneficiary is empty"});
     } else {
-        var client = new dgcWalletRequest(req.body.privateKey);
+        var client = new dgcRequest(req.body.privateKey);
         var getBalance = client.dgcBalance();
         getBalance.then(result => {
             if (req.body.DGC > result ) {
@@ -80,7 +80,7 @@ router.post('/buyDGC', function(req, res) {
     } else if (null == req.body.currency) {
         res.send({error: "Currency cannot be empty"});
     } else {
-        var client = new dgcWalletRequest(req.body.privateKey);
+        var client = new dgcRequest(req.body.privateKey);
         var getBalance = client.dgcBalance();
         getBalance.then(result => {
             if (req.body.DGC > result ) {
@@ -102,7 +102,7 @@ router.post('/sellDGC', function(req, res) {
     } else if (null == req.body.currency) {
         res.send({error: "Currency cannot be empty"});
     } else {
-        var client = new dgcWalletRequest(req.body.privateKey);
+        var client = new dgcRequest(req.body.privateKey);
         var getBalance = client.dgcBalance();
         getBalance.then(result => {
             if (req.body.DGC > result ) {
@@ -206,10 +206,10 @@ router.post('/login', urlencodedParser, function(req, res){
 //function to deposit amount in server
 router.post('/deposit', function(req, res) {
     //var userId = req.body.userId;
-    //var client = new dgcWalletRequest(userId); 
+    //var client = new dgcRequest(userId); 
     var amount = req.body.money;
     var privateKey = req.body.privateKey;
-    var client = new dgcWalletRequest(privateKey);
+    var client = new dgcRequest(privateKey);
     client.deposit(amount);    
     res.send({message:"Amount "+ amount +" successfully added"});
 });
@@ -217,10 +217,10 @@ router.post('/deposit', function(req, res) {
 //function to withdraw
 router.post('/withdraw', function(req, res) {
     //var userId = req.body.userId;
-    //var client = new dgcWalletRequest(userId);   
+    //var client = new dgcRequest(userId);   
     var amount = req.body.money;
     var privateKey = req.body.privateKey;
-    var client = new dgcWalletRequest(privateKey);
+    var client = new dgcRequest(privateKey);
     client.withdraw(amount);     
     res.send({  message:"Amount "+ amount +" successfully deducted"});
 });
@@ -228,20 +228,20 @@ router.post('/withdraw', function(req, res) {
 //function to transfer money to another user
 router.post('/transfer', function(req, res) {
     //var userId = req.body.userId;
-    //var client = new dgcWalletRequest(userId);
+    //var client = new dgcRequest(userId);
     var beneficiary = req.body.beneficiary;
     var amount = req.body.money;
     var privateKey = req.body.privateKey;
-    var client = new dgcWalletRequest(privateKey);
+    var client = new dgcRequest(privateKey);
     client.transfer(beneficiary, amount);    
     res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});
 });
 
 router.post('/balance', function(req, res){
     //var userId = req.body.userId;
-    //var client = new dgcWalletRequest(userId);
+    //var client = new dgcRequest(userId);
     var privateKey = req.body.privateKey;
-    var client = new dgcWalletRequest(privateKey);
+    var client = new dgcRequest(privateKey);
     var getYourBalance = client.balance();
     console.log(getYourBalance);
     getYourBalance.then(result => {res.send({ balance: result, message:"Amount " + result + " available"});});
