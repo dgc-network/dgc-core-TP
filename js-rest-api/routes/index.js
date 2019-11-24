@@ -19,11 +19,13 @@ router.post('/makePrivateKey', function(req, res){
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
     let app = new dgcRequest(req.body.privateKey);
-    if (false == app.isPrivateKey()) {
-        res.send({error: "privateKey is not corrected"});
-    } else {
-        res.send({publicKey: app.getPublicKey()});
-    }
+    app.isPrivateKey().then(result => {
+        if (false == result) {
+            res.send({error: "privateKey is not corrected"});
+        } else {
+            res.send({publicKey: app.getPublicKey()});
+        }
+    });
 })
 
 // Is Registered
@@ -36,8 +38,6 @@ router.get('/isRegistered', function(req, res){
 // dgcBalance
 router.post('/dgcBalance', function(req, res){
     let app = new dgcRequest(req.body.privateKey);
-    //var getBalance = app.dgcBalance();
-    //getBalance.then(result => {
     app.dgcBalance().then(result => {
         if (false == result) {
             res.send({ error: "privateKey is not corrected"});
