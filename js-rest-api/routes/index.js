@@ -35,19 +35,16 @@ router.get('/isRegistered', function(req, res){
 
 // dgcBalance
 router.post('/dgcBalance', function(req, res){
-    //if (null == req.body.privateKey) {
-        //res.send({error: "privateKey is empty"});
-    //} else {
-        var app = new dgcRequest(req.body.privateKey);
-        var getBalance = app.dgcBalance();
-        getBalance.then(result => {
-            if (false == result) {
-                res.send({error: "privateKey is not corrected"});
-            } else {
-                res.send({ balance: result, message:"Amount " + result + " available"});
-            }
-        });
-    //}
+    let app = new dgcRequest(req.body.privateKey);
+    //var getBalance = app.dgcBalance();
+    //getBalance.then(result => {
+    app.dgcBalance().then(result => {
+        if (false == result) {
+            res.send({ error: "privateKey is not corrected"});
+        } else {
+            res.send({ balance: result, message:"Amount " + result + " available"});
+        }
+    });
 })
 
 // Transfer DGC to another user
