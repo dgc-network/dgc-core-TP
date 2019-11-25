@@ -30,7 +30,7 @@ class dgcRequest {
   constructor(reqBody) {
     console.log(reqBody);
     if (null == reqBody.privateKey) {
-      return {error: "privateKey is empty"};
+      return;
     } else {
       const privateKeyStr = reqBody.privateKey;
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
