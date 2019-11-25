@@ -36,7 +36,8 @@ router.post('/getPublicKey', function(req, res){
 
 // dgcBalance
 router.post('/dgcBalance', function(req, res){
-    let app = new dgcRequest(req.body.privateKey);
+    //let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req);
     app.dgcBalance().then(result => {
         if (false == result) {
             res.send({ error: "privateKey is not corrected"});
