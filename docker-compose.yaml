@@ -23,10 +23,10 @@ services:
       - '.:/project/dgc-core/'
 
   dgc-core-rest-api:
-    container_name: dgc-core-js-rest-api
+    container_name: dgc-core-rest-api
     build:
       context: .
-      dockerfile: ./js-rest-api/Dockerfile
+      dockerfile: .//Dockerfile
       #dockerfile: ./rust-rest-api/Dockerfile
       args:
         - http_proxy
