@@ -183,8 +183,10 @@ class dgcRequest {
       .then((response) => response.json())
       .then((responseJson) => {
         var data = responseJson.data;
-        if (null == data) return 0
-        else {
+        console.log("Response: " + data);
+        if (null == data) {
+          return 0;
+        } else {
           var amount = new Buffer(data, 'base64').toString();
           return amount;  
         }
