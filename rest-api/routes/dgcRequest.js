@@ -27,8 +27,10 @@ const context = new secp256k1.Secp256k1Context()
 
 class dgcRequest {
   constructor(privateKeyStr) {
+    if (null == privateKeyStr) {
+      return "privateKey is empty";
+    }
     const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-    //var privateKey = new Buffer(privateKeyStr, 'hex');
     this.signer = new CryptoFactory(context).newSigner(privateKey);
     this.publicKey = this.signer.getPublicKey().asHex();
     this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
