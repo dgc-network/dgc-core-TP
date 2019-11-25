@@ -28,7 +28,7 @@ const context = new secp256k1.Secp256k1Context()
 class dgcRequest {
   //constructor(privateKeyStr) {
   constructor(req) {
-    console.log("Request: " + req.json());
+    console.log(req);
     const privateKeyStr = req.body.privateKey;
     const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
     this.signer = new CryptoFactory(context).newSigner(privateKey);
