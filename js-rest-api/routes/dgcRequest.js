@@ -52,20 +52,24 @@ class dgcRequest {
     return this._send_to_rest_api(null);
   }
 
+  dgcCredit() {
+    return this._send_to_rest_api(null);
+  } //imcomplete
+
   transferDGC(amount, user2) {
     this._wrap_and_send("transfer", [amount, user2]);
   }
 
-  dgcExchange() {
+  dgcExchange(currency) {
     return this._send_to_rest_api(null);
+  } //imcomplete
+
+  sellDGC(dgc_amount, currency, currency_amount) {
+    this._wrap_and_send("sellDGC", [dgc_amount, currency, currency_amount]);
   }
 
-  sellDGC(amount, currency) {
-    this._wrap_and_send("sellDGC", [amount, currency]);
-  }
-
-  buyDGC(amount, currency) {
-    this._wrap_and_send("buyDGC", [amount, currency]);
+  buyDGC(dgc_amount, currency, currency_amount) {
+    this._wrap_and_send("buyDGC", [dgc_amount, currency, currency_amount]);
   }
 
 /*
@@ -150,8 +154,22 @@ class dgcRequest {
     const batchListBytes = protobuf.BatchList.encode({
       batches: [batch]
     }).finish();
-    this._send_to_rest_api(batchListBytes);	
-  }
+    //this._send_to_rest_api(batchListBytes);	
+    fetch('http://rest-api:8008/batches', {
+      method: 'POST',
+     headers: {
+       'Content-Type': 'application/octet-stream'
+     },
+     body: batchListBytes
+   })
+   .then((response) => response.json())
+   .then((responseJson) => {
+     console.log(responseJson);
+   })
+   .catch((error) => {
+      console.error(error);
+   }); 	
+}
 
   _send_to_rest_api(batchListBytes){
     if (batchListBytes == null) {

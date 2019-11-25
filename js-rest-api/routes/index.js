@@ -46,6 +46,18 @@ router.post('/dgcBalance', function(req, res){
     });
 })
 
+// dgcCredit
+router.post('/dgcCredit', function(req, res){
+    let app = new dgcRequest(req.body.privateKey);
+    app.dgcBalance().then(result => {
+        if (false == result) {
+            res.send({ error: "privateKey is not corrected"});
+        } else {
+            res.send({ credit: result, message:"Amount " + result + " available"});
+        }
+    });
+})
+
 // Transfer DGC to another user
 router.post('/transferDGC', function(req, res) {
     let app = new dgcRequest(req.body.privateKey);
