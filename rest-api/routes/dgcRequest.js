@@ -178,7 +178,7 @@ class dgcRequest {
       })
       .catch((error) => {
         console.error(error);
-        //return false;
+        return false;
       });
 /*      
       //.catch((error) => {
