@@ -152,7 +152,7 @@ impl TransactionHandler for DGCTransactionHandler {
 
             Action::dgcExchange => {
                 let current_exchange: u32 = self.dgcExchange(&mut state, currency)?;                                
-                info!("current exchange: {} ", current_balance);
+                info!("current exchange: {} ", current_exchange);
             }
             
             Action::sellDGC => {
