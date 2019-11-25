@@ -29,9 +29,22 @@ class dgcRequest {
   //constructor(privateKeyStr) {
   constructor(reqBody) {
     console.log(reqBody);
-    if (null != reqBody.privateKey) {
-      const privateKeyStr = reqBody.privateKey;
-      const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+    const privateKeyHex = reqBody.privateKey;
+    let buffer = Buffer.from(privateKeyHex, 'hex')
+    // verify that it is either a proper compressed or uncompressed key
+    if (!secp256k1.privateKeyVerify(buffer) &&
+      !secp256k1.privateKeyVerify(buffer, false)) {
+      throw new ParseError('Unable to parse a private key from the given hex')
+    }
+    if (null !== reqBody.privateKey) {
+      const privateKeyHex = reqBody.privateKey;
+      let buffer = Buffer.from(privateKeyHex, 'hex')
+      // verify that it is either a proper compressed or uncompressed key
+      if (!secp256k1.privateKeyVerify(buffer) &&
+        !secp256k1.privateKeyVerify(buffer, false)) {
+        throw new ParseError('Unable to parse a private key from the given hex')
+      }
+      const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
       this.signer = new CryptoFactory(context).newSigner(privateKey);
       this.publicKey = this.signer.getPublicKey().asHex();
       this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
