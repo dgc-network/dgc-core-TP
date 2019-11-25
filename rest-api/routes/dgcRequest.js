@@ -176,6 +176,7 @@ class dgcRequest {
       return fetch(geturl, {
         method: 'GET',
       })
+/*      
       //.catch((error) => {
       //  console.error(error);
       //  return false;
@@ -194,7 +195,8 @@ class dgcRequest {
       .catch((error) => {
         console.error(error);
         return false;
-      }); 	
+      });
+*/      
     } else {
       fetch('http://rest-api:8008/batches', {
  	      method: 'POST',
