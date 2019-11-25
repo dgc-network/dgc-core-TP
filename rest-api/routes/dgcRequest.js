@@ -176,6 +176,7 @@ class dgcRequest {
       return fetch(geturl, {
         method: 'GET',
       })
+      .then((response) => response.json())
       .catch((error) => {
         console.error(error);
         return false;
@@ -185,7 +186,6 @@ class dgcRequest {
       //  console.error(error);
       //  return false;
       //})
-      .then((response) => response.json())
       .then((responseJson) => {
         var data = responseJson.data;
         console.log("Response: " + data);
