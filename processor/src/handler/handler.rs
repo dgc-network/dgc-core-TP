@@ -151,6 +151,16 @@ impl TransactionHandler for DGCTransactionHandler {
             }                        
 
             Action::dgcExchange => {
+                //Get currency from payload
+                let currency =  match payload.get_currency() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: dgcExchange. currency doesn't exist.",
+                        )))
+                    }                    
+                };
+                
                 let current_exchange: u32 = self.dgcExchange(&mut state, currency)?;                                
                 info!("current exchange: {} ", current_exchange);
             }

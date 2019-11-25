@@ -139,7 +139,11 @@ impl DGCPayload {
         self.value
     }
     
-    pub fn get_beneficiary(&self) -> &Option<String> {        
+    pub fn get_beneficiary(&self) -> &Option<String> {
+        &self.beneficiary_pubkey      
+    }
+
+    pub fn get_currency(&self) -> &Option<String> {
         &self.beneficiary_pubkey      
     }
 
