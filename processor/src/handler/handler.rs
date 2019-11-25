@@ -23,11 +23,11 @@ trait DGCTransactions {
     fn withdraw(&self, state: &mut DGCState, customer_pubkey: &str, withdraw_amount: u32) -> Result<(), ApplyError>;
     fn transfer(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
     fn balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
-    fn dgcBalance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
-    fn transferDGC(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
-    fn dgcExchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError>;
-    fn sellDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError>;
-    fn buyDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError>;
+    fn dgc_balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
+    fn transfer_dgc(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
+    fn dgc_exchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError>;
+    fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError>;
+    fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError>;
 }
 
 impl DGCTransactionHandler {
@@ -127,19 +127,19 @@ impl TransactionHandler for DGCTransactionHandler {
                 self.transfer(&mut state, customer_pubkey, beneficiary_pubkey, transfer_amount)?;                
             }                        
 
-            Action::dgcBalance => {
-                let current_balance: u32 = self.dgcBalance(&mut state, customer_pubkey)?;                                
+            Action::BalanceDGC => {
+                let current_balance: u32 = self.dgc_balance(&mut state, customer_pubkey)?;                                
                 info!("current balance: {} ", current_balance);
             }
             
-            Action::transferDGC => {
+            Action::TransferDGC => {
             
                 //Get beneficiary details from payload
                 let beneficiary_pubkey =  match payload.get_beneficiary() {
                     Some(v) => v.as_str(),
                     None => {
                         return Err(ApplyError::InvalidTransaction(String::from(
-                            "Action: transferDGC. beneficiary account doesn't exist.",
+                            "Action: TransferDGC. beneficiary account doesn't exist.",
                         )))
                     }                    
                 };
@@ -147,32 +147,32 @@ impl TransactionHandler for DGCTransactionHandler {
                 //Get transfer amount
                 let transfer_amount = payload.get_value();
         
-                self.transferDGC(&mut state, customer_pubkey, beneficiary_pubkey, transfer_amount)?;                
+                self.transfer_dgc(&mut state, customer_pubkey, beneficiary_pubkey, transfer_amount)?;                
             }                        
 
-            Action::dgcExchange => {
+            Action::ExchangeDGC => {
                 //Get currency from payload
                 let currency =  match payload.get_currency() {
                     Some(v) => v.as_str(),
                     None => {
                         return Err(ApplyError::InvalidTransaction(String::from(
-                            "Action: dgcExchange. currency doesn't exist.",
+                            "Action: ExchangeDGC. currency doesn't exist.",
                         )))
                     }                    
                 };
                 
-                let current_exchange: u32 = self.dgcExchange(&mut state, currency)?;                                
+                let current_exchange: u32 = self.dgc_exchange(&mut state, currency)?;                                
                 info!("current exchange: {} ", current_exchange);
             }
             
-            Action::sellDGC => {
+            Action::SellDGC => {
             
                 //Get currency from payload
                 let currency =  match payload.get_currency() {
                     Some(v) => v.as_str(),
                     None => {
                         return Err(ApplyError::InvalidTransaction(String::from(
-                            "Action: sellDGC. currency doesn't exist.",
+                            "Action: SellDGC. currency doesn't exist.",
                         )))
                     }                    
                 };
@@ -180,17 +180,17 @@ impl TransactionHandler for DGCTransactionHandler {
                 //Get sell amount
                 let sell_amount = payload.get_value();
         
-                self.sellDGC(&mut state, customer_pubkey, currency, sell_amount)?;                
+                self.sell_dgc(&mut state, customer_pubkey, currency, sell_amount)?;                
             }                        
 
-            Action::buyDGC => {
+            Action::BuyDGC => {
             
                 //Get currency from payload
                 let currency =  match payload.get_currency() {
                     Some(v) => v.as_str(),
                     None => {
                         return Err(ApplyError::InvalidTransaction(String::from(
-                            "Action: buyDGC. currency doesn't exist.",
+                            "Action: BuyDGC. currency doesn't exist.",
                         )))
                     }                    
                 };
@@ -198,7 +198,7 @@ impl TransactionHandler for DGCTransactionHandler {
                 //Get sell amount
                 let buy_amount = payload.get_value();
         
-                self.buyDGC(&mut state, customer_pubkey, currency, buy_amount)?;                
+                self.buy_dgc(&mut state, customer_pubkey, currency, buy_amount)?;                
             }                        
         }
 
@@ -208,7 +208,7 @@ impl TransactionHandler for DGCTransactionHandler {
 
 impl DGCTransactions for DGCTransactionHandler {
 
-    fn dgcBalance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError> {
+    fn dgc_balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError> {
     
         let current_balance: u32 = match state.get_balance(customer_pubkey) {
             Ok(Some(v)) => v,
@@ -222,13 +222,13 @@ impl DGCTransactions for DGCTransactionHandler {
         Ok(current_balance)
     }
 
-    fn transferDGC(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError> {
+    fn transfer_dgc(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError> {
                    
         //Get balance of customer
-        let current_balance: u32 = self.dgcBalance(state, customer_pubkey)?;                                        
+        let current_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
                                 
         //Get beneficiary balance
-        let beneficiary_balance: u32 = self.dgcBalance(state, beneficiary_pubkey)?;        
+        let beneficiary_balance: u32 = self.dgc_balance(state, beneficiary_pubkey)?;        
         
         //Transfer amount should not be greater than current account balance        
         if transfer_amount > current_balance {
@@ -245,7 +245,7 @@ impl DGCTransactions for DGCTransactionHandler {
     
     }
 
-    fn dgcExchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError> {
+    fn dgc_exchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError> {
     
         let current_exchange: u32 = match state.get_exchange(currency) {
             Ok(Some(v)) => v,
@@ -259,13 +259,13 @@ impl DGCTransactions for DGCTransactionHandler {
         Ok(current_exchange)
     }
 
-    fn sellDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError> {
+    fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError> {
                    
         //Get balance of customer
-        let current_balance: u32 = self.dgcBalance(state, customer_pubkey)?;                                        
+        let current_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
 
         //Get exchange rate of currency
-        let current_exchange: u32 = self.dgcExchange(state, currency)?;                                        
+        let current_exchange: u32 = self.dgc_exchange(state, currency)?;                                        
 
         //sell amount should not be greater than current account balance        
         if sell_amount > current_balance {
@@ -283,13 +283,13 @@ impl DGCTransactions for DGCTransactionHandler {
     
     }
 
-    fn buyDGC(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError> {
+    fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError> {
                    
         //Get balance of customer
-        let current_balance: u32 = self.dgcBalance(state, customer_pubkey)?;                                        
+        let current_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
 
         //Get exchange rate of currency
-        let current_exchange: u32 = self.dgcExchange(state, currency)?;                                        
+        let current_exchange: u32 = self.dgc_exchange(state, currency)?;                                        
 
         //sell amount should not be greater than current account balance        
         //if sell_amount > current_balance {

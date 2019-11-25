@@ -12,11 +12,11 @@ pub enum Action {
     Withdraw,
     Balance,
     Transfer,
-    dgcBalance,
-    transferDGC,
-    dgcExchange,
-    sellDGC,
-    buyDGC,
+    BalanceDGC,
+    TransferDGC,
+    ExchangeDGC,
+    SellDGC,
+    BuyDGC,
 }
 
 impl fmt::Display for Action {
@@ -29,11 +29,11 @@ impl fmt::Display for Action {
                 Action::Withdraw => "Action::Withdraw",
                 Action::Balance => "Action::Balance",
                 Action::Transfer => "Action::Transfer",
-                Action::dgcBalance => "Action::dgcBalance",
-                Action::transferDGC => "Action::transferDGC",
-                Action::dgcExchange => "Action::dgcExchange",
-                Action::sellDGC => "Action::sellDGC",
-                Action::buyDGC => "Action::buyDGC",
+                Action::BalanceDGC => "Action::BalanceDGC",
+                Action::TransferDGC => "Action::TransferDGC",
+                Action::ExchangeDGC => "Action::ExchangeDGC",
+                Action::SellDGC => "Action::SellDGC",
+                Action::BuyDGC => "Action::BuyDGC",
             }
         )
     }
@@ -86,11 +86,11 @@ impl DGCPayload {
             "withdraw" => Action::Withdraw,
             "balance" => Action::Balance,
             "transfer" => Action::Transfer,
-            "dgcBalance" => Action::dgcBalance,
-            "transferDGC" => Action::transferDGC,
-            "dgcExchange" => Action::dgcExchange,
-            "sellDGC" => Action::sellDGC,
-            "buyDGC" => Action::buyDGC,
+            "dgcBalance" => Action::BalanceDGC,
+            "transferDGC" => Action::TransferDGC,
+            "dgcExchange" => Action::ExchangeDGC,
+            "sellDGC" => Action::SellDGC,
+            "buyDGC" => Action::BuyDGC,
             _ => {
                 return Err(ApplyError::InvalidTransaction(String::from(
                     "Invalid Action",

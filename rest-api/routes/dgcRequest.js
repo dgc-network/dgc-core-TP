@@ -111,8 +111,6 @@ class dgcRequest {
     var inputAddressList = [address];
     var outputAddressList = [address];
     if (action === "transfer") {
-	    //const pubKeyStrBuf = this.getUserPubKey(values[1]);
-      //const pubKeyStr = pubKeyStrBuf.toString().trim();
       console.log(values[1]);
 	    const pubKeyStr = values[1];
       var toAddress = hash("dgc-core").substr(0, 6) + hash(pubKeyStr).substr(0, 64);
@@ -185,8 +183,11 @@ class dgcRequest {
       .then((response) => response.json())
       .then((responseJson) => {
         var data = responseJson.data;
-        var amount = new Buffer(data, 'base64').toString();
-        return amount;
+        if (null == data) return 0
+        else {
+          var amount = new Buffer(data, 'base64').toString();
+          return amount;  
+        }
       })
       .catch((error) => {
         console.error(error);
