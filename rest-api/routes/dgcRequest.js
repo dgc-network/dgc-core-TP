@@ -176,16 +176,16 @@ class dgcRequest {
       return fetch(geturl, {
         method: 'GET',
       })
-      .then((response) => response.json())
       .catch((error) => {
         console.error(error);
-        return false;
+        //return false;
       });
 /*      
       //.catch((error) => {
       //  console.error(error);
       //  return false;
       //})
+      .then((response) => response.json())
       .then((responseJson) => {
         var data = responseJson.data;
         console.log("Response: " + data);
@@ -196,6 +196,10 @@ class dgcRequest {
           return amount;  
         }
       })
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
 */      
     } else {
       fetch('http://rest-api:8008/batches', {
