@@ -178,10 +178,10 @@ class dgcRequest {
       return fetch(geturl, {
         method: 'GET',
       })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      })
+      //.catch((error) => {
+      //  console.error(error);
+      //  return false;
+      //})
       .then((response) => response.json())
       .then((responseJson) => {
         var data = responseJson.data;
