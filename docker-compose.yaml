@@ -26,7 +26,7 @@ services:
     container_name: dgc-core-rest-api
     build:
       context: .
-      dockerfile: .//Dockerfile
+      dockerfile: ./rest-api/Dockerfile
       #dockerfile: ./rust-rest-api/Dockerfile
       args:
         - http_proxy
