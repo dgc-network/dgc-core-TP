@@ -27,14 +27,18 @@ const context = new secp256k1.Secp256k1Context()
 
 class dgcRequest {
   //constructor(privateKeyStr) {
-  constructor(req) {
-    console.log(req.body);
-    const privateKeyStr = req.body.privateKey;
-    const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
-    this.signer = new CryptoFactory(context).newSigner(privateKey);
-    this.publicKey = this.signer.getPublicKey().asHex();
-    this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
-    console.log("Storing at: " + this.address);  
+  constructor(reqBody) {
+    console.log(reqBody);
+    if (null == reqBody.privateKey) {
+      return {error: "privateKey is empty"};
+    } else {
+      const privateKeyStr = reqBody.privateKey;
+      const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
+      this.signer = new CryptoFactory(context).newSigner(privateKey);
+      this.publicKey = this.signer.getPublicKey().asHex();
+      this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
+      console.log("Storing at: " + this.address);    
+    }
   }
 
   isPrivateKey() {
