@@ -29,9 +29,7 @@ class dgcRequest {
   //constructor(privateKeyStr) {
   constructor(reqBody) {
     console.log(reqBody);
-    if (null == reqBody.privateKey) {
-      return;
-    } else {
+    if (null != reqBody.privateKey) {
       const privateKeyStr = reqBody.privateKey;
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyStr);
       this.signer = new CryptoFactory(context).newSigner(privateKey);

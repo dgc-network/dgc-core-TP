@@ -12,7 +12,7 @@ const router = express.Router();
 
 // makePrivateKey
 router.post('/makePrivateKey', function(req, res){
-    let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body);
     app.isPrivateKey().then(result => {
         if (false == result) {
             res.send({ privateKey: app.makePrivateKey()});
@@ -24,7 +24,7 @@ router.post('/makePrivateKey', function(req, res){
 
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
-    let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body);
     app.isPrivateKey().then(result => {
         if (false == result) {
             res.send({ error: "privateKey is not corrected"});
@@ -49,7 +49,7 @@ router.post('/dgcBalance', function(req, res){
 
 // dgcCredit
 router.post('/dgcCredit', function(req, res){
-    let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body);
     app.dgcBalance().then(result => {
         if (false == result) {
             res.send({ error: "privateKey is not corrected"});
@@ -61,7 +61,7 @@ router.post('/dgcCredit', function(req, res){
 
 // Transfer DGC to another user
 router.post('/transferDGC', function(req, res) {
-    let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body);
     app.dgcBalance().then(result => {
         if (false == result) {
             res.send({ error: "privateKey is not corrected"});
@@ -81,7 +81,7 @@ router.post('/transferDGC', function(req, res) {
 // dgcExchange
 router.post('/dgcExchange', function(req, res){
     let currency = req.body.currency;
-    let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body);
     app.dgcExchange(currency).then(result => {
         if (false == result) {
             res.send({ message:"the currency " + currency + " is not existed"});
@@ -128,7 +128,7 @@ router.post('/buyDGC', function(req, res) {
     let amount = req.body.DGC;
     let currency = req.body.currency;
     let currency_amount = req.body.currency_amount;
-    let app = new dgcRequest(req.body.privateKey);
+    let app = new dgcRequest(req.body);
     app.buyDGC(amount, currency, currency_amount);
     
     
@@ -147,7 +147,6 @@ router.post('/buyDGC', function(req, res) {
 
 // Get Info
 router.get('/info', function(req, res){
-    var userId = req.body.userId;
     res.send({
         //pubkey: batcher.getPublicKey(),
         //mapsApiKey: config.MAPS_API_KEY,
