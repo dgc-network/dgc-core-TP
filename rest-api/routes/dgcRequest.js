@@ -18,6 +18,9 @@ const FAMILY_VER = "1.0"
 const DGC_BALANCE = "ba"
 const DGC_CREDIT  = "ca"
 const DGC_EXCHANGE= "ec"
+const TRANSFER_DGC = "transfer"
+const SELL_DGC = "sell"
+const BUY_DGC = "buy"
 
 function hash(v) {
   return createHash('sha512').update(v).digest('hex');
@@ -90,45 +93,13 @@ class dgcRequest {
     this._post_to_rest_api("buyDGC", [dgc_amount, currency, currency_amount]);
   }
 
-/*
-  deposit(amount) {
-    this._post_to_rest_api("deposit", [amount]);
-  }
-
-  withdraw(amount) {
-    this._post_to_rest_api("withdraw", [amount]);
-  }	
-
-  balance() {
-    let amount = this._send_to_rest_api(null);
-    return amount;
-  }
-
-  transfer(user2, amount) {
-    this._post_to_rest_api("transfer", [amount, user2]);
-  }
-
-  getUserPriKey(userid) {
-    console.log(userid);
-    console.log("Current working directory is: " + process.cwd());
-    var userprivkeyfile = '/root/.sawtooth/keys/'+userid+'.priv';
-    return fs.readFileSync(userprivkeyfile);
-  }	
-
-  getUserPubKey(userid) {
-    console.log(userid);
-    console.log("Current working directory is: " + process.cwd());
-    var userpubkeyfile = '/root/.sawtooth/keys/'+userid+'.pub';
-    return fs.readFileSync(userpubkeyfile);
-  }
-*/
-  _post_to_rest_api(action,values){
+  _post_to_rest_api(action, values){
     let payload = ''
     const address = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
     console.log("wrapping for: " + address);
     let inputAddressList = [address];
     let outputAddressList = [address];
-    if (action === "transfer") {
+    if (action === TRANSFER_DGC) {
       console.log(values[1]);
 	    const pubKeyStr = values[1];
       const toAddress = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(pubKeyStr).substr(0, 62);
@@ -173,69 +144,19 @@ class dgcRequest {
     //this._send_to_rest_api(batchListBytes);	
     return fetch('http://rest-api:8008/batches', {
       method: 'POST',
-     headers: {
-       'Content-Type': 'application/octet-stream'
-     },
-     body: batchListBytes
-   })
-   .then((response) => {return response.json()})
-   .then((responseJson) => {
-     console.log(responseJson);
-   })
-   .catch((error) => {
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
+      body: batchListBytes
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log(responseJson);
+      return responseJson;
+    })
+    .catch((error) => {
       console.error(error);
-   }); 	
-  }
-
-  _send_to_rest_api(batchListBytes){
-    if (batchListBytes == null) {
-      var geturl = 'http://rest-api:8008/state/'+this.address
-      console.log("Getting from: " + geturl);
-      return fetch(geturl, {
-        method: 'GET',
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-/*      
-      //.catch((error) => {
-      //  console.error(error);
-      //  return false;
-      //})
-      .then((response) => response.json())
-      .then((responseJson) => {
-        var data = responseJson.data;
-        console.log("Response: " + data);
-        if (null == data) {
-          return 0;
-        } else {
-          var amount = new Buffer(data, 'base64').toString();
-          return amount;  
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
-
-    } else {
-      fetch('http://rest-api:8008/batches', {
- 	      method: 'POST',
-        headers: {
-	        'Content-Type': 'application/octet-stream'
-        },
-        body: batchListBytes
-	    })
-	    .then((response) => response.json())
-	    .then((responseJson) => {
-        console.log(responseJson);
-      })
-      .catch((error) => {
- 	      console.error(error);
-      });
-*/
-    }    
+    }); 	
   }
 }
 module.exports.dgcRequest = dgcRequest;
