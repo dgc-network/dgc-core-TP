@@ -59,6 +59,7 @@ class dgcRequest {
 
   dgcExchange(reqBody) {
     const currency = reqBody.currency;
+    console.log("Request: " + currency);
     if (currency !== null) {
       return this._get_from_rest_api(DGC_EXCHANGE, currency);
     } 

@@ -40,8 +40,8 @@ router.post('/dgcBalance', function(req, res){
     app.dgcBalance().then(response => {
         if (response.error !== null) {
             res.send({ balance: 0, message: response.error.message });
-        }
-        if (response.data !== null) {
+        } else {
+        //if (response.data !== null) {
             var data = response.data;
             console.log("Response: " + data);
             //if (null == data) {
@@ -61,8 +61,8 @@ router.post('/dgcCredit', function(req, res){
     app.dgcCredit().then(response => {
         if (response.error !== null) {
             res.send({ credit: 0, message: response.error.message });
-        }
-        if (response.data !== null) {
+        } else {
+        //if (response.data !== null) {
             var data = response.data;
             console.log("Response: " + data);
             var amount = new Buffer(data, 'base64').toString();
@@ -78,8 +78,8 @@ router.post('/dgcExchange', function(req, res){
     app.dgcExchange(req.body).then(response => {
         if (response.error !== null) {
             res.send({ message: response.error.message });
-        }
-        if (response.data !== null) {
+        } else {
+        //if (response.data !== null) {
             var data = response.data;
             console.log("Response: " + data);
             var amount = new Buffer(data, 'base64').toString();
