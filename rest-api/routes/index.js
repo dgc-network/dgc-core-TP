@@ -90,6 +90,22 @@ router.post('/dgcExchange', function(req, res){
 
 // Transfer DGC to another user
 router.post('/transferDGC', function(req, res) {
+    let privateKey = req.body.privateKey;
+    let amount = req.body.DGC;
+    let beneficiary = req.body.beneficiary;
+    if ((privateKey == undefined) || (amount == undefined) || (beneficiary == undefined)) {
+        res.send({ message: "privateKey or DGC or beneficiary undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.transferDGC(amount, beneficiary).then(response => {
+            if (response.error !== null) {
+                res.send({ message: response.error.message });
+            } else {
+                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+            }
+        });    
+    }
+/*
     let app = new dgcRequest(req.body);
     app.dgcBalance().then(result => {
         if (false == result) {
@@ -105,6 +121,7 @@ router.post('/transferDGC', function(req, res) {
             }
         }
     });
+*/
 });
 
 // sell DGC to marketplace

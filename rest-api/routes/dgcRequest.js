@@ -14,6 +14,7 @@ const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 const context = createContext('secp256k1')
 
 const FAMILY_NAME = "dgc-core"
+const FAMILY_VER = "1.0"
 const DGC_BALANCE = "ba"
 const DGC_CREDIT  = "ca"
 const DGC_EXCHANGE= "ec"
@@ -24,14 +25,10 @@ function hash(v) {
 
 class dgcRequest {
   constructor(privateKeyHex) {
-    //console.log(reqBody);
-    //const privateKeyHex = reqBody.privateKey;
     if (undefined !== privateKeyHex) {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
       this.signer = new CryptoFactory(context).newSigner(privateKey)
       this.publicKeyHex = this.signer.getPublicKey().asHex();
-      //this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKeyHex).substr(0, 64);
-      //console.log("Storing at: " + this.address);    
     }
   }
 
@@ -58,11 +55,7 @@ class dgcRequest {
   }
 
   dgcExchange(currency) {
-    //const currency = reqBody.currency;
-    console.log("Request: " + currency);
-    if (currency !== undefined) {
-      return this._get_from_rest_api(DGC_EXCHANGE, currency);
-    } 
+    return this._get_from_rest_api(DGC_EXCHANGE, currency);
   }
 
   _get_from_rest_api(action, values){
@@ -130,15 +123,15 @@ class dgcRequest {
   }
 */
   _wrap_and_send(action,values){
-    var payload = ''
-    const address = this.address;
-    console.log("wrapping for: " + this.address);
-    var inputAddressList = [address];
-    var outputAddressList = [address];
+    let payload = ''
+    const address = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
+    console.log("wrapping for: " + address);
+    let inputAddressList = [address];
+    let outputAddressList = [address];
     if (action === "transfer") {
       console.log(values[1]);
 	    const pubKeyStr = values[1];
-      var toAddress = hash("dgc-core").substr(0, 6) + hash(pubKeyStr).substr(0, 64);
+      const toAddress = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(pubKeyStr).substr(0, 62);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
       payload = action+","+values[0]+","+pubKeyStr;
@@ -148,8 +141,8 @@ class dgcRequest {
     var enc = new TextEncoder('utf8');
     const payloadBytes = enc.encode(payload);
     const transactionHeaderBytes = protobuf.TransactionHeader.encode({
-      familyName: 'dgc-core',
-      familyVersion: '1.0',
+      familyName: FAMILY_NAME,
+      familyVersion: FAMILY_VER,
       inputs: inputAddressList,
       outputs: outputAddressList,
       signerPublicKey: this.signer.getPublicKey().asHex(),
