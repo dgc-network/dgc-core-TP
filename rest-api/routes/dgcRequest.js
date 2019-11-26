@@ -28,7 +28,7 @@ class dgcRequest {
     const privateKeyHex = reqBody.privateKey;
     if (null !== privateKeyHex) {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
-      this.signer = CryptoFactory(context).newSigner(privateKey)
+      this.signer = new CryptoFactory(context).newSigner(privateKey)
       this.publicKeyHex = this.signer.getPublicKey().asHex();
       //this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKeyHex).substr(0, 64);
       //console.log("Storing at: " + this.address);    
