@@ -13,38 +13,25 @@ const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 
 const context = createContext('secp256k1')
 
-//const FAMILY_NAME='dgc-core'
+const FAMILY_NAME='dgc-core'
+const DGC_BALANCE='ba'
+const DGC_CREDIT='ca'
+const DGC_EXCHANGE='ec'
 
 function hash(v) {
   return createHash('sha512').update(v).digest('hex');
 }
 
-/**
- * Generates a new private key, saving it to memory and storage (encrypted).
- * Returns both a public key and the encrypted private key.
- */
-//const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
-//const context = new secp256k1.Secp256k1Context()
-//const context = createContext('secp256k1');
-
 class dgcRequest {
   constructor(reqBody) {
     console.log(reqBody);
     const privateKeyHex = reqBody.privateKey;
-/*    
-    let buffer = Buffer.from(privateKeyHex, 'hex')
-    // verify that it is either a proper compressed or uncompressed key
-    if (!secp256k1.privateKeyVerify(buffer) &&
-      !secp256k1.privateKeyVerify(buffer, false)) {
-      throw new ParseError('Unable to parse a private key from the given hex')
-    }
-*/    
     if (null !== privateKeyHex) {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
       this.signer = CryptoFactory(context).newSigner(privateKey)
       this.publicKeyHex = this.signer.getPublicKey().asHex();
-      this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKeyHex).substr(0, 64);
-      console.log("Storing at: " + this.address);    
+      //this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKeyHex).substr(0, 64);
+      //console.log("Storing at: " + this.address);    
     }
   }
 
@@ -63,20 +50,49 @@ class dgcRequest {
   }
 
   dgcBalance() {
-    return this._send_to_rest_api(null);
+    return this._get_from_rest_api([DGC_BALANCE]);
   }
 
   dgcCredit() {
-    return this._send_to_rest_api(null);
+    return this._get_from_rest_api([DGC_CREDIT]);
   } //imcomplete
+
+  dgcExchange(currency) {
+    return this._get_from_rest_api([DGC_EXCHANGE, currency]);
+  } //imcomplete
+
+  _get_from_rest_api(params){
+    let address = hash(FAMILY_NAME).substr(0, 6) + hash(params[0]).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
+    if (params[1] !== null) {
+      address = hash(FAMILY_NAME).substr(0, 6) + hash(params[1]).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
+    }
+    console.log("Storing at: " + address);
+    const geturl = 'http://rest-api:8008/state/'+address
+    console.log("Getting from: " + geturl);
+    return fetch(geturl, {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      var data = responseJson.data;
+      return data;
+      console.log("Response: " + data);
+      if (null == data) {
+        return 0;
+      } else {
+        var amount = new Buffer(data, 'base64').toString();
+        return amount;  
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
+  }
 
   transferDGC(amount, user2) {
     this._wrap_and_send("transfer", [amount, user2]);
   }
-
-  dgcExchange(currency) {
-    return this._send_to_rest_api(null);
-  } //imcomplete
 
   sellDGC(dgc_amount, currency, currency_amount) {
     this._wrap_and_send("sellDGC", [dgc_amount, currency, currency_amount]);
