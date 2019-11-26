@@ -75,7 +75,7 @@ router.post('/dgcCredit', function(req, res){
 router.post('/dgcExchange', function(req, res){
     let currency = req.body.currency;
     let app = new dgcRequest(req.body);
-    app.dgcExchange(currency).then(response => {
+    app.dgcExchange(req.body).then(response => {
         if (response.error !== null) {
             res.send({ message: response.error.message });
         }
