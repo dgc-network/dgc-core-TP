@@ -5,10 +5,13 @@
 
 const {createHash} = require('crypto')
 const {CryptoFactory, createContext } = require('sawtooth-sdk/signing')
+const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')
 const protobuf = require('sawtooth-sdk/protobuf')
-const fs = require('fs')
+//const fs = require('fs')
 const fetch = require('node-fetch');
 const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
+
+const context = createContext('secp256k1')
 
 //const FAMILY_NAME='dgc-core'
 
@@ -20,34 +23,27 @@ function hash(v) {
  * Generates a new private key, saving it to memory and storage (encrypted).
  * Returns both a public key and the encrypted private key.
  */
-const {Secp256k1PrivateKey} = require('sawtooth-sdk/signing/secp256k1')	
-const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
-const context = new secp256k1.Secp256k1Context()
+//const secp256k1 = require('sawtooth-sdk/signing/secp256k1')
+//const context = new secp256k1.Secp256k1Context()
 //const context = createContext('secp256k1');
 
 class dgcRequest {
-  //constructor(privateKeyStr) {
   constructor(reqBody) {
     console.log(reqBody);
     const privateKeyHex = reqBody.privateKey;
+/*    
     let buffer = Buffer.from(privateKeyHex, 'hex')
     // verify that it is either a proper compressed or uncompressed key
     if (!secp256k1.privateKeyVerify(buffer) &&
       !secp256k1.privateKeyVerify(buffer, false)) {
       throw new ParseError('Unable to parse a private key from the given hex')
     }
-    if (null !== reqBody.privateKey) {
-      const privateKeyHex = reqBody.privateKey;
-      let buffer = Buffer.from(privateKeyHex, 'hex')
-      // verify that it is either a proper compressed or uncompressed key
-      if (!secp256k1.privateKeyVerify(buffer) &&
-        !secp256k1.privateKeyVerify(buffer, false)) {
-        throw new ParseError('Unable to parse a private key from the given hex')
-      }
+*/    
+    if (null !== privateKeyHex) {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
-      this.signer = new CryptoFactory(context).newSigner(privateKey);
-      this.publicKey = this.signer.getPublicKey().asHex();
-      this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKey).substr(0, 64);
+      this.signer = CryptoFactory(context).newSigner(privateKey)
+      this.publicKeyHex = this.signer.getPublicKey().asHex();
+      this.address = hash("dgc-core").substr(0, 6) + hash(this.publicKeyHex).substr(0, 64);
       console.log("Storing at: " + this.address);    
     }
   }
@@ -57,13 +53,13 @@ class dgcRequest {
   }
 
   makePrivateKey() {
-    let privateKey = context.newRandomPrivateKey()
-    privateKey = privateKey.asHex()
-    return privateKey
+    const privateKey = context.newRandomPrivateKey()
+    const privateKeyHex = privateKey.asHex()
+    return privateKeyHex
   }
 
   getPublicKey() {
-    return this.publicKey
+    return this.publicKeyHex
   }
 
   dgcBalance() {
@@ -185,7 +181,7 @@ class dgcRequest {
    .catch((error) => {
       console.error(error);
    }); 	
-}
+  }
 
   _send_to_rest_api(batchListBytes){
     if (batchListBytes == null) {
@@ -218,7 +214,7 @@ class dgcRequest {
         console.error(error);
         return false;
       });
-*/      
+
     } else {
       fetch('http://rest-api:8008/batches', {
  	      method: 'POST',
@@ -233,8 +229,9 @@ class dgcRequest {
       })
       .catch((error) => {
  	      console.error(error);
-      }); 	
-    }
+      });
+*/
+    }    
   }
 }
 module.exports.dgcRequest = dgcRequest;
