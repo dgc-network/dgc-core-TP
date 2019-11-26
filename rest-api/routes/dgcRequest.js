@@ -74,9 +74,7 @@ class dgcRequest {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      if (responseJson.error !== null) {
-        return responseJson.error.message;
-      }
+      return responseJson;
       var data = responseJson.data;
       return data;
       console.log("Response: " + data);
@@ -89,7 +87,6 @@ class dgcRequest {
     })
     .catch((error) => {
       console.error(error);
-      return error;
     });
   }
 
