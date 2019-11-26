@@ -23,9 +23,9 @@ function hash(v) {
 }
 
 class dgcRequest {
-  constructor(reqBody) {
-    console.log(reqBody);
-    const privateKeyHex = reqBody.privateKey;
+  constructor(privateKeyHex) {
+    //console.log(reqBody);
+    //const privateKeyHex = reqBody.privateKey;
     if (undefined !== privateKeyHex) {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
       this.signer = new CryptoFactory(context).newSigner(privateKey)

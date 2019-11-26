@@ -12,80 +12,93 @@ const router = express.Router();
 
 // makePrivateKey
 router.post('/makePrivateKey', function(req, res){
-    let app = new dgcRequest(req.body);
-    app.isPrivateKey().then(result => {
-        if (false == result) {
-            res.send({ privateKey: app.makePrivateKey()});
+    let privateKey = req.body.privateKey;
+    let app = new dgcRequest(privateKey);
+    app.makePrivateKey().then(response => {
+        if (response.error !== null) {
+            res.send({ message: response.error.message });
         } else {
-            res.send({ error: "privateKey is existed"});
+            res.send({ privateKey: app.makePrivateKey()});
         }
     });
 })
 
 // getPublicKey
 router.post('/getPublicKey', function(req, res){
-    let app = new dgcRequest(req.body);
-    app.isPrivateKey().then(result => {
-        if (false == result) {
-            res.send({ error: "privateKey is not corrected"});
-        } else {
-            res.send({ publicKey: app.getPublicKey()});
-        }
-    });
+    let privateKey = req.body.privateKey;
+    if (privateKey == undefined) {
+        res.send({ message: "privateKey undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.getPublicKey().then(response => {
+            if (response.error !== null) {
+                res.send({ message: response.error.message });
+            } else {
+                res.send({ publicKey: app.getPublicKey()});
+            }
+        });
+    }
 })
 
 // dgcBalance
 router.post('/dgcBalance', function(req, res){
-    let app = new dgcRequest(req.body);
-    app.dgcBalance().then(response => {
-        if (response.error !== null) {
-            res.send({ balance: 0, message: response.error.message });
-        } else {
-        //if (response.data !== null) {
-            var data = response.data;
-            console.log("Response: " + data);
-            //if (null == data) {
-              //return 0;
-            //} else {
-              var amount = new Buffer(data, 'base64').toString();
-              //return amount;  
-            //}
-            res.send({ balance: amount, message: response.data.message });
-        }
-    });
+    let privateKey = req.body.privateKey;
+    if (privateKey == undefined) {
+        res.send({ message: "privateKey undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.dgcBalance().then(response => {
+            if (response.error !== null) {
+                res.send({ balance: 0, message: response.error.message });
+            } else {
+                var data = response.data;
+                console.log("Response: " + data);
+                var amount = new Buffer(data, 'base64').toString();
+                res.send({ balance: amount, message: response.data.message });
+            }
+        });
+    }
 })
 
 // dgcCredit
 router.post('/dgcCredit', function(req, res){
-    let app = new dgcRequest(req.body);
-    app.dgcCredit().then(response => {
-        if (response.error !== null) {
-            res.send({ credit: 0, message: response.error.message });
-        } else {
-        //if (response.data !== null) {
-            var data = response.data;
-            console.log("Response: " + data);
-            var amount = new Buffer(data, 'base64').toString();
-            res.send({ credit: amount, message: response.data.message });
-        }
-    });
+    let privateKey = req.body.privateKey;
+    if (privateKey == undefined) {
+        res.send({ message: "privateKey undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.dgcCredit().then(response => {
+            if (response.error !== null) {
+                res.send({ credit: 0, message: response.error.message });
+            } else {
+                var data = response.data;
+                console.log("Response: " + data);
+                var amount = new Buffer(data, 'base64').toString();
+                res.send({ credit: amount, message: response.data.message });
+            }
+        });
+    }
 })
 
 // dgcExchange
 router.post('/dgcExchange', function(req, res){
+    let privateKey = req.body.privateKey;
     let currency = req.body.currency;
-    let app = new dgcRequest(req.body);
-    app.dgcExchange(currency).then(response => {
-        if (response.error !== null) {
-            res.send({ message: response.error.message });
-        } else {
-        //if (response.data !== null) {
-            var data = response.data;
-            console.log("Response: " + data);
-            var amount = new Buffer(data, 'base64').toString();
-            res.send({ exchangeRate: amount, currency: currency, message: response.data.message });
-        }
-    });
+    if ((privateKey == undefined) || (currency == undefined)) {
+        res.send({ message: "privateKey or currency undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.dgcExchange(currency).then(response => {
+            if (response.error !== null) {
+                res.send({ message: response.error.message });
+            } else {
+                var data = response.data;
+                console.log("Response: " + data);
+                var amount = new Buffer(data, 'base64').toString();
+                res.send({ rate: amount, currency: currency, message: response.data.message });
+            }
+        });    
+    }
 })
 
 // Transfer DGC to another user
