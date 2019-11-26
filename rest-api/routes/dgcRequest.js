@@ -26,7 +26,7 @@ class dgcRequest {
   constructor(reqBody) {
     console.log(reqBody);
     const privateKeyHex = reqBody.privateKey;
-    if (null !== privateKeyHex) {
+    if (undefined !== privateKeyHex) {
       const privateKey = Secp256k1PrivateKey.fromHex(privateKeyHex);
       this.signer = new CryptoFactory(context).newSigner(privateKey)
       this.publicKeyHex = this.signer.getPublicKey().asHex();
@@ -57,10 +57,10 @@ class dgcRequest {
     return this._get_from_rest_api(DGC_CREDIT);
   }
 
-  dgcExchange(reqBody) {
-    const currency = reqBody.currency;
+  dgcExchange(currency) {
+    //const currency = reqBody.currency;
     console.log("Request: " + currency);
-    if (currency !== null) {
+    if (currency !== undefined) {
       return this._get_from_rest_api(DGC_EXCHANGE, currency);
     } 
   }
