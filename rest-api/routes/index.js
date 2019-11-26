@@ -39,7 +39,7 @@ router.post('/dgcBalance', function(req, res){
     let app = new dgcRequest(req.body);
     app.dgcBalance().then(response => {
         if (response.error !== null) {
-            res.send({ message: response.error.message });
+            res.send({ balance: 0, message: response.error.message });
         }
         if (response.data !== null) {
             res.send({ message: response.data.message });
