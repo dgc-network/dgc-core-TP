@@ -42,7 +42,15 @@ router.post('/dgcBalance', function(req, res){
             res.send({ balance: 0, message: response.error.message });
         }
         if (response.data !== null) {
-            res.send({ message: response.data.message });
+            var data = response.data;
+            console.log("Response: " + data);
+            //if (null == data) {
+              //return 0;
+            //} else {
+              var amount = new Buffer(data, 'base64').toString();
+              //return amount;  
+            //}
+            res.send({ balance: amount, message: response.data.message });
         }
     });
 })
@@ -50,11 +58,32 @@ router.post('/dgcBalance', function(req, res){
 // dgcCredit
 router.post('/dgcCredit', function(req, res){
     let app = new dgcRequest(req.body);
-    app.dgcBalance().then(result => {
-        if (false == result) {
-            res.send({ error: "privateKey is not corrected"});
-        } else {
-            res.send({ credit: result, message:"Amount " + result + " available"});
+    app.dgcCredit().then(response => {
+        if (response.error !== null) {
+            res.send({ credit: 0, message: response.error.message });
+        }
+        if (response.data !== null) {
+            var data = response.data;
+            console.log("Response: " + data);
+            var amount = new Buffer(data, 'base64').toString();
+            res.send({ credit: amount, message: response.data.message });
+        }
+    });
+})
+
+// dgcExchange
+router.post('/dgcExchange', function(req, res){
+    let currency = req.body.currency;
+    let app = new dgcRequest(req.body);
+    app.dgcExchange(currency).then(response => {
+        if (response.error !== null) {
+            res.send({ message: response.error.message });
+        }
+        if (response.data !== null) {
+            var data = response.data;
+            console.log("Response: " + data);
+            var amount = new Buffer(data, 'base64').toString();
+            res.send({ exchangeRate: amount, currency: currency, message: response.data.message });
         }
     });
 })
@@ -77,19 +106,6 @@ router.post('/transferDGC', function(req, res) {
         }
     });
 });
-
-// dgcExchange
-router.post('/dgcExchange', function(req, res){
-    let currency = req.body.currency;
-    let app = new dgcRequest(req.body);
-    app.dgcExchange(currency).then(result => {
-        if (false == result) {
-            res.send({ message:"the currency " + currency + " is not existed"});
-        } else {
-            res.send({ exchange: result, message:"The currency "  + currency + " exchange rate is " + result });
-        }
-    });
-})
 
 // sell DGC to marketplace
 // imcomplete

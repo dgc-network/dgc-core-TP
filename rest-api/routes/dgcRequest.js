@@ -55,11 +55,13 @@ class dgcRequest {
 
   dgcCredit() {
     return this._get_from_rest_api(DGC_CREDIT);
-  } //imcomplete
+  }
 
   dgcExchange(currency) {
-    return this._get_from_rest_api(DGC_EXCHANGE, currency);
-  } //imcomplete
+    if (currency !== null) {
+      return this._get_from_rest_api(DGC_EXCHANGE, currency);
+    } 
+  }
 
   _get_from_rest_api(action, values){
     let address = hash(FAMILY_NAME).substr(0, 6) + hash(action).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
@@ -75,15 +77,6 @@ class dgcRequest {
     .then((response) => response.json())
     .then((responseJson) => {
       return responseJson;
-      var data = responseJson.data;
-      return data;
-      console.log("Response: " + data);
-      if (null == data) {
-        return 0;
-      } else {
-        var amount = new Buffer(data, 'base64').toString();
-        return amount;  
-      }
     })
     .catch((error) => {
       console.error(error);
