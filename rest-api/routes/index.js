@@ -12,15 +12,8 @@ const router = express.Router();
 
 // makePrivateKey
 router.post('/makePrivateKey', function(req, res){
-    let privateKey = req.body.privateKey;
-    let app = new dgcRequest(privateKey);
-    app.makePrivateKey().then(response => {
-        if (response.error !== null) {
-            res.send({ message: response.error.message });
-        } else {
-            res.send({ privateKey: app.makePrivateKey()});
-        }
-    });
+    let app = new dgcRequest(req.body.privateKey);
+    res.send({ privateKey: app.makePrivateKey()});
 })
 
 // getPublicKey
@@ -30,13 +23,7 @@ router.post('/getPublicKey', function(req, res){
         res.send({ message: "privateKey undefined" });
     } else {
         let app = new dgcRequest(privateKey);
-        app.getPublicKey().then(response => {
-            if (response.error !== null) {
-                res.send({ message: response.error.message });
-            } else {
-                res.send({ publicKey: app.getPublicKey()});
-            }
-        });
+        res.send({ publicKey: app.getPublicKey()});
     }
 })
 
