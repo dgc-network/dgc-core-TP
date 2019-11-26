@@ -13,10 +13,10 @@ const {TextEncoder, TextDecoder} = require('text-encoding/lib/encoding')
 
 const context = createContext('secp256k1')
 
-const FAMILY_NAME='dgc-core'
-const DGC_BALANCE='ba'
-const DGC_CREDIT='ca'
-const DGC_EXCHANGE='ec'
+const FAMILY_NAME = "dgc-core"
+const DGC_BALANCE = "ba"
+const DGC_CREDIT  = "ca"
+const DGC_EXCHANGE= "ec"
 
 function hash(v) {
   return createHash('sha512').update(v).digest('hex');
@@ -50,21 +50,21 @@ class dgcRequest {
   }
 
   dgcBalance() {
-    return this._get_from_rest_api([DGC_BALANCE]);
+    return this._get_from_rest_api(DGC_BALANCE);
   }
 
   dgcCredit() {
-    return this._get_from_rest_api([DGC_CREDIT]);
+    return this._get_from_rest_api(DGC_CREDIT);
   } //imcomplete
 
   dgcExchange(currency) {
-    return this._get_from_rest_api([DGC_EXCHANGE, currency]);
+    return this._get_from_rest_api(DGC_EXCHANGE, currency);
   } //imcomplete
 
-  _get_from_rest_api(params){
-    let address = hash(FAMILY_NAME).substr(0, 6) + hash(params[0]).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
-    if (params[1] !== null) {
-      address = hash(FAMILY_NAME).substr(0, 6) + hash(params[1]).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
+  _get_from_rest_api(action, values){
+    let address = hash(FAMILY_NAME).substr(0, 6) + hash(action).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
+    if (action == DGC_EXCHANGE) {
+      address = hash(FAMILY_NAME).substr(0, 6) + hash(values).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
     }
     console.log("Storing at: " + address);
     const geturl = 'http://rest-api:8008/state/'+address
