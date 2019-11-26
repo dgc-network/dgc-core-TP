@@ -97,8 +97,17 @@ router.post('/transferDGC', function(req, res) {
         res.send({ message: "privateKey or DGC or beneficiary undefined" });
     } else {
         let app = new dgcRequest(privateKey);
-        app.transferDGC(amount, beneficiary);
-        res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+        app.transferDGC(amount, beneficiary).then(response => {
+            if (response.error !== null) {
+                res.send({ message: response.error.message });
+            } else {
+                var data = response.data;
+                console.log("Response: " + data);
+                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
+                //var amount = new Buffer(data, 'base64').toString();
+                //res.send({ rate: amount, currency: currency, message: response.data.message });
+            }
+        });    
     }
 /*
     let app = new dgcRequest(req.body);

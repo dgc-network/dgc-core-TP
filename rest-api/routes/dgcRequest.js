@@ -79,24 +79,24 @@ class dgcRequest {
   }
 
   transferDGC(amount, user2) {
-    this._wrap_and_send("transfer", [amount, user2]);
+    this._post_to_rest_api("transfer", [amount, user2]);
   }
 
   sellDGC(dgc_amount, currency, currency_amount) {
-    this._wrap_and_send("sellDGC", [dgc_amount, currency, currency_amount]);
+    this._post_to_rest_api("sellDGC", [dgc_amount, currency, currency_amount]);
   }
 
   buyDGC(dgc_amount, currency, currency_amount) {
-    this._wrap_and_send("buyDGC", [dgc_amount, currency, currency_amount]);
+    this._post_to_rest_api("buyDGC", [dgc_amount, currency, currency_amount]);
   }
 
 /*
   deposit(amount) {
-    this._wrap_and_send("deposit", [amount]);
+    this._post_to_rest_api("deposit", [amount]);
   }
 
   withdraw(amount) {
-    this._wrap_and_send("withdraw", [amount]);
+    this._post_to_rest_api("withdraw", [amount]);
   }	
 
   balance() {
@@ -105,7 +105,7 @@ class dgcRequest {
   }
 
   transfer(user2, amount) {
-    this._wrap_and_send("transfer", [amount, user2]);
+    this._post_to_rest_api("transfer", [amount, user2]);
   }
 
   getUserPriKey(userid) {
@@ -122,7 +122,7 @@ class dgcRequest {
     return fs.readFileSync(userpubkeyfile);
   }
 */
-  _wrap_and_send(action,values){
+  _post_to_rest_api(action,values){
     let payload = ''
     const address = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
     console.log("wrapping for: " + address);
@@ -171,14 +171,14 @@ class dgcRequest {
       batches: [batch]
     }).finish();
     //this._send_to_rest_api(batchListBytes);	
-    fetch('http://rest-api:8008/batches', {
+    return fetch('http://rest-api:8008/batches', {
       method: 'POST',
      headers: {
        'Content-Type': 'application/octet-stream'
      },
      body: batchListBytes
    })
-   .then((response) => response.json())
+   .then((response) => {return response.json()})
    .then((responseJson) => {
      console.log(responseJson);
    })
