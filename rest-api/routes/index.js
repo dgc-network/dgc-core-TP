@@ -98,7 +98,7 @@ router.post('/applyCredit', function(req, res) {
     } else {
         let app = new dgcRequest(privateKey);
         app.applyCredit(amount, currency).then(response => {
-            if (response.error !== null) {
+            if (response.error !== undefined) {
                 res.send({ message: response.error.message });
             } else {
                 var data = response.data;
