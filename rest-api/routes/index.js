@@ -102,7 +102,7 @@ router.post('/applyCredit', function(req, res) {
                 res.send({ message: response.error.message });
             } else {
                 var data = response.data;
-                console.log("Response: " + response.link);
+                console.log("Response: " + response.status);
                 res.send({ message:"Credit "+ amount +" successfully added to " + currency});        
                 //var amount = new Buffer(data, 'base64').toString();
                 //res.send({ rate: amount, currency: currency, message: response.data.message });
