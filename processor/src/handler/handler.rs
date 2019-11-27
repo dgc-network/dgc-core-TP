@@ -24,8 +24,10 @@ trait DGCTransactions {
     fn transfer(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
     fn balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
     fn dgc_balance(&self, state: &mut DGCState, customer_pubkey: &str) -> Result<u32, ApplyError>;
-    fn transfer_dgc(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
     fn dgc_exchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError>;
+    fn dgc_credit(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str) -> Result<u32, ApplyError>;
+    fn apply_credit(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, credit_amount: u32) -> Result<(), ApplyError>;
+    fn transfer_dgc(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
     fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError>;
     fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError>;
 }
@@ -132,6 +134,54 @@ impl TransactionHandler for DGCTransactionHandler {
                 info!("current balance: {} ", current_balance);
             }
             
+            Action::ExchangeDGC => {
+                //Get currency from payload
+                let currency =  match payload.get_currency() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: ExchangeDGC. currency doesn't exist.",
+                        )))
+                    }                    
+                };
+                
+                let current_exchange: u32 = self.dgc_exchange(&mut state, currency)?;                                
+                info!("current exchange: {} ", current_exchange);
+            }
+            
+            Action::CreditDGC => {
+                //Get currency from payload
+                let currency =  match payload.get_currency() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: CreditDGC. currency doesn't exist.",
+                        )))
+                    }                    
+                };
+                
+                let current_credit: u32 = self.dgc_credit(&mut state, customer_pubkey, currency)?;                                
+                info!("current credit: {} ", current_credit);
+            }
+            
+            Action::ApplyCredit => {
+            
+                //Get currency from payload
+                let currency =  match payload.get_currency() {
+                    Some(v) => v.as_str(),
+                    None => {
+                        return Err(ApplyError::InvalidTransaction(String::from(
+                            "Action: CreditDGC. currency doesn't exist.",
+                        )))
+                    }                    
+                };
+                
+                //Get apply credit amount
+                let credit_amount = payload.get_value();
+        
+                self.credit_dgc(&mut state, customer_pubkey, currency, credit_amount)?;                
+            }                        
+
             Action::TransferDGC => {
             
                 //Get beneficiary details from payload
@@ -150,21 +200,6 @@ impl TransactionHandler for DGCTransactionHandler {
                 self.transfer_dgc(&mut state, customer_pubkey, beneficiary_pubkey, transfer_amount)?;                
             }                        
 
-            Action::ExchangeDGC => {
-                //Get currency from payload
-                let currency =  match payload.get_currency() {
-                    Some(v) => v.as_str(),
-                    None => {
-                        return Err(ApplyError::InvalidTransaction(String::from(
-                            "Action: ExchangeDGC. currency doesn't exist.",
-                        )))
-                    }                    
-                };
-                
-                let current_exchange: u32 = self.dgc_exchange(&mut state, currency)?;                                
-                info!("current exchange: {} ", current_exchange);
-            }
-            
             Action::SellDGC => {
             
                 //Get currency from payload
@@ -222,6 +257,46 @@ impl DGCTransactions for DGCTransactionHandler {
         Ok(current_balance)
     }
 
+    fn dgc_exchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError> {
+    
+        let current_exchange: u32 = match state.get_exchange(currency) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new currency for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+        
+        Ok(current_exchange)
+    }
+
+    fn dgc_credit(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str) -> Result<u32, ApplyError> {
+    
+        let current_credit: u32 = match state.get_exchange(currency) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new currency for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+        
+        Ok(current_credit)
+    }
+
+    fn apply_credit(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, credit_amount: u32) -> Result<(), ApplyError> {
+                   
+        //Get credit of customer
+        let current_credit: u32 = self.dgc_credit(state, customer_pubkey, currency)?;                                        
+                                
+        //Store new credit to state
+        state.set_credit(customer_pubkey, current_credit + credit_amount, currency)?;
+                                     
+        Ok(())
+    
+    }
+
     fn transfer_dgc(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError> {
                    
         //Get balance of customer
@@ -245,63 +320,55 @@ impl DGCTransactions for DGCTransactionHandler {
     
     }
 
-    fn dgc_exchange(&self, state: &mut DGCState, currency: &str) -> Result<u32, ApplyError> {
-    
-        let current_exchange: u32 = match state.get_exchange(currency) {
-            Ok(Some(v)) => v,
-            Ok(None) => {
-                info!("Creating new currency for user.");
-                0              
-            }
-            Err(err) => return Err(err),
-        };
-        
-        Ok(current_exchange)
-    }
-
-    fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError> {
+    fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, sell_dgc_amount: u32, currency: &str, expected_sell_currency_amount: u32) -> Result<(), ApplyError> {
                    
-        //Get balance of customer
-        let current_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
+        //Get dgc balance of customer
+        let current_dgc_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
+
+        //Get dgc credit of customer
+        let current_dgc_credit: u32 = self.dgc_credit(state, customer_pubkey, 'DGC')?;                                        
 
         //Get exchange rate of currency
         let current_exchange: u32 = self.dgc_exchange(state, currency)?;                                        
 
-        //sell amount should not be greater than current account balance        
-        if sell_amount > current_balance {
+        //sell amount should not be greater than current account balance + credit
+        if sell_dgc_amount > (current_dgc_balance + current_dgc_credit){
             return Err(ApplyError::InvalidTransaction(String::from(
                 "Action: Sell amount is more than customer account balance.",
             )))
         }
         
         //Store new balance to state
-        state.set_balance(customer_pubkey, current_balance - sell_amount)?;
+        //state.set_balance(customer_pubkey, current_balance - sell_amount)?;
         //Store new exchange rate to state --> imcomplete
-        state.set_exchange(currency, current_exchange)?;
+        //state.set_exchange(currency, current_exchange)?;
                                      
         Ok(())
     
     }
 
-    fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError> {
+    fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, buy_dgc_amount: u32, currency: &str, expected_buy_currency_amount: u32) -> Result<(), ApplyError> {
                    
-        //Get balance of customer
+        //Get dgc balance of customer
         let current_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
+
+        //Get currency credit of customer
+        let currency_credit: u32 = self.dgc_credit(state, customer_pubkey, currency)?;                                        
 
         //Get exchange rate of currency
         let current_exchange: u32 = self.dgc_exchange(state, currency)?;                                        
 
-        //sell amount should not be greater than current account balance        
-        //if sell_amount > current_balance {
-        //    return Err(ApplyError::InvalidTransaction(String::from(
-        //        "Action: Sell amount is more than customer account balance.",
-        //    )))
-        //}
+        //buy amount should not be greater than current account balance        
+        if (buy_dgc_amount * current_exchange) > currency_credit {
+            return Err(ApplyError::InvalidTransaction(String::from(
+                "Action: Buy amount is more than customer account credit.",
+            )))
+        }
         
         //Store new balance to state
-        state.set_balance(customer_pubkey, current_balance + buy_amount)?;
+        //state.set_balance(customer_pubkey, current_balance + buy_amount)?;
         //Store new exchange rate to state --> imcomplete
-        state.set_exchange(currency, current_exchange)?;
+        //state.set_exchange(currency, current_exchange)?;
                                      
         Ok(())
     

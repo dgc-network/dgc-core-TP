@@ -12,9 +12,9 @@ use sawtooth_sdk::processor::handler::TransactionContext;
 
 const FAMILY_NAME: &str = "dgc-core";
 const FAMILY_VER: &str = "1.0";
-const DGC_BALANCE: &str = "ba";
-const DGC_CREDIT: &str  = "ca";
-const DGC_EXCHANGE: &str= "ec";
+const DGC_BALANCE: &str = "balance";
+const DGC_CREDIT: &str  = "credit";
+const DGC_EXCHANGE: &str= "exchange";
 const APPLY_CREDIT: &str = "apply";
 const TRANSFER_DGC: &str = "transfer";
 const SELL_DGC: &str = "sell";
@@ -22,7 +22,8 @@ const BUY_DGC: &str = "buy";
 
 pub fn get_dgc_prefix() -> String {
     let mut sha = Sha512::new();
-    sha.input_str(&FAMILY_NAME);
+    //sha.input_str(&FAMILY_NAME);
+    sha.input_str(FAMILY_NAME);
     sha.result_str()[..6].to_string()
 }
 
@@ -38,15 +39,18 @@ pub fn hash(to_hash: &str, num: usize) -> String {
 }
 
 pub fn make_balance_address(identifier: &str) -> String {
-    get_dgc_prefix() + &DGC_BALANCE + &hash(identifier, 62)
+    //get_dgc_prefix() + &DGC_BALANCE + &hash(identifier, 62)
+    &hash(FAMILY_NAME, 6) + &hash(DGC_BALANCE, 2) + &hash(identifier, 62)
 }
 
 pub fn make_credit_address(identifier: &str, currency: &str) -> String {
-    get_dgc_prefix() + &DGC_CREDIT + &hash(currency, 2) + &hash(identifier, 60)
+    //get_dgc_prefix() + &DGC_CREDIT + &hash(currency, 2) + &hash(identifier, 60)
+    &hash(FAMILY_NAME, 6) + &hash(DGC_CREDIT, 2) + &hash(currency, 2) + &hash(identifier, 60)
 }
 
 pub fn make_exchange_address(currency: &str) -> String {
-    get_dgc_prefix() + &DGC_EXCHANGE + &hash(currency, 62)
+    //get_dgc_prefix() + &DGC_EXCHANGE + &hash(currency, 62)
+    &hash(FAMILY_NAME, 6) + &hash(DGC_EXCHANGE, 2) + &hash(identifier, 62)
 }
 
 //dgc-core State

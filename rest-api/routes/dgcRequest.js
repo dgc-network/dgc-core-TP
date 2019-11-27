@@ -15,9 +15,9 @@ const context = createContext('secp256k1')
 
 const FAMILY_NAME = "dgc-core"
 const FAMILY_VER = "1.0"
-const DGC_BALANCE = "ba"
-const DGC_CREDIT  = "ca"
-const DGC_EXCHANGE= "ec"
+const DGC_BALANCE = "balance"
+const DGC_CREDIT  = "credit"
+const DGC_EXCHANGE= "exchange"
 const APPLY_CREDIT = "apply"
 const TRANSFER_DGC = "transfer"
 const SELL_DGC = "sell"
@@ -28,15 +28,15 @@ function hash(v) {
 }
 
 function make_balance_address(identifier) {
-  return hash(FAMILY_NAME).substr(0, 6) + DGC_BALANCE + hash(identifier).substr(0, 62);
+  return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(identifier).substr(0, 62);
 }
 
 function make_credit_address(identifier, currency) {
-  return hash(FAMILY_NAME).substr(0, 6) + DGC_CREDIT + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
+  return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_CREDIT).substr(0, 2) + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
 }
 
 function make_exchange_address(currency) {
-  return hash(FAMILY_NAME).substr(0, 6) + DGC_EXCHANGE + hash(currency).substr(0, 62);
+  return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_EXCHANGE).substr(0, 2) + hash(currency).substr(0, 62);
 }
 
 class dgcRequest {
@@ -49,7 +49,7 @@ class dgcRequest {
   }
 
   isPrivateKey() {
-    return this._send_to_rest_api(null);
+    //return this._send_to_rest_api(null);
   }
 
   makePrivateKey() {
@@ -89,10 +89,10 @@ class dgcRequest {
     return fetch(geturl, {
       method: 'GET',
     })
-    .then((response) => { return response.json()})
+    .then((response) => response.json())
     .then((responseJson) => {
       console.log(responseJson);
-    //  return responseJson;
+      return responseJson;
     })
     .catch((error) => {
       console.error(error);
@@ -192,9 +192,10 @@ class dgcRequest {
       },
       body: batchListBytes
     })
-    .then((response) => {return response.json()})
+    .then((response) => response.json())
     .then((responseJson) => {
       console.log(responseJson);
+      return responseJson;
     })
     .catch((error) => {
       console.error(error);
