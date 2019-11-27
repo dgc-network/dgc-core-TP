@@ -98,14 +98,16 @@ router.post('/applyCredit', function(req, res) {
     } else {
         let app = new dgcRequest(privateKey);
         app.applyCredit(amount, currency).then(response => {
-            if (response.error !== undefined) {
-                res.send({ message: response.error.message });
-            } else {
+            if (response.data !== undefined) {
                 var data = response.data;
                 console.log("Response: " + response.status);
                 res.send({ message:"Credit "+ amount +" successfully added to " + currency});        
                 //var amount = new Buffer(data, 'base64').toString();
                 //res.send({ rate: amount, currency: currency, message: response.data.message });
+            } else if (response.error !== undefined) {
+                res.send({ message: response.error.message });
+            } else {
+                res.send({ message: "oop! process imcomplete" });
             }
         });    
     }
