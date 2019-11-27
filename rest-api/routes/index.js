@@ -88,6 +88,29 @@ router.post('/dgcExchange', function(req, res){
     }
 })
 
+// Apply Credit for certain Currency
+router.post('/applyCredit', function(req, res) {
+    let privateKey = req.body.privateKey;
+    let amount = req.body.amount;
+    let currency = req.body.currency;
+    if ((privateKey == undefined) || (amount == undefined) || (currency == undefined)) {
+        res.send({ message: "privateKey or currency or currency_amount undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.applyCredit(amount, currency).then(response => {
+            if (response.error !== null) {
+                res.send({ message: response.error.message });
+            } else {
+                var data = response.data;
+                console.log("Response: " + data);
+                res.send({ message:"Credit "+ amount +" successfully added to " + currency});        
+                //var amount = new Buffer(data, 'base64').toString();
+                //res.send({ rate: amount, currency: currency, message: response.data.message });
+            }
+        });    
+    }
+});
+
 // Transfer DGC to another user
 router.post('/transferDGC', function(req, res) {
     let privateKey = req.body.privateKey;
@@ -109,23 +132,6 @@ router.post('/transferDGC', function(req, res) {
             }
         });    
     }
-/*
-    let app = new dgcRequest(req.body);
-    app.dgcBalance().then(result => {
-        if (false == result) {
-            res.send({ error: "privateKey is not corrected"});
-        } else {
-            if (req.body.DGC > result ) {
-                res.send({ message: "your DGC balance is not enough"});
-            } else {
-                var amount = req.body.DGC;
-                var beneficiary = req.body.beneficiary;
-                app.dgcTransfer(amount, beneficiary);
-                res.send({ message:"Amount "+ amount +" successfully added to " + beneficiary});        
-            }
-        }
-    });
-*/
 });
 
 // sell DGC to marketplace
