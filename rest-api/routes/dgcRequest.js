@@ -18,6 +18,7 @@ const FAMILY_VER = "1.0"
 const DGC_BALANCE = "ba"
 const DGC_CREDIT  = "ca"
 const DGC_EXCHANGE= "ec"
+const APPLY_CREDIT = "apply"
 const TRANSFER_DGC = "transfer"
 const SELL_DGC = "sell"
 const BUY_DGC = "buy"
@@ -81,21 +82,24 @@ class dgcRequest {
     });
   }
 
+  applyCredit(amount, currency) {
+    return this._post_to_rest_api(APPLY_CREDIT, [amount, currency]);
+  }
+
   transferDGC(amount, user2) {
-    this._post_to_rest_api("transfer", [amount, user2]);
+    return this._post_to_rest_api(TRANSFER_DGC, [amount, user2]);
   }
 
   sellDGC(dgc_amount, currency, currency_amount) {
-    this._post_to_rest_api("sellDGC", [dgc_amount, currency, currency_amount]);
+    return this._post_to_rest_api(SELL_DGC, [dgc_amount, currency, currency_amount]);
   }
 
   buyDGC(dgc_amount, currency, currency_amount) {
-    this._post_to_rest_api("buyDGC", [dgc_amount, currency, currency_amount]);
+    return this._post_to_rest_api(BUY_DGC, [dgc_amount, currency, currency_amount]);
   }
 
   _post_to_rest_api(action, values){
     let payload = ''
-/*    
     const address = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
     console.log("wrapping for: " + address);
     let inputAddressList = [address];
@@ -142,8 +146,6 @@ class dgcRequest {
     const batchListBytes = protobuf.BatchList.encode({
       batches: [batch]
     }).finish();
-*/
-let batchListBytes=[];
     //this._send_to_rest_api(batchListBytes);	
     return fetch('http://rest-api:8008/batches', {
       method: 'POST',
