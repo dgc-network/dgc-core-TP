@@ -95,6 +95,7 @@ class dgcRequest {
 
   _post_to_rest_api(action, values){
     let payload = ''
+/*    
     const address = hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(this.publicKeyHex).substr(0, 62);
     console.log("wrapping for: " + address);
     let inputAddressList = [address];
@@ -141,6 +142,8 @@ class dgcRequest {
     const batchListBytes = protobuf.BatchList.encode({
       batches: [batch]
     }).finish();
+*/
+let batchListBytes=[];
     //this._send_to_rest_api(batchListBytes);	
     return fetch('http://rest-api:8008/batches', {
       method: 'POST',
