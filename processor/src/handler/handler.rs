@@ -28,8 +28,8 @@ trait DGCTransactions {
     fn dgc_credit(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str) -> Result<u32, ApplyError>;
     fn apply_credit(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, credit_amount: u32) -> Result<(), ApplyError>;
     fn transfer_dgc(&self, state: &mut DGCState, customer_pubkey: &str, beneficiary_pubkey: &str, transfer_amount: u32) -> Result<(), ApplyError>;
-    fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, sell_amount: u32) -> Result<(), ApplyError>;
-    fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, currency: &str, buy_amount: u32) -> Result<(), ApplyError>;
+    fn sell_dgc(&self, state: &mut DGCState, customer_pubkey: &str, sell_dgc_amount: u32, currency: &str, expected_sell_currency__amount: u32) -> Result<(), ApplyError>;
+    fn buy_dgc(&self, state: &mut DGCState, customer_pubkey: &str, buy_dgc_amount: u32, currency: &str, expected_buy_currency_amount: u32) -> Result<(), ApplyError>;
 }
 
 impl DGCTransactionHandler {
@@ -179,7 +179,7 @@ impl TransactionHandler for DGCTransactionHandler {
                 //Get apply credit amount
                 let credit_amount = payload.get_value();
         
-                self.credit_dgc(&mut state, customer_pubkey, currency, credit_amount)?;                
+                self.apply_credit(&mut state, customer_pubkey, currency, credit_amount)?;                
             }                        
 
             Action::TransferDGC => {
@@ -291,7 +291,7 @@ impl DGCTransactions for DGCTransactionHandler {
         let current_credit: u32 = self.dgc_credit(state, customer_pubkey, currency)?;                                        
                                 
         //Store new credit to state
-        state.set_credit(customer_pubkey, current_credit + credit_amount, currency)?;
+        state.set_credit(customer_pubkey, currency, current_credit + credit_amount)?;
                                      
         Ok(())
     
@@ -326,7 +326,7 @@ impl DGCTransactions for DGCTransactionHandler {
         let current_dgc_balance: u32 = self.dgc_balance(state, customer_pubkey)?;                                        
 
         //Get dgc credit of customer
-        let current_dgc_credit: u32 = self.dgc_credit(state, customer_pubkey, 'DGC')?;                                        
+        let current_dgc_credit: u32 = self.dgc_credit(state, customer_pubkey, "DGC")?;                                        
 
         //Get exchange rate of currency
         let current_exchange: u32 = self.dgc_exchange(state, currency)?;                                        

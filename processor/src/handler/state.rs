@@ -40,17 +40,25 @@ pub fn hash(to_hash: &str, num: usize) -> String {
 
 pub fn make_balance_address(identifier: &str) -> String {
     //get_dgc_prefix() + &DGC_BALANCE + &hash(identifier, 62)
-    &hash(FAMILY_NAME, 6) + &hash(DGC_BALANCE, 2) + &hash(identifier, 62)
+    hash(FAMILY_NAME, 6) + &hash(DGC_BALANCE, 2) + &hash(identifier, 62)
 }
 
 pub fn make_credit_address(identifier: &str, currency: &str) -> String {
     //get_dgc_prefix() + &DGC_CREDIT + &hash(currency, 2) + &hash(identifier, 60)
-    &hash(FAMILY_NAME, 6) + &hash(DGC_CREDIT, 2) + &hash(currency, 2) + &hash(identifier, 60)
+    hash(FAMILY_NAME, 6) + &hash(DGC_CREDIT, 2) + &hash(currency, 2) + &hash(identifier, 60)
 }
 
 pub fn make_exchange_address(currency: &str) -> String {
     //get_dgc_prefix() + &DGC_EXCHANGE + &hash(currency, 62)
-    &hash(FAMILY_NAME, 6) + &hash(DGC_EXCHANGE, 2) + &hash(identifier, 62)
+    hash(FAMILY_NAME, 6) + &hash(DGC_EXCHANGE, 2) + &hash(currency, 62)
+}
+
+pub fn make_sell_address(currency: &str, timestamp: &str) -> String {
+    hash(FAMILY_NAME, 6) + &hash(SELL_DGC, 2) + &hash(currency, 2) + &hash(timestamp, 60)
+}
+
+pub fn make_buy_address(currency: &str, timestamp: &str) -> String {
+    hash(FAMILY_NAME, 6) + &hash(BUY_DGC, 2) + &hash(currency, 2) + &hash(timestamp, 60)
 }
 
 //dgc-core State
@@ -167,6 +175,72 @@ impl<'a> DGCState<'a> {
     pub fn set_credit(&mut self, identifier: &str, currency: &str, value: u32) -> Result<(), ApplyError> {       
         let mut sets = HashMap::new();
         sets.insert(make_credit_address(identifier, currency), value.to_string().into_bytes());
+        self.context
+            .set_state(sets)
+            .map_err(|err| ApplyError::InternalError(format!("{}", err)))?;
+
+        Ok(())
+    }
+
+    pub fn get_sell(&mut self, currency: &str, timestamp: &str) -> Result<Option<u32>, ApplyError> {
+        let address = make_sell_address(currency, timestamp);
+        let d = self.context.get_state(vec![address.clone()])?;
+        match d {
+            Some(packed) => {                
+                
+                let value_string = match String::from_utf8(packed) {
+                    Ok(v) => v,
+                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from("Invalid UTF-8 sequence")))
+                };                
+                
+                let value: u32 = match value_string.parse() {
+                    Ok(v) => v,
+                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from("Unable to parse UTF-8 String as u32")))
+                };
+                
+                Ok(Some(value))
+                               
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn set_sell(&mut self, currency: &str, timestamp: &str, value: u32) -> Result<(), ApplyError> {       
+        let mut sets = HashMap::new();
+        sets.insert(make_sell_address(currency, timestamp), value.to_string().into_bytes());
+        self.context
+            .set_state(sets)
+            .map_err(|err| ApplyError::InternalError(format!("{}", err)))?;
+
+        Ok(())
+    }
+
+    pub fn get_buy(&mut self, currency: &str, timestamp: &str) -> Result<Option<u32>, ApplyError> {
+        let address = make_buy_address(currency, timestamp);
+        let d = self.context.get_state(vec![address.clone()])?;
+        match d {
+            Some(packed) => {                
+                
+                let value_string = match String::from_utf8(packed) {
+                    Ok(v) => v,
+                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from("Invalid UTF-8 sequence")))
+                };                
+                
+                let value: u32 = match value_string.parse() {
+                    Ok(v) => v,
+                    Err(_) => return Err(ApplyError::InvalidTransaction(String::from("Unable to parse UTF-8 String as u32")))
+                };
+                
+                Ok(Some(value))
+                               
+            }
+            None => Ok(None),
+        }
+    }
+
+    pub fn set_buy(&mut self, currency: &str, timestamp: &str, value: u32) -> Result<(), ApplyError> {       
+        let mut sets = HashMap::new();
+        sets.insert(make_buy_address(currency, timestamp), value.to_string().into_bytes());
         self.context
             .set_state(sets)
             .map_err(|err| ApplyError::InternalError(format!("{}", err)))?;
