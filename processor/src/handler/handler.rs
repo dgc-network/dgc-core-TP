@@ -215,7 +215,7 @@ impl TransactionHandler for DGCTransactionHandler {
                 //Get sell amount
                 let sell_amount = payload.get_value();
         
-                self.sell_dgc(&mut state, customer_pubkey, currency, sell_amount)?;                
+                self.sell_dgc(&mut state, customer_pubkey, sell_dgc_amount, currency, expected_sell_currency_amount)?;                
             }                        
 
             Action::BuyDGC => {
@@ -233,7 +233,7 @@ impl TransactionHandler for DGCTransactionHandler {
                 //Get sell amount
                 let buy_amount = payload.get_value();
         
-                self.buy_dgc(&mut state, customer_pubkey, currency, buy_amount)?;                
+                self.buy_dgc(&mut state, customer_pubkey, buy_dgc_amount, currency, expected_buy_currency_amount)?;                
             }                        
         }
 

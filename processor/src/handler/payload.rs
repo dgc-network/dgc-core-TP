@@ -7,6 +7,22 @@ use std::fmt;
 use sawtooth_sdk::processor::handler::ApplyError;
 
 #[derive(Copy, Clone)]
+enum Action {
+    CreateParticipant(payload::CreateParticipantAction),
+    CreateRecord(payload::CreateRecordAction),
+    FinalizeRecord(payload::FinalizeRecordAction),
+    CreateTable(payload::CreateTableAction),
+    UpdateProperties(payload::UpdatePropertiesAction),
+    CreateProposal(payload::CreateProposalAction),
+    AnswerProposal(payload::AnswerProposalAction),
+    RevokeReporter(payload::RevokeReporterAction),
+}
+
+struct PayloadDGC {
+    action: Action,
+    timestamp: u64,
+}
+
 pub enum Action {
     Deposit,
     Withdraw,
@@ -19,6 +35,12 @@ pub enum Action {
     TransferDGC,
     SellDGC,
     BuyDGC,
+}
+
+pub struct DGCPayload {
+    action: Action,    
+    value: u32,
+    beneficiary_pubkey: Option<String>,
 }
 
 impl fmt::Display for Action {
@@ -43,16 +65,20 @@ impl fmt::Display for Action {
     }
 }
 
-pub struct DGCPayload {
-    action: Action,    
-    value: u32,
-    beneficiary_pubkey: Option<String>,
-}
-
 impl DGCPayload {
 
+    //pub fn new(payload: &[u8]) -> Result<Option<PayloadDGC>, ApplyError> {
     pub fn new(payload_data: &[u8]) -> Result<Option<DGCPayload>, ApplyError> {
-    
+    /*
+        let payload: payload::PayloadDGC = match protobuf::parse_from_bytes(payload) {
+            Ok(payload) => payload,
+            Err(_) => {
+                return Err(ApplyError::InvalidTransaction(String::from(
+                    "Cannot deserialize payload",
+                )))
+            }
+        };
+    */
         let payload_string = match str::from_utf8(&payload_data) {
             Ok(s) => s,
             Err(_) => {
