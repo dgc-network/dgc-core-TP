@@ -39,6 +39,14 @@ function make_exchange_address(currency) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_EXCHANGE).substr(0, 2) + hash(currency).substr(0, 62);
 }
 
+function make_sell_address(currency, expected_currency_amount) {
+  return hash(FAMILY_NAME).substr(0, 6) + hash(SELL_DGC).substr(0, 2) + hash(currency).substr(0, 2) + hash(expected_currency_amount).substr(0, 60);
+}
+
+function make_buy_address(currency, expected_currency_amount) {
+  return hash(FAMILY_NAME).substr(0, 6) + hash(BUY_DGC).substr(0, 2) + hash(currency).substr(0, 2) + hash(expected_currency_amount).substr(0, 60);
+}
+
 class dgcRequest {
   constructor(privateKeyHex) {
     if (undefined !== privateKeyHex) {
@@ -117,8 +125,8 @@ class dgcRequest {
 
   _post_to_rest_api(action, values){
     let payload = ''
-    let inputAddressList = [address];
-    let outputAddressList = [address];
+    let inputAddressList = [];
+    let outputAddressList = [];
 
     if (action === APPLY_CREDIT) {
       const currency = values[1];
