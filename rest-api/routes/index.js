@@ -47,26 +47,6 @@ router.post('/dgcBalance', function(req, res){
     }
 })
 
-// dgcCredit
-router.post('/dgcCredit', function(req, res){
-    let privateKey = req.body.privateKey;
-    if (privateKey == undefined) {
-        res.send({ message: "privateKey undefined" });
-    } else {
-        let app = new dgcRequest(privateKey);
-        app.dgcCredit().then(response => {
-            if (response.error !== null) {
-                res.send({ credit: 0, message: response.error.message });
-            } else {
-                var data = response.data;
-                console.log("Response: " + data);
-                var amount = new Buffer(data, 'base64').toString();
-                res.send({ credit: amount, message: response.data.message });
-            }
-        });
-    }
-})
-
 // dgcExchange
 router.post('/dgcExchange', function(req, res){
     let privateKey = req.body.privateKey;
@@ -85,6 +65,26 @@ router.post('/dgcExchange', function(req, res){
                 res.send({ rate: amount, currency: currency, message: response.data.message });
             }
         });    
+    }
+})
+
+// dgcCredit
+router.post('/dgcCredit', function(req, res){
+    let privateKey = req.body.privateKey;
+    if (privateKey == undefined) {
+        res.send({ message: "privateKey undefined" });
+    } else {
+        let app = new dgcRequest(privateKey);
+        app.dgcCredit().then(response => {
+            if (response.error !== undefined) {
+                res.send({ credit: 0, message: response.error.message });
+            } else {
+                var data = response.data;
+                console.log("Response: " + data);
+                var amount = new Buffer(data, 'base64').toString();
+                res.send({ credit: amount, message: response.data.message });
+            }
+        });
     }
 })
 
