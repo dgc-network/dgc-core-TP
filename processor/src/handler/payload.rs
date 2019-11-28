@@ -1,6 +1,10 @@
 // Copyright (c) The dgc.network
 // SPDX-License-Identifier: Apache-2.0
 
+use protobuf;
+use protobuf::Message;
+use protobuf::RepeatedField;
+
 use std::str;
 use std::fmt;
 
@@ -8,16 +12,12 @@ use sawtooth_sdk::processor::handler::ApplyError;
 
 #[derive(Copy, Clone)]
 enum Action {
-    CreateParticipant(payload::CreateParticipantAction),
-    CreateRecord(payload::CreateRecordAction),
-    FinalizeRecord(payload::FinalizeRecordAction),
-    CreateTable(payload::CreateTableAction),
-    UpdateProperties(payload::UpdatePropertiesAction),
-    CreateProposal(payload::CreateProposalAction),
-    AnswerProposal(payload::AnswerProposalAction),
-    RevokeReporter(payload::RevokeReporterAction),
+    ApplyCredit(payload::ApplyCreditAction),
+    TransferDGCoin(payload::TransferDGCoinAction),
+    SellDGCoin(payload::SellDGCoinAction),
+    BuyDGCoin(payload::BuyDGCoinAction),
 }
-
+/*
 struct PayloadDGC {
     action: Action,
     timestamp: u64,
@@ -32,9 +32,9 @@ pub enum Action {
     CreditDGC,
     ExchangeDGC,
     ApplyCredit,
-    TransferDGC,
-    SellDGC,
-    BuyDGC,
+    TransferDGCoin,
+    SellDGCoin,
+    BuyDGCoin,
 }
 
 pub struct DGCPayload {
@@ -57,20 +57,18 @@ impl fmt::Display for Action {
                 Action::ExchangeDGC => "Action::ExchangeDGC",
                 Action::CreditDGC => "Action::CreditDGC",
                 Action::ApplyCredit => "Action::ApplyCredit",
-                Action::TransferDGC => "Action::TransferDGC",
-                Action::SellDGC => "Action::SellDGC",
-                Action::BuyDGC => "Action::BuyDGC",
+                Action::TransferDGCoin => "Action::TransferDGCoin",
+                Action::SellDGCoin => "Action::SellDGCoin",
+                Action::BuyDGCoin => "Action::BuyDGCoin",
             }
         )
     }
 }
-
+*/
 impl DGCPayload {
 
-    //pub fn new(payload: &[u8]) -> Result<Option<PayloadDGC>, ApplyError> {
-    pub fn new(payload_data: &[u8]) -> Result<Option<DGCPayload>, ApplyError> {
-    /*
-        let payload: payload::PayloadDGC = match protobuf::parse_from_bytes(payload) {
+    pub fn new(payload: &[u8]) -> Result<Option<DGCPayload>, ApplyError> {
+        let payload: payload::DGCPayload = match protobuf::parse_from_bytes(payload) {
             Ok(payload) => payload,
             Err(_) => {
                 return Err(ApplyError::InvalidTransaction(String::from(
@@ -78,7 +76,48 @@ impl DGCPayload {
                 )))
             }
         };
-    */
+
+        let dgc_core_action = payload.get_action();
+        let action = match dgc_core_action {
+            payload::DGCPayload_Action::APPLY_CREDIT => {
+                Action::ApplyCredit(apply_credit.clone())
+            }
+            payload::DGCPayload_Action::TRANSFER_DG_COIN => {
+                Action::TransferDGCoin(transfer_dg_coin.clone())
+            }
+            payload::DGCPayload_Action::SELL_DG_COIN => {
+                Action::SellDGCoin(sell_dg_coin.clone())
+            }
+            payload::DGCPayload_Action::BUY_DG_COIN => {
+                Action::BuyDGCoin(buy_dg_coin.clone())
+            }
+        };
+
+        let timestamp = match payload.get_timestamp() {
+            0 => {
+                return Err(ApplyError::InvalidTransaction(String::from(
+                    "Timestamp is not set",
+                )))
+            }
+            x => x,
+        };
+
+        Ok(Some(DGCPayload {
+            action: action,
+            timestamp: timestamp,
+        }))
+    }
+
+    pub fn get_action(&self) -> Action {
+        self.action.clone()
+    }
+
+    pub fn get_timestamp(&self) -> u64 {
+        self.timestamp
+    }
+/*
+    pub fn new(payload_data: &[u8]) -> Result<Option<DGCPayload>, ApplyError> {
+    
         let payload_string = match str::from_utf8(&payload_data) {
             Ok(s) => s,
             Err(_) => {
@@ -120,9 +159,9 @@ impl DGCPayload {
             "dgcCredit" => Action::CreditDGC,
             "dgcExchange" => Action::ExchangeDGC,
             "applyCredit" => Action::ApplyCredit,
-            "transferDGC" => Action::TransferDGC,
-            "sellDGC" => Action::SellDGC,
-            "buyDGC" => Action::BuyDGC,
+            "transferDGC" => Action::TransferDGCoin,
+            "sellDGC" => Action::SellDGCoin,
+            "buyDGC" => Action::BuyDGCoin,
             _ => {
                 return Err(ApplyError::InvalidTransaction(String::from(
                     "Invalid Action",
@@ -178,5 +217,5 @@ impl DGCPayload {
     pub fn get_currency(&self) -> &Option<String> {
         &self.beneficiary_pubkey      
     }
-
+*/
 }
