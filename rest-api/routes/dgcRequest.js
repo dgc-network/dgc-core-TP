@@ -111,8 +111,8 @@ class dgcRequest {
     return this._post_to_rest_api(APPLY_CREDIT, [amount, currency]);
   }
 
-  transferDGC(amount, user2) {
-    return this._post_to_rest_api(TRANSFER_DGC, [amount, user2]);
+  transferDGC(amount, beneficiary) {
+    return this._post_to_rest_api(TRANSFER_DGC, [amount, beneficiary]);
   }
 
   sellDGC(dgc_amount, currency, expected_currency_amount) {
@@ -141,8 +141,8 @@ class dgcRequest {
       inputAddressList.push(address);
       outputAddressList.push(address);
       console.log("wrapping for: " + address);
-      const pubKeyStr = values[1];
-      const toAddress = make_balance_state_address(pubKeyStr);
+      const beneficiary = values[1];
+      const toAddress = make_balance_state_address(beneficiary);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
       payload = action+","+values[0]+","+values[1];
