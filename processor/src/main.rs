@@ -12,8 +12,7 @@ extern crate log4rs;
 extern crate sawtooth_sdk;
 
 mod handler;
-mod payload;
-mod state;
+mod messages;
 
 use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
