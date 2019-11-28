@@ -7,10 +7,13 @@ extern crate clap;
 extern crate crypto;
 #[macro_use]
 extern crate log;
+extern crate protobuf;
 extern crate log4rs;
 extern crate sawtooth_sdk;
 
 mod handler;
+mod payload;
+mod state;
 
 use log::LevelFilter;
 use log4rs::append::console::ConsoleAppender;
