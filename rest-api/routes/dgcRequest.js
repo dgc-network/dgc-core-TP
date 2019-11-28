@@ -31,12 +31,12 @@ function make_balance_state_address(identifier) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(identifier).substr(0, 62);
 }
 
-function make_credit_state_address(identifier, currency) {
-  return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_CREDIT).substr(0, 2) + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
-}
-
 function make_exchange_state_address(currency) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_EXCHANGE).substr(0, 2) + hash(currency).substr(0, 62);
+}
+
+function make_credit_state_address(identifier, currency) {
+  return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_CREDIT).substr(0, 2) + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
 }
 
 function make_sell_state_address(currency, expected_currency_amount) {
@@ -74,7 +74,7 @@ class dgcRequest {
     return this._get_from_rest_api(DGC_BALANCE);
   }
 
-  dgcCredit(currency) {
+  dgcCredit(currency='DGC') {
     return this._get_from_rest_api(DGC_CREDIT, [currency]);
   }
 
