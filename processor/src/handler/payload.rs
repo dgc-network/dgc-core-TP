@@ -18,7 +18,7 @@ enum Action {
     BuyDGCoin(payload::BuyDGCoinAction),
 }
 
-struct PayloadDGC {
+struct DGCPayload {
     action: Action,
     timestamp: u64,
 }
