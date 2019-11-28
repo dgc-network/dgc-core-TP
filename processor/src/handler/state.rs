@@ -13,8 +13,8 @@ use sawtooth_sdk::processor::handler::TransactionContext;
 const FAMILY_NAME: &str = "dgc-core";
 const FAMILY_VER: &str = "1.0";
 const DGC_BALANCE: &str = "balance";
-const DGC_CREDIT: &str  = "credit";
 const DGC_EXCHANGE: &str= "exchange";
+const GET_CREDIT: &str  = "credit";
 const APPLY_CREDIT: &str = "apply";
 const TRANSFER_DGC: &str = "transfer";
 const SELL_DGC: &str = "sell";
@@ -46,7 +46,7 @@ pub fn make_exchange_state_address(currency: &str) -> String {
 }
 
 pub fn make_credit_state_address(identifier: &str, currency: &str) -> String {
-    hash(FAMILY_NAME, 6) + &hash(DGC_CREDIT, 2) + &hash(currency, 2) + &hash(identifier, 60)
+    hash(FAMILY_NAME, 6) + &hash(GET_CREDIT, 2) + &hash(currency, 2) + &hash(identifier, 60)
 }
 
 pub fn make_sell_state_address(currency: &str, timestamp: &str) -> String {
@@ -70,7 +70,6 @@ impl<'a> DGCState<'a> {
     }
 
     pub fn get_balance(&mut self, identifier: &str) -> Result<Option<u32>, ApplyError> {
-        //let address = DGCState::calculate_address(name);
         let address = make_balance_state_address(identifier);
         let d = self.context.get_state(vec![address.clone()])?;
         match d {
