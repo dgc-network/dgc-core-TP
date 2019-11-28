@@ -11,6 +11,7 @@ description = "dgc-core Transaction Processor"
 #sawtooth_sdk = { git = "https://github.com/hyperledger/sawtooth-core.git" } 
 sawtooth-sdk = "^0.1"
 rust-crypto = "0.2"
+protobuf = "2"
 clap = "2"
 log = "0.4"
 log4rs = "0.8"
