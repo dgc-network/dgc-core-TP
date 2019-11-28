@@ -17,12 +17,12 @@ enum Action {
     SellDGCoin(payload::SellDGCoinAction),
     BuyDGCoin(payload::BuyDGCoinAction),
 }
-/*
+
 struct PayloadDGC {
     action: Action,
     timestamp: u64,
 }
-
+/*
 pub enum Action {
     Deposit,
     Withdraw,
