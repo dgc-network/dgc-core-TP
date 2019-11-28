@@ -27,23 +27,23 @@ function hash(v) {
   return createHash('sha512').update(v).digest('hex');
 }
 
-function make_balance_address(identifier) {
+function make_balance_state_address(identifier) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_BALANCE).substr(0, 2) + hash(identifier).substr(0, 62);
 }
 
-function make_credit_address(identifier, currency) {
+function make_credit_state_address(identifier, currency) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_CREDIT).substr(0, 2) + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
 }
 
-function make_exchange_address(currency) {
+function make_exchange_state_address(currency) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_EXCHANGE).substr(0, 2) + hash(currency).substr(0, 62);
 }
 
-function make_sell_address(currency, expected_currency_amount) {
+function make_sell_state_address(currency, expected_currency_amount) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(SELL_DGC).substr(0, 2) + hash(currency).substr(0, 2) + hash(expected_currency_amount).substr(0, 60);
 }
 
-function make_buy_address(currency, expected_currency_amount) {
+function make_buy_state_address(currency, expected_currency_amount) {
   return hash(FAMILY_NAME).substr(0, 6) + hash(BUY_DGC).substr(0, 2) + hash(currency).substr(0, 2) + hash(expected_currency_amount).substr(0, 60);
 }
 
@@ -74,22 +74,22 @@ class dgcRequest {
     return this._get_from_rest_api(DGC_BALANCE);
   }
 
-  dgcCredit(currency='DGC') {
-    return this._get_from_rest_api(DGC_CREDIT, currency);
+  dgcCredit(currency) {
+    return this._get_from_rest_api(DGC_CREDIT, [currency]);
   }
 
   dgcExchange(currency) {
-    return this._get_from_rest_api(DGC_EXCHANGE, currency);
+    return this._get_from_rest_api(DGC_EXCHANGE, [currency]);
   }
 
-  _get_from_rest_api(action, value){
+  _get_from_rest_api(action, values){
     let address = '';
     if (action == DGC_BALANCE) {
-      address = make_balance_address(this.publicKeyHex);
-    } else if (action == DGC_CREDIT) {
-      address = make_credit_address(this.publicKeyHex, value);
+      address = make_balance_state_address(this.publicKeyHex);
     } else if (action == DGC_EXCHANGE) {
-      address = make_exchange_address(value);
+      address = make_exchange_state_address(values[0]);
+    } else if (action == DGC_CREDIT) {
+      address = make_credit_state_address(this.publicKeyHex, values[0]);
     }
     console.log("Storing at: " + address);
     const geturl = 'http://rest-api:8008/state/'+address
@@ -174,6 +174,7 @@ class dgcRequest {
       dependencies: [],
       payloadSha512: hash(payloadBytes),
     }).finish();
+
     const transaction = protobuf.Transaction.create({
       header: transactionHeaderBytes,
       headerSignature: this.signer.sign(transactionHeaderBytes),
@@ -184,6 +185,7 @@ class dgcRequest {
       signerPublicKey: this.signer.getPublicKey().asHex(),
       transactionIds: transactions.map((txn) => txn.headerSignature),
     }).finish();
+
     const batchSignature = this.signer.sign(batchHeaderBytes);
     const batch = protobuf.Batch.create({
       header: batchHeaderBytes,
@@ -193,6 +195,7 @@ class dgcRequest {
     const batchListBytes = protobuf.BatchList.encode({
       batches: [batch]
     }).finish();
+    
     return fetch('http://rest-api:8008/batches', {
       method: 'POST',
       headers: {

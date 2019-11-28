@@ -76,13 +76,15 @@ router.post('/dgcCredit', function(req, res){
     } else {
         let app = new dgcRequest(privateKey);
         app.dgcCredit().then(response => {
-            if (response.error !== undefined) {
-                res.send({ credit: 0, message: response.error.message });
-            } else {
+            if (response.data !== undefined) {
                 var data = response.data;
                 console.log("Response: " + data);
                 var amount = new Buffer(data, 'base64').toString();
                 res.send({ credit: amount, message: response.data.message });
+            } else if (response.error !== undefined) {
+                res.send({ error: response.error.message });
+            } else {
+                res.send({ error: "oop! process imcomplete" });
             }
         });
     }
@@ -100,14 +102,13 @@ router.post('/applyCredit', function(req, res) {
         app.applyCredit(amount, currency).then(response => {
             if (response.data !== undefined) {
                 var data = response.data;
-                console.log("Response: " + response.status);
+                console.log("Response: " + data);
+                var amount = new Buffer(data, 'base64').toString();
                 res.send({ message:"Credit "+ amount +" successfully added to " + currency});        
-                //var amount = new Buffer(data, 'base64').toString();
-                //res.send({ rate: amount, currency: currency, message: response.data.message });
             } else if (response.error !== undefined) {
-                res.send({ message: response.error.message });
+                res.send({ error: response.error.message });
             } else {
-                res.send({ message: "oop! process imcomplete" });
+                res.send({ error: "oop! process imcomplete" });
             }
         });    
     }
