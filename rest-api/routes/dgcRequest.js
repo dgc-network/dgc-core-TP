@@ -134,7 +134,7 @@ class dgcRequest {
       inputAddressList.push(address);
       outputAddressList.push(address);
       console.log("wrapping for: " + address);
-      payload = action+","+values[0]+","+currency;
+      payload = action+","+values[0]+","+values[1];
 
     } else if (action === TRANSFER_DGC) {
       const address = make_balance_state_address(this.publicKeyHex);
@@ -145,7 +145,7 @@ class dgcRequest {
       const toAddress = make_balance_state_address(pubKeyStr);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
-      payload = action+","+values[0]+","+pubKeyStr;
+      payload = action+","+values[0]+","+values[1];
 
     } else if (action === SELL_DGC) {
       const address = make_balance_state_address(this.publicKeyHex);
@@ -157,22 +157,23 @@ class dgcRequest {
       const toAddress = make_sell_state_address(currency, expected_currency_amount);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
-      payload = action+","+values[0]+","+currency+","+expected_currency_amount;
+      payload = action+","+values[0]+","+values[1]+","+values[2];
 
     }	
 
     var enc = new TextEncoder('utf8');
     const payloadBytes = enc.encode(payload);
+
     const transactionHeaderBytes = protobuf.TransactionHeader.encode({
       familyName: FAMILY_NAME,
       familyVersion: FAMILY_VER,
+      signerPublicKey: this.publicKeyHex,
+      batcherPublicKey: this.publicKeyHex,
       inputs: inputAddressList,
       outputs: outputAddressList,
-      signerPublicKey: this.signer.getPublicKey().asHex(),
-      nonce: "" + Math.random(),
-      batcherPublicKey: this.signer.getPublicKey().asHex(),
       dependencies: [],
       payloadSha512: hash(payloadBytes),
+      nonce: "" + Math.random(),
     }).finish();
 
     const transaction = protobuf.Transaction.create({
@@ -182,14 +183,13 @@ class dgcRequest {
     });
     const transactions = [transaction];
     const batchHeaderBytes = protobuf.BatchHeader.encode({
-      signerPublicKey: this.signer.getPublicKey().asHex(),
+      signerPublicKey: this.publicKeyHex,
       transactionIds: transactions.map((txn) => txn.headerSignature),
     }).finish();
 
-    const batchSignature = this.signer.sign(batchHeaderBytes);
     const batch = protobuf.Batch.create({
       header: batchHeaderBytes,
-      headerSignature: batchSignature,
+      headerSignature: this.signer.sign(batchHeaderBytes),
       transactions: transactions,
     });
     const batchListBytes = protobuf.BatchList.encode({
