@@ -130,31 +130,31 @@ class dgcRequest {
 
     if (action === APPLY_CREDIT) {
       const currency = values[1];
-      const address = make_credit_address(this.publicKeyHex, currency);
+      const address = make_credit_state_address(this.publicKeyHex, currency);
       inputAddressList.push(address);
       outputAddressList.push(address);
       console.log("wrapping for: " + address);
       payload = action+","+values[0]+","+currency;
 
     } else if (action === TRANSFER_DGC) {
-      const address = make_balance_address(this.publicKeyHex);
+      const address = make_balance_state_address(this.publicKeyHex);
       inputAddressList.push(address);
       outputAddressList.push(address);
       console.log("wrapping for: " + address);
       const pubKeyStr = values[1];
-      const toAddress = make_balance_address(pubKeyStr);
+      const toAddress = make_balance_state_address(pubKeyStr);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
       payload = action+","+values[0]+","+pubKeyStr;
 
     } else if (action === SELL_DGC) {
-      const address = make_balance_address(this.publicKeyHex);
+      const address = make_balance_state_address(this.publicKeyHex);
       inputAddressList.push(address);
       outputAddressList.push(address);
       console.log("wrapping for: " + address);
       const currency = values[1];
       const expected_currency_amount = values[2];
-      const toAddress = make_sell_address(currency, expected_currency_amount);
+      const toAddress = make_sell_state_address(currency, expected_currency_amount);
       inputAddressList.push(toAddress);
       outputAddressList.push(toAddress);
       payload = action+","+values[0]+","+currency+","+expected_currency_amount;
@@ -195,7 +195,7 @@ class dgcRequest {
     const batchListBytes = protobuf.BatchList.encode({
       batches: [batch]
     }).finish();
-    
+
     return fetch('http://rest-api:8008/batches', {
       method: 'POST',
       headers: {
