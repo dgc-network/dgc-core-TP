@@ -69,18 +69,19 @@ router.post('/dgcExchange', function(req, res){
 })
 
 // dgcCredit
-router.post('/dgcCredit', function(req, res){
+router.post('/getCredit', function(req, res){
     let privateKey = req.body.privateKey;
-    if (privateKey == undefined) {
-        res.send({ message: "privateKey undefined" });
+    let currency = req.body.currency;
+    if ((privateKey == undefined) || (currency == undefined)) {
+        res.send({ message: "privateKey or currency undefined" });
     } else {
         let app = new dgcRequest(privateKey);
-        app.dgcCredit().then(response => {
+        app.getCredit(currency).then(response => {
             if (response.data !== undefined) {
                 var data = response.data;
                 console.log("Response: " + data);
                 var amount = new Buffer(data, 'base64').toString();
-                res.send({ credit: amount, message: response.data.message });
+                res.send({ currency: currency, credit: amount, message: response.data.message });
             } else if (response.error !== undefined) {
                 res.send({ error: response.error.message });
             } else {

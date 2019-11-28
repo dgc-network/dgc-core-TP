@@ -16,8 +16,8 @@ const context = createContext('secp256k1')
 const FAMILY_NAME = "dgc-core"
 const FAMILY_VER = "1.0"
 const DGC_BALANCE = "balance"
-const DGC_CREDIT  = "credit"
 const DGC_EXCHANGE= "exchange"
+const GET_CREDIT  = "credit"
 const APPLY_CREDIT = "apply"
 const TRANSFER_DGC = "transfer"
 const SELL_DGC = "sell"
@@ -36,7 +36,7 @@ function make_exchange_state_address(currency) {
 }
 
 function make_credit_state_address(identifier, currency) {
-  return hash(FAMILY_NAME).substr(0, 6) + hash(DGC_CREDIT).substr(0, 2) + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
+  return hash(FAMILY_NAME).substr(0, 6) + hash(GET_CREDIT).substr(0, 2) + hash(currency).substr(0, 2) + hash(identifier).substr(0, 60);
 }
 
 function make_sell_state_address(currency, expected_currency_amount) {
@@ -74,12 +74,12 @@ class dgcRequest {
     return this._get_from_rest_api(DGC_BALANCE);
   }
 
-  dgcCredit(currency='DGC') {
-    return this._get_from_rest_api(DGC_CREDIT, [currency]);
-  }
-
   dgcExchange(currency) {
     return this._get_from_rest_api(DGC_EXCHANGE, [currency]);
+  }
+
+  getCredit(currency) {
+    return this._get_from_rest_api(GET_CREDIT, [currency]);
   }
 
   _get_from_rest_api(action, values){
@@ -88,7 +88,7 @@ class dgcRequest {
       address = make_balance_state_address(this.publicKeyHex);
     } else if (action == DGC_EXCHANGE) {
       address = make_exchange_state_address(values[0]);
-    } else if (action == DGC_CREDIT) {
+    } else if (action == GET_CREDIT) {
       address = make_credit_state_address(this.publicKeyHex, values[0]);
     }
     console.log("Storing at: " + address);
