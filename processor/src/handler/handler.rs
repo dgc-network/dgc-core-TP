@@ -45,7 +45,7 @@ impl DGCTransactionHandler {
         
     fn _apply_credit(
         &self,
-        payload: payload::DGCPayload::ApplyCreditAction,
+        payload: DGCPayload::ApplyCreditAction,
         mut state: DGCState,
         signer: &str,
         timestamp: u64,
