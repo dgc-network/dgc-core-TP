@@ -71,7 +71,7 @@ impl DGCTransactionHandler {
 
     fn _transfer_dg_coin(
         &self,
-        payload: payload::TransferDGCoinAction,
+        payload: DGCPayload::TransferDGCoinAction,
         mut state: DGCState,
         signer: &str,
         timestamp: u64,
@@ -117,7 +117,7 @@ impl DGCTransactionHandler {
 
     fn _sell_dg_coin(
         &self,
-        payload: payload::SellDGCoinAction,
+        payload: DGCPayload::SellDGCoinAction,
         mut state: DGCState,
         signer: &str,
         timestamp: u64,

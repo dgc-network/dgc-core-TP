@@ -12,10 +12,16 @@ use sawtooth_sdk::processor::handler::ApplyError;
 
 #[derive(Copy, Clone)]
 enum Action {
+/*
     ApplyCredit(payload::ApplyCreditAction),
     TransferDGCoin(payload::TransferDGCoinAction),
     SellDGCoin(payload::SellDGCoinAction),
     BuyDGCoin(payload::BuyDGCoinAction),
+*/    
+    ApplyCredit,
+    TransferDGCoin,
+    SellDGCoin,
+    BuyDGCoin,
 }
 
 struct DGCPayload {
@@ -68,7 +74,8 @@ impl fmt::Display for Action {
 impl DGCPayload {
 
     pub fn new(payload: &[u8]) -> Result<Option<DGCPayload>, ApplyError> {
-        let payload: payload::DGCPayload = match protobuf::parse_from_bytes(payload) {
+        //let payload: payload::DGCPayload = match protobuf::parse_from_bytes(payload) {
+        let payload = match protobuf::parse_from_bytes(payload) {
             Ok(payload) => payload,
             Err(_) => {
                 return Err(ApplyError::InvalidTransaction(String::from(
