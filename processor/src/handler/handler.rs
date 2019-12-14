@@ -11,9 +11,6 @@ use handler::payload::Action;
 use handler::state::DGCState;
 use handler::state::get_dgc_prefix;
 
-mod payload;
-mod state;
-
 pub struct DGCTransactionHandler {
     family_name: String,
     family_versions: Vec<String>,
@@ -48,7 +45,7 @@ impl DGCTransactionHandler {
         
     fn _apply_credit(
         &self,
-        payload: payload::ApplyCreditAction,
+        payload: payload::DGCPayload::ApplyCreditAction,
         mut state: DGCState,
         signer: &str,
         timestamp: u64,
