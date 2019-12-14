@@ -151,6 +151,16 @@ impl DGCTransactionHandler {
             )))
         }
         
+        //Get exchange rate of currency
+        let exchange_rate: u32 = match state.get_exchange(currency) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new exchange rate for currency.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+
         //Get open for buy of currency
         let open_for_buy: u32 = match state.get_buy(currency, exchange_rate) {
             Ok(Some(v)) => v,
@@ -191,6 +201,49 @@ impl DGCTransactionHandler {
             )))
         }
         
+        //Store new balance to state
+        //state.set_balance(customer_pubkey, current_balance - transfer_amount)?;
+        //state.set_balance(beneficiary_pubkey, beneficiary_balance + transfer_amount)?;
+                                     
+        Ok(())    
+    }
+
+    fn _buy_dg_coin(
+        &self,
+        payload: DGCPayload::SellDGCoinAction,
+        mut state: DGCState,
+        signer: &str,
+        timestamp: u64,
+    ) -> Result<(), ApplyError> {
+        let currency = payload.get_currency();
+        let customer_pubkey = payload.get_customer_pubkey();
+        //Get balance of customer
+        let customer_balance: u32 = match state.get_balance(customer_pubkey) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new account for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };        
+        //Get credit of customer
+        let customer_credit: u32 = match state.get_credit(customer_pubkey, "DGC") {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new currency for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };                                
+                                
+        let sell_amount = payload.get_sell_amount();
+        //Sell amount should not be greater than current account balance + customer_credit
+        if sell_amount > customer_balance + customer_credit{
+            return Err(ApplyError::InvalidTransaction(String::from(
+                "Action: Transfer amount is more than customer account balance.",
+            )))
+        }
+        
         //Get exchange rate of currency
         let exchange_rate: u32 = match state.get_exchange(currency) {
             Ok(Some(v)) => v,
@@ -201,6 +254,46 @@ impl DGCTransactionHandler {
             Err(err) => return Err(err),
         };
 
+        //Get open for buy of currency
+        let open_for_buy: u32 = match state.get_buy(currency, exchange_rate) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new sell for currency.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+
+
+
+        let beneficiary_pubkey = payload.get_beneficiary_pubkey();
+        //Get beneficiary balance
+        let beneficiary_balance: u32 = match state.get_balance(beneficiary_pubkey) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new account for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };
+        //Get credit of beneficiary
+        let beneficiary_credit: u32 = match state.get_credit(beneficiary_pubkey, currency) {
+            Ok(Some(v)) => v,
+            Ok(None) => {
+                info!("Creating new currency for user.");
+                0              
+            }
+            Err(err) => return Err(err),
+        };                                
+        
+        let expected_sell_currency_amount = payload.get_expected_sell_currency_amount();
+        //expected sell currency amount should not be greater than beneficiary credit
+        if expected_sell_currency_amount < beneficiary_credit {
+            return Err(ApplyError::InvalidTransaction(String::from(
+                "Action: Transfer amount is more than customer account balance.",
+            )))
+        }
+        
         //Store new balance to state
         //state.set_balance(customer_pubkey, current_balance - transfer_amount)?;
         //state.set_balance(beneficiary_pubkey, beneficiary_balance + transfer_amount)?;

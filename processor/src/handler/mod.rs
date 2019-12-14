@@ -2,5 +2,5 @@
 // SPDX-License-Identifier: Apache-2.0
 
 pub mod handler;
-mod payload;
+pub mod payload;
 mod state;

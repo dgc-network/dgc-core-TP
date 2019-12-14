@@ -86,7 +86,8 @@ impl DGCPayload {
 
         let dgc_core_action = payload.get_action();
         let action = match dgc_core_action {
-            payload::DGCPayload_Action::APPLY_CREDIT => {
+            //payload::DGCPayload_Action::APPLY_CREDIT => {
+            ApplyCredit => {
                 Action::ApplyCredit(apply_credit.clone())
             }
             payload::DGCPayload_Action::TRANSFER_DG_COIN => {
