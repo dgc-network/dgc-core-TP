@@ -11,7 +11,7 @@ use std::fmt;
 use sawtooth_sdk::processor::handler::ApplyError;
 
 #[derive(Copy, Clone)]
-enum Action {
+pub enum Action {
 /*
     ApplyCredit(payload::ApplyCreditAction),
     TransferDGCoin(payload::TransferDGCoinAction),

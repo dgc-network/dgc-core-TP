@@ -7,7 +7,7 @@ use sawtooth_sdk::processor::handler::TransactionContext;
 use sawtooth_sdk::processor::handler::TransactionHandler;
 
 use handler::payload::DGCPayload;
-//use handler::payload::Action;
+use handler::payload::Action;
 use handler::state::DGCState;
 use handler::state::get_dgc_prefix;
 
