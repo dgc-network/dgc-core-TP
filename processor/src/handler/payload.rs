@@ -24,7 +24,7 @@ enum Action {
     BuyDGCoin,
 }
 
-struct DGCPayload {
+pub struct DGCPayload {
     action: Action,
     timestamp: u64,
 }
